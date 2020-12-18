@@ -1,0 +1,114 @@
+<div class="row">
+  <div class="col-lg-12"> 
+    <div class="widget-container fluid-height clearfix">
+      <div class="heading">
+        <i class="icon-table"></i>合同查询
+        <a class="btn btn-sm btn-primary-outline pull-right" href="{:U('Memorandum/Index/add')}"> 
+          <i class="icon-plus"></i>新增合同
+        </a> 
+      </div> 
+      <div class="widget-content padded clearfix">
+      <form action="{:U('Memorandum/Index/index')}" class="form-horizontal" method="post">
+	    <table class="tab search"> 
+	      <tbody> 
+	        <tr>
+	          <td>
+	            <select class="form-control" tabindex="1" name="sid"> 
+	              <option value="">选择签单人</option>  
+	              <foreach name="Salesman" item="v"> 
+	                <option value="{$v['id']}" <if condition="$sid == $v['id']">selected="selected"</if> >{$v['name']}</option>
+	              </foreach> 
+	            </select> 
+	          </td>
+	          <td>
+	            <select class="form-control" tabindex="1" name="isPost">
+	              <option value="-1" <if condition="$isPost==-1">selected="selected"</if>>全部</option>
+	              <option value="0" <if condition="$isPost==0">selected="selected"</if>>未过帐</option>
+	              <option value="1" <if condition="$isPost==1">selected="selected"</if>>已过帐</option> 
+	            </select>
+	          </td> 
+	          <td><input class="form-control"  name="company" type="text" placeholder="客户名称" value="{$company}"></td>
+	          <td><button type="submit"  class="btn btn-primary sousuo"><i class="icon-search"></i> 搜索</button></td>
+	        </tr>
+	      </tbody>
+	    </table> 
+	  </form> 
+	  </div> 
+      <div class="widget-content padded clearfix"> 
+        <!-- <table class="table table-bordered table-striped" id="datatable-editable"> -->
+        <table class="table table-bordered table-striped">
+         <thead>
+            <th> 客户名称  </th>
+            <th> 合同号      </th>
+            <th> 合同时间  </th>
+            <th> 合同开始时间 </th> 
+            <th> 合同结束时间 </th>
+            <th> 签单人      </th> 
+            <th> 产品类型  </th>
+            <th> 合同金额  </th> 
+            <th> 已收金额  </th> 
+            <th> 开票金额  </th>
+            <th> 税点         </th> 
+            <th> 合同备注  </th> 
+            <th> 操作          </th> 
+          </thead>
+          <tbody> 
+         	<foreach name="Contact" item="v"> 
+              <tr> 
+                <td>{$v['company']}</td>
+                <td>{$v['orderCode']}</td> 
+                <td>{$v['orderDate']}</td> 
+                <td>{$v['start_time']}</td>
+                <td>{$v['end_time']}</td> 
+                <td>{$v['name']}</td> 
+                <td>{$v['proName']}</td> 
+                <td>{$v['money']}</td> 
+                <td>{$v['moneyfasheng']}</td> 
+                <td>{$v['kaipiao_money']}</td> 
+                <td>{$v['shuilv']}</td> 
+                <td>{$v['memo']}</td> 
+                <td> 
+				  <div class="action-buttons">
+				    <if condition="$v['isPhoto'] GT 5"> 
+				    <a id="iframe" class="iframe table-actions" href="__ROOT__/{$v['seephoto']}"><i id="seephoto" class="glyphicon glyphicon-picture" title="查看合同"></i></a>
+				    </if> 
+				    <if condition="$v['isShou']==0"> 
+                    <a class="table-actions" href="{:U('Memorandum/Index/edit',array('id'=>$v['id']))}"><i id="Medit" class="icon-pencil"></i></a>
+                    <a class="table-actions" data-toggle="modal" href="#myModal{$v['id']}"><i class="icon-trash"></i></a> 
+					</if> 
+					  <!--删除模态框 -->
+				      <div class="modal fade" id="myModal{$v['id']}"> 
+	                    <div class="modal-dialog">
+	                      <div class="modal-content">
+	                        <div class="modal-header">
+	                          <button aria-hidden="true" class="close" data-dismiss="modal" type="button">&times;</button>
+	                          <h4 class="modal-title">
+	                         	   注意！
+	                          </h4>
+	                        </div>
+	                        <div class="modal-body">
+	                          <p>
+	                        	  确认删除吗?删除后将不可恢复！！！ 
+	                          </p>
+	                        </div> 
+	                        <div class="modal-footer">
+	                          <a class="btn btn-primary" type="button" href="{:U('Memorandum/Index/delect',array('id'=>$v['id']))}">删除</a>
+	                          <button class="btn btn-default-outline" data-dismiss="modal" type="button">取消</button>
+	                        </div>
+	                   	  </div>
+	                    </div>
+		              </div>
+		              <!-- 模态框结束 --> 
+                  </div>
+				</td>
+              </tr>
+            </foreach>
+          </tbody>
+        </table>
+        <span>
+			{$page} 
+		</span>
+      </div>
+    </div>
+  </div>
+</div>

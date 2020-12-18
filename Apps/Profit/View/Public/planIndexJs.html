@@ -1,0 +1,188 @@
+<script type="text/javascript">
+    $(function(){
+        // 生产计划详情
+        $('a.billDetail').click(function(){
+            var $this = $(this)
+                ,url = "{:U('Profit/Plan/showBill')}"
+                ,param = {};
+            param.id = $this.data('id');
+            param.title = $this.data('title');
+
+            var $myModal = $('#billModal');
+            // 填充标题栏的数据
+            $myModal.find('#spanInfo').text(param.title);
+
+            // 请求明细数据
+            $.get(url, param, function(data){
+                var content = '<h3> 未获得数据 </h3>';
+                if(data){
+                    content =  data;
+                }
+                $myModal.find('.modal-body').html(content);
+                $myModal.find('.memo').tooltip();
+            }, 'html');
+            $myModal.modal();
+        });
+
+        // 所需原料明细
+        $('a.productDetail').click(function(){
+            var $this = $(this)
+                ,url = "{:U('Profit/Plan/showForecastProduct')}"
+                ,param = {};
+            param.id = $this.data('id');
+            param.fid = $this.data('fid');
+            param.title = $this.data('title');
+
+            var $myModal = $('#productModal');
+            // 填充标题栏的数据
+            $myModal.find('#spanInfo').text(param.title);
+
+            // 请求明细数据
+            $.get(url, param, function(data){
+                var content = '<h3> 未获得数据 </h3>';
+                if(data){
+                    content =  data;
+                }
+                $myModal.find('.modal-body').html(content);
+                $myModal.find('.memo').tooltip();
+            }, 'html');
+            $myModal.modal();
+        });
+
+        // 采购计划详情
+        $('a.forecastDetail').click(function(){
+            var $this = $(this)
+                ,url = "{:U('Profit/Plan/showForecastedLog')}"
+                ,param = {};
+            param.id = $this.data('id');
+            param.title = $this.data('title');
+
+            var $myModal = $('#forecastLogModal');
+            // 填充标题栏的数据
+            $myModal.find('#spanInfo').text(param.title);
+
+            // 请求明细数据
+            $.get(url, param, function(data){
+                var content = '<h3> 未获得数据 </h3>';
+                if(data){
+                    content =  data;
+                }
+                $myModal.find('.modal-body').html(content);
+                $myModal.find('.memo').tooltip();
+            }, 'html');
+            $myModal.modal();
+        });
+
+
+
+        // 创建采购计划
+        $('a.buildForecast').click(function(){
+            var $this = $(this)
+                ,url = "{:U('Profit/Plan/buildForecast')}"
+                ,param ={};
+
+            param.id = $this.data('id');
+
+            $.post(url, param, function(data){
+                if(data.status == '1') {
+                    window.location.href = window.location.href;
+                }else{
+                    alert(data.msg);
+                }
+            })
+        });
+
+        // 导出采购计划
+
+        // 导入生产计划
+        $('#import').click(function(){
+            $("#formImport").submit();
+        });
+        $('#formImport').submit(function(){
+            var formdata = new FormData();
+            var fileObj = document.getElementById("fileToUpload").files;
+            for (var i = 0; i < fileObj.length; i++)
+                formdata.append("file" + i, fileObj[i]);
+            $.ajax({
+                type: 'POST',
+                url: "{:U('Client/Client/upload')}",
+                data: formdata,
+                /**
+                 *必须false才会自动加上正确的Content-Type
+                 */
+                contentType: false,
+                /**
+                 * 必须false才会避开jQuery对 formdata 的默认处理
+                 * XMLHttpRequest会对 formdata 进行正确的处理
+                 */
+                processData: false
+            }).then(function (data) {
+                if(data.status){
+                    swal({
+                            title: data.msg,
+                            text: "点击确定开始导入数据",
+                            type: "success",
+                            showCancelButton: false,
+                            confirmButtonText: '导入'
+                        },
+                        function(){
+                            //重置进度条
+                            $('#progress').removeClass('hide');
+                            //开始导入
+                            send(data.filepath);
+                        })
+                }else{
+                    swal({
+                        title: "操作失败！",
+                        text: data.msg,
+                        type: "error",
+                        showCancelButton: false,
+                        confirmButtonColor: '#DD6B55',
+                        confirmButtonText: '确定'
+                    })
+                }
+            }, function () {
+                //failCal
+            });
+            return false;
+        });
+        function send(path){
+            var percent = document.getElementById("percent");
+            var msg = document.getElementById("msg");
+            var title = $("#importTitle").val();
+            var memo = $("#importMemo").val();
+            var date = $("#importDate").val();
+            var xhr = new window.XMLHttpRequest();
+            if(!window.XMLHttpRequest){
+                try {
+                    xhr = new window.ActiveXObject("Microsoft.XMLHTTP");
+                } catch(e) {}
+            }
+            var filepath = encodeURIComponent(path);
+            var url = "__ROOT__/Profit/Plan/import";
+
+            var params = 'file=' + filepath;
+                params+= '&title=' + title;
+                params+= '&memo=' + memo;
+                params+= '&date=' + date;
+
+            xhr.open("post",url);
+            xhr.onreadystatechange = function(){
+                if(xhr.readyState > 2){
+                    var data = xhr.responseText.substr(0,xhr.responseText.length-1);
+                    data = data.split("~");
+                    var progress = data.pop();
+                    var info = progress.substr(1,progress.length-2).split("-");
+                    var width = Math.round(info[0]/info[1]*100)+"%"
+                    msg.innerHTML = info[2]+width;
+                    percent.style.width = width;
+                }
+                if(xhr.readyState == 4){
+                    msg.innerHTML = "导入完成！……100%";
+                }
+            }
+            xhr.setRequestHeader("CONTENT-TYPE","application/x-www-form-urlencoded");
+            xhr.send(params);
+        }
+    });
+</script>

@@ -1,0 +1,26 @@
+CREATE TABLE `ykb_aftersales` (
+  `id` int(10) NOT NULL AUTO_INCREMENT,
+  `store` int(10) NOT NULL DEFAULT '0' COMMENT '店铺ID',
+  `uid` int(10) NOT NULL COMMENT '操作人(客服ID)',
+  `orderId` varchar(50) NOT NULL COMMENT '订单编号',
+  `saleID` varchar(50) NOT NULL COMMENT '型号',
+  `saleProblem` varchar(250) NOT NULL COMMENT '售后问题',
+  `handleMessuares` varchar(250) NOT NULL COMMENT '处理方案',
+  `cserviceMemo` varchar(250) NOT NULL COMMENT '客服备注',
+  `date` date NOT NULL COMMENT '售后服务日期',
+  `operator` int(10) NOT NULL DEFAULT '0' COMMENT '运营',
+  `handleProcess` varchar(50) NOT NULL DEFAULT '' COMMENT '运营处理反馈',
+  `Qc` int(10) NOT NULL DEFAULT '0' COMMENT '品控',
+  `confirmQc` varchar(250) NOT NULL DEFAULT '' COMMENT '售后问题确认',
+  `memoQc` varchar(250) NOT NULL DEFAULT ' ' COMMENT '品控备注',
+  `operatorSec` int(10) NOT NULL DEFAULT '0' COMMENT '运营（审核人）',
+  `audit` int(11) NOT NULL COMMENT '审核状态',
+  `operatorMemo` varchar(250) NOT NULL DEFAULT '  ' COMMENT '运营备注',
+  `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '创建时间',
+  PRIMARY KEY (`id`),
+  KEY `index_id` (`id`),
+  KEY `index_uid` (`uid`),
+  KEY `index_orderId` (`orderId`),
+  KEY `index_reviwer` (`audit`)
+) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+

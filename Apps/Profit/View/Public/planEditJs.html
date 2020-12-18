@@ -1,0 +1,78 @@
+<script type="text/javascript">
+    //原料入库登记界面
+$(function(){
+        $('.contact2').hide();
+        //添加明细
+        $('.addCp').click(function(){
+            _trModel = $('.contact2').eq(0).clone(true);
+            $('input,select',_trModel).val('');
+            $('#contactDiv').append(_trModel.clone(true));
+            $('#contactDiv').find('.contact2').show();
+        });
+        // 删除明细
+        $('.btnDetailRemove').click(function(){
+            var sonid = $(this).parents('.product').find('#sonId').val();
+            $.post('{:U("Profit/Plan/deleteBill")}',{id:sonid},function(){
+                location.reload();
+            })
+            $(this).parents('.product').remove();
+        });
+    });
+    //选择产品双击
+    function setProduct(id,name,code,color,pid,cnt){
+        //将双击项填入表单
+        $('.aa').find('#cp_name').val(name);
+        $('.aa').find('#cp_code').val(code);
+        $('.aa').find('#cp_color').val(color);
+        $('.aa').find('#cpid').val(id);
+        $('#myModalc').modal('hide');
+        $('.product').removeClass('aa');//删除该class
+    }
+    var renderChenpinpProductTable = function(page, isInit){
+        if(isInit){
+            $('#productKeycp').val('');
+        }
+        var name = $('#productKeycp').val(),
+            page = page?page:1;
+
+        $.get('{:U("Storehouse/Cpruku/getProductKey")}', {'p':page,'name':name}, function(data){  //用get方法发送信息到TestAction中的test方法
+            var html = "", pageHtml ="";
+            if(data && data.list.length>0){
+                var name = "";
+                var id = "";
+                var code = "";
+                var kind = "";
+                var color = "";
+
+                $.each(data.list,function(){
+                    name = this['name'];
+                    id = this['id'];
+                    code = this['code'];
+                    kind = this['kind'];
+                    color = this['color'];
+                    html += "<tr ondblclick=\"setProduct('"+id+"','"+name.replace(/<[^>].*?>/g,"")+"','"+code+"','"+color+"')\" style=\"cursor:pointer\"><td style='width:200px;'>"+code+"</td><td style='width:200px;'>"+name+"</td><td style='width:200px;'>"+kind+"</td><td style='width:200px;'>"+color+"</td></tr>";
+                });
+                pageHtml = data.page;
+            } else {
+                pageHtml = "";
+                html =" 您好，没有该产品，请先新增~";
+            }
+            $('#page2').html(pageHtml);
+            $("#product").html(html);
+        });
+    };
+    //ajax分页
+    function product(id){    //test函数名 一定要和action中的第三个参数一致上面有
+        renderChenpinpProductTable(id);
+    }
+    $(function(e) {
+        $('.billSelectcp').click(function(){
+            $(this).parents('.product').addClass('aa');//目的是确定哪一个子类
+            renderChenpinpProductTable(1, true);
+        });
+        //搜索
+        $('#searchList2cp').click(function(){
+            renderChenpinpProductTable(1);
+        });
+    });
+</script>

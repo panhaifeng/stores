@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+	<meta charset="utf-8" />
+	<title>{:C('SYSTEM_INFO')}</title>
+	<meta name="description" content="易奇软件" />
+	<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+    <link href="__PUBLIC__/css/fonts-useso-com.css" media="all" rel="stylesheet" type="text/css" />
+    <link href="__PUBLIC__/css/bootstrap.min.css" media="all" rel="stylesheet" type="text/css" />
+	<link href="__PUBLIC__/css/font-awesome.css" media="all" rel="stylesheet" type="text/css" />
+	<link href="__PUBLIC__/css/se7en-font.css" media="all" rel="stylesheet" type="text/css" />
+	<link href="__PUBLIC__/css/isotope.css" media="all" rel="stylesheet" type="text/css" />
+	<link href="__PUBLIC__/css/jquery.fancybox.css" media="all" rel="stylesheet" type="text/css" />
+	<link href="__PUBLIC__/css/fullcalendar.css" media="all" rel="stylesheet" type="text/css" />
+	<link href="__PUBLIC__/css/wizard.css" media="all" rel="stylesheet" type="text/css" />
+	<link href="__PUBLIC__/css/select2.css" media="all" rel="stylesheet" type="text/css" />
+	<link href="__PUBLIC__/css/morris.css" media="all" rel="stylesheet" type="text/css" />
+	<link href="__PUBLIC__/css/datatables.css" media="all" rel="stylesheet" type="text/css" />
+	<link href="__PUBLIC__/css/datepicker.css" media="all" rel="stylesheet" type="text/css" />
+	<link href="__PUBLIC__/css/timepicker.css" media="all" rel="stylesheet" type="text/css" />
+	<link href="__PUBLIC__/css/colorpicker.css" media="all" rel="stylesheet" type="text/css" />
+	<link href="__PUBLIC__/css/bootstrap-switch.css" media="all" rel="stylesheet" type="text/css" />
+	<link href="__PUBLIC__/css/daterange-picker.css" media="all" rel="stylesheet" type="text/css" />
+	<link href="__PUBLIC__/css/typeahead.css" media="all" rel="stylesheet" type="text/css" />
+	<link href="__PUBLIC__/css/summernote.css" media="all" rel="stylesheet" type="text/css" />
+	<link href="__PUBLIC__/css/pygments.css" media="all" rel="stylesheet" type="text/css" />
+	<link href="__PUBLIC__/css/style.css" media="all" rel="stylesheet" type="text/css" />
+	<link href="__PUBLIC__/css/color/green.css" media="all" rel="alternate stylesheet" title="green-theme" type="text/css" />
+	<link href="__PUBLIC__/css/color/orange.css" media="all" rel="alternate stylesheet" title="orange-theme" type="text/css" />
+	<link href="__PUBLIC__/css/color/magenta.css" media="all" rel="alternate stylesheet" title="magenta-theme" type="text/css" />
+	<link href="__PUBLIC__/css/color/gray.css" media="all" rel="alternate stylesheet" title="gray-theme" type="text/css" />
+	<link href="__PUBLIC__/css/extra.css" type="text/css" />
+	<link href="__PUBLIC__/css/sweet-alert.css" rel="stylesheet" type="text/css">
+  	<link type="favicon" rel="shortcut icon" href="__PUBLIC__/favicon.ico" />
+	<!-- 财务基础资料导航栏设置 -->
+	<style type="text/css"> 
+	.baseul a {color:#999999;}  
+ 	.baseul a:hover {color:#007aff;} 
+ 	.baseli {list-style:none} 
+	.cache{
+	position:absolute;
+	left:0px; top:15px; padding:8px 14px;
+	}
+	.aaaa{
+	position:absolute;
+	right:0px; top:15px; padding:8px 14px;
+	}
+	.paymentul a {color:#999999;}  
+ 	.paymentul a:hover {color:#007aff;} 
+ 	.paymentli {list-style:none} 
+	</style>
+	

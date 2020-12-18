@@ -1,0 +1,72 @@
+CREATE TABLE `ykb_plan_production` (
+  `id` int(10) NOT NULL AUTO_INCREMENT,
+  `title` varchar(30) DEFAULT NULL COMMENT '标题',
+  `plan_date` int(10) DEFAULT NULL COMMENT '计划时间',
+  `is_lock` tinyint(4) DEFAULT '0' COMMENT '是否锁定，不可更改',
+  `status` enum('planning','planed','forcasting','forcasted') DEFAULT 'planning' COMMENT '计划的状态',
+  `plan_code` varchar(20) DEFAULT NULL COMMENT '计划编号',
+  `memo` varchar(200) DEFAULT NULL COMMENT '备注',
+  `user_id` int(11) DEFAULT NULL COMMENT '负责人ID',
+  `creator` varchar(20) DEFAULT NULL COMMENT '创建人姓名',
+  `ctime` int(10) DEFAULT NULL COMMENT '创建时间',
+  `utime` timestamp NOT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='生产计划主表';
+
+CREATE TABLE `ykb_plan_production_bill` (
+  `id` int(10) NOT NULL AUTO_INCREMENT,
+  `production_id` int(10) DEFAULT NULL COMMENT '生产计划ID',
+  `cpid` int(10) DEFAULT NULL COMMENT '成品ID',
+  `num` int(10) DEFAULT NULL COMMENT '成品数量',
+  `user_id` int(10) DEFAULT NULL COMMENT '负责人Id',
+  `creator` varchar(25) DEFAULT NULL COMMENT '创建人姓名',
+  `ctime` int(10) DEFAULT NULL COMMENT '创建时间',
+  `utime` timestamp NOT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='生产计划-生产清单(成品)';
+
+
+CREATE TABLE `ykb_plan_forecast` (
+  `id` int(10) NOT NULL AUTO_INCREMENT,
+  `production_id` int(10) DEFAULT NULL COMMENT '生产计划ID',
+  `is_export` tinyint(1) DEFAULT '0' COMMENT '是否导出，0：未导出，1：',
+  `date` date DEFAULT NULL COMMENT '预测时间',
+  `user_id` int(10) DEFAULT NULL COMMENT '负责人ID',
+  `creator` varchar(25) DEFAULT NULL COMMENT '创建人姓名',
+  `ctime` int(10) DEFAULT NULL COMMENT '创建时间',
+  `utime` timestamp NOT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='生产计划-预测';
+
+CREATE TABLE `ykb_plan_forecast_bill` (
+  `id` int(10) NOT NULL AUTO_INCREMENT,
+  `production_id` int(10) DEFAULT NULL COMMENT '生产计划ID',
+  `forecast_id` int(10) DEFAULT NULL COMMENT '预测ID',
+  `bill_utime` int(10) DEFAULT NULL COMMENT '生产计划-成品清单更新时间',
+  `cpid` int(10) DEFAULT NULL COMMENT '成品ID',
+  `num` int(10) DEFAULT NULL COMMENT '成品数量',
+  `user_id` int(10) DEFAULT NULL COMMENT '负责人',
+  `creator` varchar(25) DEFAULT NULL COMMENT '创建人',
+  `ctime` int(10) DEFAULT NULL COMMENT '创建时间',
+  `utime` timestamp NOT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='生产计划-预测时使用的生产清单';
+
+CREATE TABLE `ykb_plan_forecast_product` (
+  `id` int(10) NOT NULL AUTO_INCREMENT,
+  `production_id` int(10) DEFAULT NULL COMMENT '生产计划ID',
+  `forecast_id` int(10) DEFAULT NULL COMMENT '预测ID',
+  `product_id` int(10) DEFAULT NULL COMMENT '原料ID',
+  `product_name` varchar(25) DEFAULT NULL COMMENT '原料名',
+  `product_code` varchar(25) DEFAULT NULL COMMENT '原料编号',
+  `num` int(10) DEFAULT NULL COMMENT '计划所需的原料数量',
+  `kucun_num` int(10) DEFAULT NULL COMMENT '预测时的库存数量',
+  `purchase_num` int(10) DEFAULT NULL COMMENT '预测-需要购入的数量',
+  `kucun_safe_num` int(10) DEFAULT NULL COMMENT '预测时-库存的警戒值',
+  `user_id` int(10) DEFAULT NULL COMMENT '负责人ID',
+  `creator` varchar(25) DEFAULT NULL COMMENT '创建人ID',
+  `ctime` int(10) DEFAULT NULL COMMENT '创建时间',
+  `utime` timestamp NOT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='生产计划-预测所需的原料清单';
+

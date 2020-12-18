@@ -1,0 +1,43 @@
+<script type="text/javascript"> 
+	//原料入库登记界面
+	$(function(){
+		$('.contact2').hide();
+		//添加明细
+		$('.addproduct').click(function(){
+			_trModel = $('.contact2').eq(0).clone(true);
+				$('input,select',_trModel).val('');
+	 		$('#contactDiv').append(_trModel.clone(true)); 
+	 		$('#contactDiv').find('.contact2').show();
+		});
+		$('.ruku_remove').click(function(){
+			var sonid = $(this).parents('.product').find('#sonId').val();
+			$.post('{:U("Baseinfo/Chengpin/deletesonid")}',{id:sonid},function(){
+				location.reload(); 
+			})
+			$(this).parents('.product').remove();
+		});
+		//自动计算金额
+		$("[name='price[]']").change(function(){
+			var price = $(this).val();
+			var cnt = $(this).parents('.form-group').find("[name='cnt[]']").val();
+			if(cnt==""){
+				alert("请先填写数量,谢谢！");
+				$(this).val("");
+				return false;
+			}
+			var money = $(this).parents('.form-group').find("[name='money[]']");
+			var m = parseFloat((parseFloat(cnt)*parseFloat(price)).toFixed(2));//js格式化数字并保留两位小数
+			money.val(m);
+		});
+		//判断是否填写了数量和金额
+		$("[name='money[]']").change(function(){
+			var cnt = $(this).parents('.form-group').find("[name='cnt[]']").val();
+			var price = $(this).parents('.form-group').find("[name='price[]']").val();
+			if(cnt==""||price==""){
+				alert("请先填写数量和单价,谢谢！");
+				$(this).val("");
+				return false;
+			}
+		})
+	});
+</script>

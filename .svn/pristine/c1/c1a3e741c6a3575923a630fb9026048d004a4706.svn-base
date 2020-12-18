@@ -1,0 +1,23 @@
+<script type="text/javascript" >
+	jQuery(function($) {
+		var hasCheck = true;
+		// doCheck
+		// callCombo
+		$(document).keydown(function(e){
+			var currKey=e.keyCode||e.which||e.charCode;
+			// alert(currKey);
+			if(hasCheck){
+				//如果ctrl+alt+shift+A弹出db_change输入框,此功能只开发给开发人员形成db_change文档时用
+				if(e.altKey&&e.ctrlKey&&e.shiftKey&&currKey==65) {
+					var url = '{:U("Tool/Dbchange/commitIndex")}';
+					window.open(url);
+				}
+				//如果ctrl+alt+shift+z弹出执行窗口,此功能只给实施人员用
+				if(e.altKey&&e.ctrlKey&&e.shiftKey&&currKey==90) {
+					var url = '{:U("Tool/Dbchange/updateIndex")}';
+					window.open(url);
+				}
+			}
+		});
+	});
+</script>

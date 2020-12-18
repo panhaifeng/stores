@@ -1,0 +1,120 @@
+<div class="row">
+  <div class="col-lg-12">
+    <div class="widget-container fluid-height clearfix">
+      <div class="heading">
+        <i class="icon-table"></i><a class="btn-primary" href="{:U('Storehouse/index/YlReport')}" style="padding:4px;border-radius:3px">对账明细</a>
+      </div>
+      <div class="widget-content padded clearfix normalSearch">
+      <form action="{:U('Storehouse/index/YlReport')}" class="form-horizontal" method="post">
+          <table class="tab search">
+              <tbody>
+              <tr>
+                  <td>
+                      <select class="form-control" tabindex="1" name="time_kind" id="time_kind" onchange=dateChange(this.value)>
+                          <option value="0" <if condition="$time_kind==0">selected="selected"</if>>全部</option>
+                          <option value="1" <if condition="$time_kind==1">selected="selected"</if>>本月</option>
+                          <option value="2" <if condition="$time_kind==2">selected="selected"</if>>上月</option>
+                          <option value="3" <if condition="$time_kind==3">selected="selected"</if>>本年</option>
+                      </select>
+                  </td>
+                  <td>
+                      <input class="form-control" data-date-autoclose="true" data-date-format="yyyy-mm-dd" id="dpd1" name="start_time" placeholder="开始时间" type="text" value="{$start_time}">
+                  </td>
+                  <td>
+                      <input class="form-control" data-date-autoclose="true" data-date-format="yyyy-mm-dd" id="dpd2" name="end_time" placeholder="结束时间" type="text" value="{$end_time}">
+                  </td>
+                  <td>
+                      <input class="form-control" id="key" name="key" placeholder="关键词检索:编码、名称.." type="text" value="{$key}">
+                  </td>
+                  <td>
+                      <button type="submit"  class="btn btn-primary sousuo"><i class="icon-search"></i> 搜索</button>
+                  </td>
+              </tr>
+              </tbody>
+          </table>
+      </form>
+      </div>
+        <div class="widget-content padded clearfix quickSearch" style="display: none">
+            <table class="tab search">
+                <tbody>
+                <tr>
+                    <td>
+                        <input class="form-control"  name="start_time" placeholder="开始时间" type="text" value="{$start_time}" disabled>
+                    </td>
+                    <td>
+                        <input class="form-control" name="end_time" placeholder="结束时间" type="text" value="{$end_time}" disabled>
+                    </td>
+                    <td>
+                        <input class="form-control" name="key" placeholder="关键词检索:编码、名称.." type="text" value="{$key}" disabled>
+                    </td>
+                    <td>
+                        <input class="form-control" name="inlinekey" placeholder="页面内检索" type="text" value="">
+                    </td>
+                    <!--<td>-->
+                        <!--<select class="form-control" name="inlinetype" id="inlinetype" autocomplete="off">-->
+                            <!--<option value="0">初始状态</option>-->
+                            <!--<option value="1">已选显示:吸顶模式</option>-->
+                            <!--<option value="2">已选显示:吸底模式</option>-->
+                        <!--</select>-->
+                    <!--</td>-->
+                    <td>
+                        <button type="button"  class="btn btn-default sousuo" id="quickSearch"><i class="icon-search"></i> 本页内搜索</button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+      <div class="widget-content padded clearfix rowsData">
+        <!-- <table class="table table-bordered table-striped" id="datatable-editable"> -->
+        <table class="table table-bordered table-striped">
+         <thead>
+            <th> 原料编码      </th>
+            <th> 原料类型      </th>
+            <th> 原料名称      </th>
+            <th> 期初库存      </th>
+            <th> 本期入库      </th>
+            <th> 本期退库      </th>
+            <th> 本期出库      </th>
+            <th> 期末库存      </th>
+            <th> 期初金额      </th>
+            <th> 入库金额      </th>
+            <th> 出库金额      </th>
+            <th> 退回金额      </th>
+            <th> 库存金额      </th>
+            <th class="quickColumn" style="display: none"> 操作 </th>
+          </thead>
+          <tbody>
+            <foreach name="Kucun" item="v">
+              <tr>
+                <td>{$v['code']}</td>
+                <td>{$v['kind']}</td>
+                <td>{$v['name']}</td>
+                <td>{$v['initKucun']}</td>
+                <td>{$v['cntRuku']}</td>
+                <td>{$v['curCntBack']}</td>
+                <td>{$v['cntChuku']}</td>
+                <td>{$v['cnt']}</td>
+                <td>{$v['initMoney']}</td>
+                <td>{$v['rukuMoney']}</td>
+                <td>{$v['chukuMoney']}</td>
+                <td>{$v['backMoney']}</td>
+                <td>{$v['kcMoney']}</td>
+                <td class="quickColumn"  style="display: none">
+                    <label class="checkbox-inline">
+                        <input type="checkbox" value="{$v['proId']}" name="preChuku[]" autocomplete="off" data-choose="false">
+                        <span></span>
+                        <span class="checkSpan"></span>
+                    </label>
+                </td>
+              </tr>
+            </foreach>
+          </tbody>
+        </table>
+        <span>
+            {$page}
+        </span>
+      </div>
+    </div>
+  </div>
+</div>
+<include file="Public:YlReportJs" />

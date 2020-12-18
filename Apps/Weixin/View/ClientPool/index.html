@@ -1,0 +1,43 @@
+{__NOLAYOUT__} 
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<title>客户池</title>
+		<meta name="description" content="客户池" />
+		<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0;" name="viewport" />
+		<link href="__PUBLIC__/assets/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    	<link href="__PUBLIC__/assets/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
+		<link rel="stylesheet" href="__PUBLIC__/weixin/showcase.css">
+ 		<link rel="stylesheet" href="__PUBLIC__/weixin/buttons.css">
+ 		<style type="text/css">
+		body a { font-family:'微软雅黑';}
+		</style>
+	</head>
+	<body style="background:#ffffff;">
+			<div class="container">
+				<div class="row">
+					<div class="span12">
+						<foreach name="client" item="v">
+						 <ul> 
+						 	<li class=""><a href="javascript:;">{$v['company']}</a>
+						 	<p style="font-family:verdana;font-size:90%;color:#CDCCCC">{$v['contact_name']}&nbsp;&nbsp;&nbsp;{$v['telephone']}&nbsp;&nbsp;&nbsp;
+							 	<a href="tel:{$v['telephone']}">电话</a>&nbsp;&nbsp;&nbsp;
+							 	<a href="sms:{$v['telephone']}">短信</a>&nbsp;&nbsp;&nbsp;
+							 	<a href="">地理位置</a>&nbsp;&nbsp;&nbsp;
+						 	</p>
+						 	</li>
+						 	<hr>
+						 </ul> 
+						</foreach>
+					</div>
+				</div>
+			</div>
+		<script type="text/javascript">
+			document.addEventListener('WeixinJSBridgeReady', function onBridgeReady() {
+				WeixinJSBridge.call('hideOptionMenu');
+			});
+		</script>
+	</body>
+</html>
+

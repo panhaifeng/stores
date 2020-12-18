@@ -1,0 +1,44 @@
+<div class="row">
+  <div class="col-lg-12">
+    <div class="widget-container fluid-height clearfix">
+      <div class="heading">
+        <i class="icon-table"></i><a class="btn-primary" href="{:U('Storehouse/Index/index')}" style="padding:4px;border-radius:3px;">库存警戒消息</a>
+      </div>
+      <div class="widget-content padded clearfix">
+        <!-- <table class="table table-bordered table-striped" id="datatable-editable"> -->
+        <table class="table table-bordered table-striped">
+         <thead>
+            <th> 原料编码      </th>
+            <th> 原料类型      </th>
+            <th> 原料名称      </th>
+            <th> 原料规格      </th>
+            <th> 库存数量      </th>
+            <th> 安全库存值     </th>
+            <th> 最高采购量      </th>
+            <th> 预警值      </th>
+          </thead>
+          <tbody>
+            <foreach name="rows" item="v">
+              <tr>
+                <td>{$v['code']}</td>
+                <td>{$v['kind']}</td>
+                <td>{$v['name']}</td>
+                <td>{$v['norms']}</td>
+                <td>{$v['kucunNum']}</td>
+                <td>{$v['safeNum']}</td>
+                <td>{$v['maxBuyCnt']}</td>
+                <td>
+                   <span class="ico-num-red" style="color:red;">{$v['num']}</span>
+                </td>
+              </tr>
+            </foreach>
+          </tbody>
+        </table>
+        <span>
+            {$page}
+        </span>
+      </div>
+    </div>
+  </div>
+</div>
+<include file="Public:indexjs" />

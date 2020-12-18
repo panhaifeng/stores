@@ -1,0 +1,91 @@
+<div class="row">
+  <div class="col-lg-12"> 
+    <div class="widget-container fluid-height clearfix">  
+      <div class="heading">
+        <i class="icon-reorder"></i>售后登记 
+        <label class="checkbox pull-right" style="margin-right:82%;"></label> 
+      </div> 
+      <div class="widget-content padded"> 
+        <form id="aftersale" action="{:U('Profit/Aftersale/save',array('fromAction'=>$fromAction))}" class="form-horizontal" method="post"> 
+           <div class="form-group">
+             <input type="hidden" name="id" value="{$aRow['id']}">
+             <label class="control-label col-md-2">店铺<i style="color:red;">*</i></label> 
+             <div class="col-md-3"> 
+              <select class="form-control" name="store">
+                <option value="">--请选择--</option>
+                <foreach name="stores" item="v" key="key">
+                  <option value="{$key}" <if condition="$aRow['store']==$key">selected="selected"</if>>{$v}</option> 
+                </foreach>
+             </select>
+             </div>  
+           </div> 
+          <div class="form-group">
+             <label class="control-label col-md-2">客服人员<i style="color:red;">*</i></label> 
+             <div class="col-md-3"> 
+              <select class="form-control"  id="sltUid" disabled="disabled">
+                <option value="">--请选择--</option>
+                <foreach name="user" item="v">
+                  <option value="{$v['id']}" <if condition="$aRow['uid']==$v['id']">selected="selected"</if>>{$v['real_name']}</option> 
+                </foreach>
+             </select>
+              <input type="hidden" name="uid" value="{$aRow['uid']}">
+             </div>  
+           </div>
+           <div class="form-group">
+            <label class="control-label col-md-2">日期<i style="color:red;">*</i></label>  
+            <div class="col-md-3"> 
+              <div class="input-group date datepicker" data-date-autoclose="true" data-date-format="yyyy-mm-dd">
+                <input id="date" name="date" class="form-control" type="text" 
+                  <if condition="$aRow['date'] !=0 "> value="{$aRow['date']}"<else/>value="{:date('Y-m-d',time())}"</if> >
+                <span class="input-group-addon"><i class="icon-calendar"></i></span></input>
+              </div> 
+            </div> 
+          </div> 
+      
+          <div class="form-group">
+             <label class="control-label col-md-2">订单编号<i style="color:red;">*</i></label>  
+             <div class="col-md-3"> 
+               <input id="orderId" name="orderId" class="form-control" type="text" value="{$aRow['orderId']}"> 
+             </div> 
+          </div>
+          <div class="form-group">
+             <label class="control-label col-md-2">ID<i style="color:red;">*</i></label>  
+             <div class="col-md-3"> 
+               <input id="saleID" name="saleID" class="form-control" type="text" value="{$aRow['saleID']}"> 
+             </div> 
+          </div>
+          <div class="form-group">
+             <label class="control-label col-md-2">售后问题<i style="color:red;">*</i></label>  
+             <div class="col-md-3"> 
+               <input id="saleProblem" name="saleProblem" class="form-control" type="text" value="{$aRow['saleProblem']}"> 
+             </div> 
+          </div>
+          <div class="form-group">
+             <label class="control-label col-md-2">处理措施<i style="color:red;">*</i></label>  
+             <div class="col-md-3"> 
+               <input id="handleMessuares" name="handleMessuares" class="form-control" type="text" value="{$aRow['handleMessuares']}"> 
+             </div> 
+          </div>
+          <div class="form-group">
+             <label class="control-label col-md-2">后台处理跟进</label>  
+             <div class="col-md-3"> 
+             <textarea id="handleProcess" name="handleProcess" class="form-control" type="text" rows="3" cols="20">{$aRow['handleProcess']}</textarea>
+             </div> 
+          </div>
+          <div class="form-group">
+             <label class="control-label col-md-2">客服反馈</label>  
+             <div class="col-md-3"> 
+             <textarea id="cserviceCallback" name="cserviceCallback" class="form-control" type="text" rows="3" cols="20">{$aRow['cserviceCallback']}</textarea>
+             </div> 
+          </div>
+          <div class="form-group"> 
+            <label class="control-label col-md-2"></label> 
+            <div class="col-md-7">
+              <button class="btn btn-primary" type="submit">保存</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

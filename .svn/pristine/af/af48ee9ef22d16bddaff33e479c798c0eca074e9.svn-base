@@ -1,0 +1,7 @@
+CREATE TABLE `ykb_auth_store` (
+  `uid` mediumint(8) unsigned NOT NULL,
+  `storeId` mediumint(8) unsigned NOT NULL,
+  UNIQUE KEY `uid_storeId` (`uid`,`storeId`) USING BTREE,
+  KEY `uid` (`uid`) USING BTREE,
+  KEY `storeId` (`storeId`) USING BTREE
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;

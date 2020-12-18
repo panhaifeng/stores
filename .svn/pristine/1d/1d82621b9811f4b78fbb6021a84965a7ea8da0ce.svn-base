@@ -1,0 +1,3 @@
+ALTER TABLE `ykb_chuku`
+ADD COLUMN `chukuKind`  varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '出库类型' AFTER `memo`;
+

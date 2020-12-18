@@ -1,0 +1,150 @@
+<div class="row">
+  <div class="col-lg-12">
+    <div class="widget-container fluid-height clearfix">
+      <div class="heading">
+        <i class="icon-reorder"></i>收款登记
+        <label class="checkbox pull-right" style="margin-right:82%;"></label>
+      </div>
+      <div class="widget-content padded">
+        <form action="{:U('Finance/Collection/addInsert')}" class="form-horizontal" method="post">
+           <fieldset disabled>
+               <div class="form-group">
+                    <label class="control-label col-md-2">收款单号<i style="color:red;">*</i></label>
+                    <div class="col-md-3">
+                    <input id="collection_number" name="collection_number" class="form-control" placeholder="系统自动生成" type="text" value="{$Collection['collection_number']}">
+                    </div>
+               </div>
+               <div class="form-group">
+                   <label for="creator" class="control-label col-md-2">操作员 <i style="color:red;">*</i></label>
+                   <div class="col-md-3">
+                    <input type="text" id="creator" name="creator" class="form-control" value="{$creator}">
+                   </div>
+               </div>
+           </fieldset>
+
+           <div class="form-group">
+            <label class="control-label col-md-2">收款时间<i style="color:red;">*</i></label>
+            <div class="col-md-3">
+              <div class="input-group date datepicker" data-date-autoclose="true" data-date-format="yyyy-mm-dd">
+                <input id="collection_date" name="collection_date" class="form-control" type="text" <if condition="$Collection_date !=0 "> value="{$Collection_date}"<else/>value="{:date('Y-m-d',time())}"</if> ><span class="input-group-addon"><i class="icon-calendar"></i></span></input>
+         </div>
+            </div>
+          </div>
+          <div class="form-group mclient">
+             <label class="control-label col-md-2">客户名称<i style="color:red;">*</i></label>
+             <div class="col-md-3">
+               <div class="input-group">
+                 <input class="form-control" type="text" id="clientName" name="clientName" value="{$Collection['clientName']}"><span class="input-group-btn"><a id="clientSelect" class="btn btn-default" type="button" data-toggle="modal" href="#myModalc">请选择</a></span></input>
+                 <input type="hidden" id="cid" name="cid" value="{$Collection['cid']}"></input>
+                 <input type="hidden" id="sid" name="sid" value="{$Collection['sid']}"></input>
+                 <input type="hidden" id="id" name="id" value="{$Collection['id']}"></input>
+                 <!-- 判段新增还是修改 -->
+                 <input id="isNew" name="isNew" type="hidden" value="{$isNew}"/>
+                 <!-- 判段收款还是付款 -->
+                 <input id="isCollection" name="isCollection" type="hidden" value="{$isCollection}">
+               </div>
+             </div>
+           </div>
+          <!-- <div class="form-group">
+             <label class="control-label col-md-2">客户名称<i style="color:red;">*</i></label>
+             <div class="col-md-3">
+               <input id="clientName" name="clientName" class="form-control" placeholder="客户名称" type="text" value="{$Collection['clientName']}">
+             </div>
+           </div> -->
+          <div class="form-group">
+             <label class="control-label col-md-2">收款金额<i style="color:red;">*</i></label>
+             <div class="col-md-3">
+               <input id="collection_money" name="collection_money" class="form-control" placeholder="收款金额" type="text" value="{$Collection['collection_money']}">
+             </div>
+          </div>
+          <!-- <div class="form-group">
+            <label class="control-label col-md-2">收款方式<i style="color:red;">*</i></label>
+            <div class="col-md-3">
+              <select id="collection_type" name="collection_type" class="form-control">
+                <option value="">请选择</option>
+                <option value="1" <if condition="$Collection['collection_type']==1">selected="selected"</if>>现金</option>
+                <option value="2" <if condition="$Collection['collection_type']==2">selected="selected"</if>>电汇</option>
+                <option value="3" <if condition="$Collection['collection_type']==3">selected="selected"</if>>承兑</option>
+                <option value="4" <if condition="$Collection['collection_type']==4">selected="selected"</if>>支票</option>
+                <option value="5" <if condition="$Collection['collection_type']==5">selected="selected"</if>>网转</option>
+              </select>
+            </div>
+          </div> -->
+          <div class="form-group">
+            <label class="control-label col-md-2">收款项目<i style="color:red;">*</i></label>
+            <div class="col-md-3">
+              <select id="item" name="item" class="form-control">
+                <option value="">请选择</option>
+                <foreach name="collection_parent" item="v">
+                    <option value="{$v['id']}" <if condition="$Collection['item']==$v['id']">selected="selected"</if>>{$v['collection_name']}</option>
+                </foreach>
+              </select>
+            </div>
+          </div>
+          <div class="form-group sonitem">
+            <label class="control-label col-md-2"></label>
+            <div class="col-md-3">
+              <select id="son" name="son" class="form-control">
+                <option value="">请选择</option>
+                <foreach name="collection_son" item="v">
+                    <option value="{$v['id']}" <if condition="$Collection['son']==$v['id']">selected="selected"</if>>{$v['collection_name']}</option>
+                </foreach>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="control-label col-md-2">银行账户<i style="color:red;">*</i></label>
+            <div class="col-md-3">
+              <select id="bankid" name="bankid" class="form-control">
+                <option value="">请选择</option>
+                <foreach name="bank" item="v">
+                    <option value="{$v['id']}" <if condition="$Collection['bankid']==$v['id']">selected="selected"</if>>{$v['bankname']}</option>
+                </foreach>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="control-label col-md-2">收款备注</label>
+            <div class="col-md-3">
+              <input id="memo" name="memo" class="form-control" placeholder="收款备注" type="text" value="{$Collection['memo']}">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="control-label col-md-2"></label>
+            <div class="col-md-7">
+              <button class="btn btn-primary" type="submit">保存</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- 客户选择模态框 -->
+<div class="modal fade" id="myModalc">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button aria-hidden="true" class="close" data-dismiss="modal" type="button">&times;</button>
+        <h4 class="modal-title">
+            客户选择
+        </h4>
+      </div>
+      <div id="clientList2">
+        <div class="form-group">
+          <div class="modal-body">
+            <div class="col-md-5">
+              <div class="input-group">
+                <input id="clientKey2" class="form-control" type="text" placeholder="客户名称"><span class="input-group-btn"><button id="searchList2" class="btn btn-default" type="button">搜索</button></span></input>
+              </div>
+            </div>
+            <table class="table table-striped ">
+              <tbody id="clients"></tbody>
+            </table>
+            <div class="pull-right" id="page"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

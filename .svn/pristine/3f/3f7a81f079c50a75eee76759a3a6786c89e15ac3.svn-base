@@ -1,0 +1,3 @@
+ALTER TABLE `ykb_payment_money`
+ADD COLUMN `supplierId`  int(11) NOT NULL COMMENT '供应商id' AFTER `utime`;
+

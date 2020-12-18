@@ -1,0 +1,97 @@
+<div class="row">
+  <div class="col-lg-12">
+    <div class="widget-container fluid-height clearfix">
+      <div class="heading">
+        <i class="icon-table"></i>现金日报表
+      </div>
+      <div class="widget-content padded clearfix">
+      <form action="{:U('Finance/Cash/index')}" class="form-horizontal" method="post"> 
+	    <table class="tab search">  
+	      <tbody> 
+	        <tr>
+		      <td>
+		      	<select class="form-control" tabindex="1" name="time_kind" id="time_kind" onchange=dateChange(this.value)> 
+	              <option value="0" <if condition="$time_kind==0">selected="selected"</if>>全部</option> 
+	              <option value="1" <if condition="$time_kind==1">selected="selected"</if>>本月</option> 
+	              <option value="2" <if condition="$time_kind==2">selected="selected"</if>>上月</option> 
+	              <option value="3" <if condition="$time_kind==3">selected="selected"</if>>本年</option> 
+	            </select> 
+		      </td> 
+	          <td> 
+	              <input class="form-control" data-date-autoclose="true" data-date-format="yyyy-mm-dd" id="dpd1" name="start_time" placeholder="开始时间" type="text" value="{$start_time}"> 
+	          </td> 
+	          <td> 
+	          	  <input class="form-control" data-date-autoclose="true" data-date-format="yyyy-mm-dd" id="dpd2" name="end_time" placeholder="结束时间" type="text" value="{$end_time}"> 
+	          </td>
+	          <td>
+	            <select class="form-control" tabindex="1" name="bank" id="bank">
+	              <option value="">选择银行账户</option>
+	              <foreach name="bank" item="v"> 
+	              <option value="{$v['id']}" <if condition="$bankid == $v['id']"> selected="selected" </if>>{$v['bankname']}</option>
+	              </foreach> 
+	          </td>
+	          <td><input class="form-control"  name="memo" type="text" placeholder="备注" value="{$memo}"></td>
+	          <!-- <td><input class="form-control"  name="company" type="text" placeholder="客户名称" value="{$company}"></td> -->
+	          <td><button type="submit"  class="btn btn-primary sousuo"><i class="icon-search"></i> 搜索</button></td> 
+	        </tr> 
+	      </tbody> 
+	    </table> 
+	  </form> 
+	  </div> 
+      <div class="widget-content padded clearfix"> 
+        <!-- <table class="table table-bordered table-striped" id="datatable-editable"> -->
+        <table class="table table-bordered table-hover"> 
+          <thead>
+           <tr>
+	            <th> 时间         </th> 
+	            <th> 项目类型  </th> 
+	            <th> 银行账户  </th>
+	            <th> 客户/供应商名称  </th>  
+	            <th> 收入         </th> 
+	            <th> 支出         </th> 
+	            <th> 余额         </th>
+	            <th> 备注         </th> 
+            </tr> 
+          </thead> 
+          <tbody>
+            <tr>
+	            <th>期初余额 </th> 
+	            <th></th> 
+	            <th></th>
+	            <th></th>  
+	            <th></th> 
+	            <th></th> 
+	            <th>{$remain}</th> 
+	            <th></th> 
+            </tr> 
+         	<foreach name="money" item="v"> 
+              <tr class="trRow"> 
+                <td>{$v['date']}</td> 
+                <td>{$v['son_name']}</td> 
+                <td>{$v['bankname']}</td> 
+                <td><a class="tooltip-top" style="cursor:pointer;" title="{$v['clientName']}">{$v['clientName2']}</a></td> 
+                <td>{$v['income']}</td> 
+                <td>{$v['expense']}</td> 
+                <td>{$v['remain']}</td> 
+                <td><a class="tooltip-top" style="cursor:pointer;" title="{$v['memo']}">{$v['memo2']}</a></td> 
+              </tr> 
+            </foreach> 
+             <tr>
+	            <th>合计 </th> 
+	            <th></th> 
+	            <th></th> 
+	            <th></th>  
+	            <th>{$moneyIncome}</th> 
+	            <th>{$moneyExpense}</th> 
+	            <th>{$totalRemain}</th> 
+	            <th></th> 
+            </tr> 
+          </tbody> 
+        </table> 
+        <span> 
+			{$page} 
+		</span>
+      </div>
+    </div>
+  </div>
+</div>

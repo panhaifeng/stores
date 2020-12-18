@@ -1,0 +1,157 @@
+<div class="row">
+  <div class="col-lg-12"> 
+    <div class="widget-container fluid-height clearfix">  
+      <div class="heading1 col-md-6">
+        <i class="icon-reorder"></i>合同登记 
+      </div>
+      <div class="heading1">
+        <i class="icon-reorder"></i>合同附件上传 
+      </div>
+      <div class="widget-content padded"> 
+        <form action="{:U('Memorandum/Index/addInsert')}" class="form-horizontal" enctype="multipart/form-data" method="post"> 
+          <div class="col-md-6">
+          <div class="form-group">
+            <label class="control-label col-md-2">客户名称</label> 
+            <div class="col-md-8"> 
+              <div class="input-group">
+                <input class="form-control" type="text" id="clientName" value="{$Memorandum['company']}"><span class="input-group-btn"><a id="clientSelect" class="btn btn-default" type="button" data-toggle="modal" href="#myModal">请选择</a></span></input>
+             	<input type="hidden" id="cid" name="cid" value="{$Memorandum['cid']}"></input> 
+             	<input type="hidden" id="id" name="id" value="{$Memorandum['id']}"></input> 
+              </div> 
+            </div> 
+          </div> 
+          <div class="form-group">
+            <label class="control-label col-md-2">我方签单人</label> 
+            <div class="col-md-8"> 
+              <select id="salesman" name="salesman" class="form-control">
+              	<option value="">请选择</option> 
+              	<foreach name="Salesman" item="v"> 
+              		<option value="{$v['id']}" <if condition="$Memorandum['sid']==$v['id']">selected="selected"</if>>{$v['name']}</option> 
+              	</foreach>
+              </select>
+            </div>
+          </div> 
+          <fieldset disabled>
+          <div class="form-group">
+            <label class="control-label col-md-2">合同号</label> 
+            <div class="col-md-8"> 
+              <input id="orderCode" name="orderCode" class="form-control" placeholder="系统自动生成" type="text" value="{$Memorandum['orderCode']}"> 
+            </div> 
+          </div>  
+          </fieldset> 
+          <div class="form-group">
+            <label class="control-label col-md-2">合同签订时间</label> 
+            <div class="col-md-8">
+              <div class="input-group date datepicker" data-date-autoclose="true" data-date-format="yyyy-mm-dd">
+                <input id="orderDate" name="orderDate" class="form-control" type="text" value="{$orderDate}" onchange="getorderDate(this.id)"><span class="input-group-addon"><i class="icon-calendar"></i></span></input>
+              </div> 
+            </div>
+          </div> 
+          <div class="form-group">
+            <label class="control-label col-md-2">合同有效期</label> 
+            <div class="col-sm-4">
+              <input class="form-control" data-date-autoclose="true" data-date-format="yyyy-mm-dd" id="dpd1" name="start_time" placeholder="开始时间" type="text" value="{$start_time}">
+            </div>
+            <div class="col-sm-4">
+              <input class="form-control" data-date-autoclose="true" data-date-format="yyyy-mm-dd" id="dpd2" name="end_time" placeholder="到期时间" type="text" value="{$end_time}">
+            </div> 
+          </div>
+          <div class="form-group">
+            <label class="control-label col-md-2">产品类型</label>  
+            <div class="col-md-8"> 
+              <select id="productId" name="productId" class="form-control"> 
+              	<option value="">请选择</option>
+              	<foreach name="Product" item="v"> 
+              	  <option value="{$v['id']}" <if condition="$Memorandum['proId']==$v['id']">selected="selected"</if>>{$v['name']}</option> 
+              	</foreach> 
+              </select>
+            </div> 
+          </div>
+          <div class="form-group">
+            <label class="control-label col-md-2">合同金额</label> 
+            <div class="col-md-8"> 
+              <div class="input-group">
+                <input id="money" name="money" class="form-control" placeholder="合同金额" type="text" value="{$Memorandum['money']}"><span class="input-group-addon">元</span> 
+              </div> 
+            </div> 
+          </div>
+          <div class="form-group">
+            <label class="control-label col-md-2">税点</label> 
+            <div class="col-md-8">
+              <label class="radio-inline"><input <if condition="$shuilv != 2"> checked=""</if> name="shuilv" type="radio" value="1"><span>0</span></label><label class="radio-inline"><input <if condition="$shuilv==2">checked=""</if> name="shuilv" type="radio" value="2"><span>0.17</span></label>
+            </div> 
+          </div> 
+          <div class="form-group">
+            <label class="control-label col-md-2">合同备注</label> 
+            <div class="col-md-8">
+              <textarea id="memo" name="memo" class="form-control" rows="3">{$Memorandum['memo']}</textarea> 
+              <input id="mphoto" name="mphoto" type="hidden" value="{$Memorandum['photo_address']}" />
+            </div> 
+          </div>
+	      </div>
+	      <div class="col-md-6">
+	      	<div class="form-group">
+	          <div class="col-gl-12"> 
+	            <div class="fileupload fileupload-new" data-provides="fileupload">
+	              <if condition="$kind==1">
+                	<if condition="$address == 5">
+                		<div class="fileupload-new img-thumbnail" style="width: 200px; height: 150px;"> 
+                		<img id="moren" src="__ROOT__/Upload/moren.gif"> 
+                	<else />
+                		<div class="fileupload-new img-thumbnail" style="width: 450px; height: 450px;">	 
+                		<img id="moren" src="__ROOT__/{$photo_address}"> 
+                	</if>
+	              <else />
+	                <div class="fileupload-new img-thumbnail" style="width: 200px; height: 150px;"> 
+	                	<img id="moren" src="__ROOT__/Upload/moren.gif"> 
+	              </if> 
+	              </div> 
+	              <div class="fileupload-preview fileupload-exists img-thumbnail" style="width: 450px; max-height: 450px"> 
+	              		<img class="img-responsive" src="__ROOT__/{$photo_address}"> 
+	              </div>                
+	              <div> 
+	              <span class="btn btn-default btn-file"><span class="fileupload-new">选择合同附件</span><span class="fileupload-exists">改变合同附件</span><input type="file" id="photo" name="photo"></span><a class="btn btn-default fileupload-exists" data-dismiss="fileupload" href="#">删除合同附件</a>
+	             </div> 
+	           </div> 
+            </div> 
+           </div> 
+           <div class="form-group pull-left">
+	        <label class="control-label col-md-2"></label> 
+		      <div class="col-md-12"> 
+	            <button class="btn btn-primary" type="submit">保存</button> 
+	          </div> 
+	      </div>
+	      </div>
+        </form> 
+      </div>
+    </div>
+  </div> 
+</div>
+<!-- 客户选择模态框 --> 
+<div class="modal fade" id="myModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button aria-hidden="true" class="close" data-dismiss="modal" type="button">&times;</button> 
+        <h4 class="modal-title"> 
+          	客户选择
+        </h4>
+      </div>
+      <div class="modal-body" id="clientList">  
+        <div class="form-group">
+	      <div class="modal-body">
+	        <div class="col-md-6"> 
+	          <div class="input-group">
+	            <input id="clientKey" class="form-control" type="text" placeholder="客户名称"><span class="input-group-btn"><button id="searchList" class="btn btn-default" type="button">搜索</button></span></input> 
+	          </div> 
+	        </div> 
+            <table class="table table-striped">  
+              <tbody id="clients"></tbody>  
+            </table>
+            <div class="pull-right" id="page"></div> 
+	      </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

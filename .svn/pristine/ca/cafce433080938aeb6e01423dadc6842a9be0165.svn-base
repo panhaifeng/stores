@@ -1,0 +1,10 @@
+<style type="text/css"> 
+.baseul li a {color:#999999; }
+.modal-dialog {
+    left: 50%;
+    padding-bottom: 30px;
+    padding-top: 30px;
+    right: auto;
+    width: 1000px;
+}
+</style>

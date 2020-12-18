@@ -1,0 +1,391 @@
+<script type="text/javascript">
+    (function ($)
+    {
+        $.fn.textSearch = function (str, options)
+        {
+            var defaults =
+                {
+                    divFlag : true, divStr : " ", markClass : "", markColor : "red", nullReport : true, emptyReport : true,
+                    callback : function (test)
+                    {
+                        return false;
+                    }
+                };
+            var sets = $.extend({}, defaults, options || {}), clStr;
+            if (sets.markClass) {
+                clStr = "class='" + sets.markClass + "'";
+            }
+            else {
+                clStr = "style='color:" + sets.markColor + ";'";
+            }
+            //对前一次高亮处理的文字还原
+            $("span[rel='mark']", $(this)).each(function ()
+            {
+                var text = document.createTextNode($(this).text());
+                $(this).replaceWith($(text));
+            });
+            //字符串正则表达式关键字转化
+            $.regTrim = function (s)
+            {
+                var imp = /[\^\.\\\|\(\)\*\+\-\$\[\]\?]/g;
+                var imp_c = {};
+                imp_c["^"] = "\\^";
+                imp_c["."] = "\\.";
+                imp_c["\\"] = "\\\\";
+                imp_c["|"] = "\\|";
+                imp_c["("] = "\\(";
+                imp_c[")"] = "\\)";
+                imp_c["*"] = "\\*";
+                imp_c["+"] = "\\+";
+                imp_c["-"] = "\\-";
+                imp_c["$"] = "\$";
+                imp_c["["] = "\\[";
+                imp_c["]"] = "\\]";
+                imp_c["?"] = "\\?";
+                s = s.replace(imp, function (o)
+                {
+                    return imp_c[o];
+                });
+                return s;
+            };
+            $(this).each(function ()
+            {
+                var t = $(this);
+                str = $.trim(str);
+                if (str === "") {
+                    if(sets.emptyReport){
+                        alert("关键字为空");
+                    }
+                    return false;
+                }
+                else
+                {
+                    //将关键字push到数组之中
+                    var arr = [];
+                    if (sets.divFlag) {
+                        arr = str.split(sets.divStr);
+                    }
+                    else {
+                        arr.push(str);
+                    }
+                }
+                var v_html = t.html();
+
+                //删除注释
+                v_html = v_html.replace(/<!--(?:.*)\-->/g, "");
+                //将HTML代码支离为HTML片段和文字片段，其中文字片段用于正则替换处理，而HTML片段置之不理
+                var tags = /[^<>]+|<(\/?)([A-Za-z]+)([^<>]*)>/g;
+                var a = v_html.match(tags), test = 0;
+                $.each(a, function (i, c)
+                {
+                    if (!/<(?:.|\s)*?>/.test(c))
+                    {
+                        //非标签
+                        //开始执行替换
+                        $.each(arr, function (index, con)
+                        {
+                            if (con === "") {
+                                return;
+                            }
+                            var reg = new RegExp($.regTrim(con), "g");
+                            if (reg.test(c)) {
+                                //正则替换
+                                c = c.replace(reg, "♂" + con + "♀");
+                                test = 1;
+                            }
+                        });
+                        c = c.replace(/♂/g, "<span rel='mark' " + clStr + ">").replace(/♀/g, "</span>");
+                        a[i] = c;
+                    }
+                });
+                //将支离数组重新组成字符串
+                var new_html = a?a.join(""):'';
+                t.html(new_html);
+                if (test === 0 && sets.nullReport) {
+                    return false;
+                }
+                //执行回调函数
+                sets.callback(test);
+            });
+        };
+    })(jQuery);
+
+    function dateChange(value){
+    var date = new Date();
+    var year = parseInt(date.getFullYear());
+    var month = parseInt(date.getMonth())+1;
+    var last = new Date(year,month,0).getDate();
+    if(value==1){
+        var start_time = year+"-"+month+"-"+1;
+        var end_time = year+"-"+month+"-"+last;
+        $('#dpd1').val(start_time);
+        $('#dpd2').val(end_time);
+    }else if(value==2){
+        if(month==1){
+            var year = year - 1;
+            var month = 12;
+            var last = new Date(year,12,0).getDate();
+            var start_time = year+"-"+month+"-"+1;
+            var end_time = year+"-"+month+"-"+last;
+            $('#dpd1').val(start_time);
+            $('#dpd2').val(end_time);
+        }else{
+            var month = month - 1;
+            var last = new Date(year,month,0).getDate();
+            var start_time = year+"-"+month+"-"+01;
+            var end_time = year+"-"+month+"-"+last;
+            $('#dpd1').val(start_time);
+            $('#dpd2').val(end_time);
+        }
+    }else if(value==3){
+        var start_time = year+"-"+01+"-"+1;
+        var end_time = year+"-"+12+"-"+last;
+        $('#dpd1').val(start_time);
+        $('#dpd2').val(end_time);
+    }else{
+        var end_time = year+"-"+month+"-"+last;
+        $('#dpd1').val('2014-01-01');
+        $('#dpd2').val(end_time);
+    };
+ }
+
+ $(function(){
+     // 切换模式
+     var $quickSwitch = $('#quickSwitch'),
+         $quickSubmit = $('#quickSubmit'),
+         $quickSearch = $('#quickSearch'),
+         $quickOrder  = $('#inlinetype'),
+         $trsCopy = $('.rowsData tbody tr').clone(true),
+         _rowsObject = [],
+         _cacheData = [];
+
+     // 绑定模式切换功能
+     $quickSwitch.click(function(){
+         var nowType = $(this).data('type');
+
+         if(nowType == 'on'){
+             // 当前「开启」，转入正常模式
+             closeQuickModel();
+             // 恢复初始状态
+             recoverTable();
+
+         }else if(nowType = 'off'){
+             // 当前「关闭」，转入快捷入库模式
+             openQuickModel();
+             // 初始化
+             initRows();
+         }
+     });
+     // 绑定检索功能
+     $quickSearch.click(function(){
+         searchInPage();
+     });
+
+     // 数据行排序
+     $quickOrder.change(function(){
+         var type = $quickOrder.val();
+         sortRows(type);
+     });
+
+     // 绑定数据录入
+     $('.rowsData tbody').on('change', '[name="preChuku[]"]', function(){
+         var $that = $(this);
+         cacheData($that);
+     });
+
+     // 绑定提交事件
+     $quickSubmit.click(function(){
+         // 提交表单
+         var url = $(this).data('url'),
+             args = [];
+         var $checkboxes = $('[name="preChuku[]"]:checked');
+         $checkboxes.each(function(){
+             args.push({"name":"proId[]", "value":$(this).val()});
+             args.push({"name":"proNum[]", "value":''});
+         });
+         myPost(url,args);
+     });
+     var myPost = function(url,args){
+         var body = $(document.body),
+             form = $("<form method='post'></form>"),
+             input;
+         form.attr({"action":url});
+         $.each(args,function(key,value){
+             input = $("<input type='hidden'>");
+             input.attr("name",value.name);
+             input.val(value.value);
+             form.append(input);
+         });
+
+         form.appendTo(document.body);
+         form.submit();
+         document.body.removeChild(form[0]);
+     };
+
+     function insertSort(arr){
+         for(var i =1,j;i<arr.length;i++){
+             j=i;
+             var v=arr[j],
+                 numA = $(arr[j-1]).attr('id')*1,
+                 numB = $(v).attr('id')*1;
+             while(numA > numB){
+                 arr[j] = arr[j-1];
+                 j--;
+                 if(j == 0){
+                     break;
+                 }
+             }
+             $(v).removeClass('ordering');
+             arr[j]= v;
+         }
+         return arr;
+     }
+
+     var sortRows = function(type){
+         // 将要排序的行打标签「ordering」
+         var $rows = $('.rowsData tbody tr').addClass('ordering');
+
+         var $orderTarget = null;
+
+
+         if(type == 1){
+             // 已选置顶
+             $orderTarget = $('.rowsData tbody tr.chukuChecked');
+
+             $orderTarget = $(insertSort($orderTarget.toArray()));
+
+             $orderTarget.detach().insertBefore('.rowsData tbody tr.ordering:first');
+
+         }else if(type == 2){
+             // 已选置底
+             $orderTarget = $('.rowsData tbody tr.chukuChecked');
+
+             $orderTarget = $(insertSort($orderTarget.toArray()));
+
+             $orderTarget.insertAfter('.rowsData tbody tr.ordering:last');
+
+         }else{
+             $orderTarget = $('.rowsData tbody tr.ordering');
+             var size = $orderTarget.size();
+             for(var i =1; i<size;i++){
+                 var $tmp =$('.rowsData tbody').find('#'+i).removeClass('ordering');
+                 $('.rowsData tbody tr.ordering:first').before($tmp.detach());
+             }
+             // 最后一个可以忽略不排序
+         }
+         // 结束排序
+         $rows.removeClass('ordering');
+
+         return true;
+     };
+
+
+     var closeQuickModel = function(){
+         // 切换按钮样式
+         $quickSwitch.find('span').text('开启快捷出库');
+         $quickSwitch.data('type', 'off');
+         $quickSwitch.find('i').removeClass('icon-eye-open').addClass('icon-eye-close');
+
+         $quickSubmit.hide();
+         // 关闭操作栏
+         $('.quickColumn').css('display', 'none');
+         // 恢复搜索框提交功能
+         $('div.quickSearch').hide();
+         $('.normalSearch').show();
+         $('#exportBtn').show();
+
+         $('span#chukuChengpinNum').data('count', 0).text('0');
+
+     };
+
+     // 打开快捷出库模式
+     var openQuickModel = function(){
+         // 切换按钮样式
+         $quickSwitch.find('span').text('关闭快捷出库');
+         $quickSwitch.data('type', 'on');
+         $quickSwitch.find('i').removeClass('icon-eye-close').addClass('icon-eye-open');
+
+         $quickSubmit.show();
+         // 开启操作栏
+         $('.quickColumn').css('display', '');
+         // 限制搜索框提交功能，变为本页内检索
+         $('div.quickSearch').show();
+         $('.normalSearch').hide();
+         $('#exportBtn').hide();
+     };
+     var cacheData = function($that){
+         var $countSpan = $('span#chukuChengpinNum'),
+             count = $countSpan.data('count');
+         count = parseFloat(count)?parseFloat(count):0;
+         var id = $that.val();
+         var isCheck = $that.parents('td').find('span.checkSpan').text()=='已选'?true:false;
+
+         if($that.is(':checked')){
+             // 选中状态
+             $that.parents('tr').addClass('chukuChecked');
+             $that.parents('td').find('span.checkSpan').text('已选');
+             if(!isCheck){
+                 count = count + 1;
+             }
+         }else{
+             // 取消选中状态
+             $that.parents('tr').removeClass('chukuChecked');
+             $that.parents('td').find('span.checkSpan').text('');
+             if(isCheck){
+                 count = count - 1;
+             }
+         }
+         $countSpan.data('count', count).text(count);
+
+     }
+
+     // 初始化行数据
+     var initRows = function(){
+         var i = 1;
+         $('.rowsData tbody tr').each(function(){
+             // 记忆初始化排序, // 记忆初始化样式
+             $(this).addClass('initorder').attr('id', i++);
+             $(this).find('[name="preChuku[]"]').data('choose', 'false');
+         });
+     };
+
+     // 还原表
+     var recoverTable = function(){
+         // 还原样式
+         // 还原排序
+         $('.rowsData tbody').html($trsCopy.clone(true));
+     };
+
+     // 页面内查询
+     var searchInPage = function(){
+         var searchText = $('[name="inlinekey"]').val();
+         // 筛选选中项, 已填写出库数量的不在检索范围内
+         $('.rowsData tbody tr').textSearch(searchText, {"emptyReport":false});
+         // 重选checkbox
+
+         $('.rowsData tbody tr [name="preChuku[]"]').each(function(){
+
+             var isCheck = $(this).parents('td').find('span.checkSpan').text();
+
+             if('已选'== isCheck ){
+                 $(this).parents('td').find('label.checkbox-inline').click();
+             }
+         });
+
+
+         $('.rowsData tbody tr:not(.chukuChecked)').each(function(){
+             if(searchText){
+                 if($(this).find('[rel="mark"]').size()>0){
+                     $(this).show();
+                 }else{
+                     $(this).hide();
+                 }
+             }else{
+                 $(this).show();
+             }
+         });
+     };
+
+
+ });
+</script>

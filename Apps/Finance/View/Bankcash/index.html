@@ -1,0 +1,91 @@
+<div class="row">
+  <div class="col-lg-12">
+    <div class="widget-container fluid-height clearfix">
+      <div class="heading">
+        <i class="icon-table"></i>账户余额表
+      </div>
+      <div class="widget-content padded clearfix">
+      <form action="{:U('Finance/Bankcash/index')}" class="form-horizontal" method="post"> 
+	    <table class="tab search">  
+	      <tbody> 
+	        <tr>
+		      <td>
+		      	<select class="form-control" tabindex="1" name="time_kind" id="time_kind" onchange=dateChange(this.value)> 
+	              <option value="0" <if condition="$time_kind==0">selected="selected"</if>>全部</option> 
+	              <option value="1" <if condition="$time_kind==1">selected="selected"</if>>本月</option> 
+	              <option value="2" <if condition="$time_kind==2">selected="selected"</if>>上月</option> 
+	              <option value="3" <if condition="$time_kind==3">selected="selected"</if>>本年</option> 
+	            </select> 
+		      </td> 
+	          <td> 
+	              <input class="form-control" data-date-autoclose="true" data-date-format="yyyy-mm-dd" id="dpd1" name="start_time" placeholder="开始时间" type="text" value="{$start_time}"> 
+	          </td> 
+	          <td> 
+	          	  <input class="form-control" data-date-autoclose="true" data-date-format="yyyy-mm-dd" id="dpd2" name="end_time" placeholder="结束时间" type="text" value="{$end_time}"> 
+	          </td>
+	          <!-- <td><input class="form-control"  name="company" type="text" placeholder="客户名称" value="{$company}"></td> -->
+	          <td><button type="submit"  class="btn btn-primary sousuo"><i class="icon-search"></i> 搜索</button></td> 
+	        </tr> 
+	      </tbody> 
+	    </table> 
+	  </form> 
+	  </div> 
+      <div class="widget-content padded clearfix"> 
+        <!-- <table class="table table-bordered table-striped" id="datatable-editable"> -->
+        <table class="table table-bordered table-hover"> 
+          <thead>
+           <tr>
+	            <th> 账户名称       </th> 
+	            <th> 期初余额</th> 
+	            <th> 本期往来  </th>
+	            <th> 期末余额 </th>  
+            </tr> 
+          </thead> 
+          <tbody>
+         	<foreach name="bank" item="v"> 
+              <tr class="trRow"> 
+                <td>{$v['bankname']}</td> 
+                <td>{$v['initMoney']}</td> 
+                <td> <a class="table-actions mingxi" data-toggle="modal" value="{$v['id']}" timekind="{$time_kind}" begintime="{$start_time}" endtime="{$end_time}"> {$v['wanglai']}</a>
+                
+                <!--开票模态框 --> 
+				      <div class="modal fade" id="myModaWang"> 
+	                    <div class="modal-dialog">
+	                      <div class="modal-content"> 
+	                        <div class="modal-header">
+	                          <button aria-hidden="true" class="close" data-dismiss="modal" type="button">&times;</button>
+	                          <h4 class="modal-title">
+	                         	本期往来明细
+	                          </h4>
+	                        </div>
+						      <div class="modal-body">
+					            <table class="table table-striped "> 
+					              <tbody id="mingxi"></tbody>  
+					            </table>
+						      </div>
+	                   	  </div>
+	                    </div>
+		              </div> 
+		              <!-- 模态框结束 --> 
+          <!-- 模态框结束 -->
+                </td> 
+                <td>{$v['cntMoney']}</td> 
+               
+              </tr> 
+            </foreach> 
+             <tr>
+	            <th>合计 </th> 
+	            <th>{$totalMoney}</th> 
+	            <th>{$wanglaiMoney}</th> 
+	            <th>{$yuMoney}</th> 
+            </tr> 
+          </tbody> 
+        </table> 
+         
+        <span> 
+			{$page} 
+		</span>
+      </div>
+    </div>
+  </div>
+</div>

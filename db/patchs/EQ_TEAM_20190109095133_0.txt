@@ -1,0 +1,2 @@
+ALTER TABLE `ykb_aftersales`
+ADD COLUMN `memoYy`  varchar(250) NOT NULL COMMENT '运营备注' AFTER `clientName`;

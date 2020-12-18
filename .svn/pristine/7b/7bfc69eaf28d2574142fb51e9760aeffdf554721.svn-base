@@ -1,0 +1,17 @@
+<script type="text/javascript">
+function checkOrderId(){
+	var orderId = document.getElementById('orderId').value;
+	var ids = document.getElementById('id').value;
+	
+    $.get('{:U("Profit/Aftersales/getOrderId")}', {'orderId':orderId,'ids':ids}, function(data){
+        if(data){
+        	alert('该订单号已存在，请重新输入！');
+        	document.getElementById('orderId').value = '';
+        	return false;
+        }
+	});
+	
+
+}
+
+</script>

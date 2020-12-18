@@ -1,0 +1,455 @@
+<?php
+namespace Storehouse\Controller;
+use Common\Controller\CommonController;
+class IndexController extends CommonController {
+
+    /**
+     * 库存查询
+     * @author xuli
+     * 2015-1-27
+     */
+    public function index(){
+        $conditions = I('param.');
+        $arr = array();
+        if($conditions['start_time'] != NULL && $conditions['end_time'] != NULL){
+            $time[0] = strtotime($conditions['start_time']);
+            $time[1] = strtotime($conditions['end_time']);
+            $map['dateFasheng'] = array('between',array($time[0],$time[1]));
+            $this->start_time = $conditions['start_time'];
+            $this->end_time = $conditions['end_time'];
+
+            $arr['start_time'] = $this->start_time;
+            $arr['end_time'] = $this->end_time;
+        }else{
+            //TODO:需优化！太难看了，虽然功能OK了
+            if($conditions['time_kind'] !=NULL){
+
+            }else{
+                $time[0] = strtotime(date('Y-m-1'));
+                $time[1] = strtotime(date("Y-m-d"));
+                $map['dateFasheng'] = array('between',array($time[0],$time[1]));
+                $this->start_time = date('Y-m-1');
+                $this->end_time = date("Y-m-d");
+
+                $arr['start_time'] = $this->start_time;
+                $arr['end_time'] = $this->end_time;
+            }
+        }
+        if($conditions['time_kind'] !=NULL){
+            $this->time_kind = $conditions['time_kind'];
+        }else{
+            $this->time_kind = 1;
+        }
+        $arr['time_kind'] = $this->time_kind;
+
+        if($conditions['key']!=NULL){
+            $map['key'] = $conditions['key'];
+            $this->key = $map['key'];
+        }
+        $arr['key'] = $this->key;
+
+
+        //期初库存
+        $initSql = "select 
+                    (IFNULL(sum(a.initCnt),0) + IFNULL(sum(a.cntRuku),0) - IFNULL(sum(a.cntChuku),0)) as initKucun,
+                    null as cntChuku, 
+                    null as cntChukuAuto,
+                    null as cntChukuQt,
+                    null as cntRuku, 
+                    a.proId  
+                from (
+                    select 
+                    null as initCnt,
+                    null as cntChuku,
+                    null as cntChukuAuto,
+                    null as cntChukuQt,
+                    sum(x.cntFasheng) as cntRuku,
+                    x.proId as proId
+                    from ykb_kucun x 
+                    where x.kind in('入库','原料入库','调库入库','原料退回') and x.dateFasheng<'{$time[0]}' group by x.proId
+
+                    UNION
+
+                    select 
+                    null as initCnt,
+                    sum(-x.cntFasheng) as cntChuku,
+                    null as cntChukuAuto,
+                    null as cntChukuQt,
+                    null as cntRuku,
+                    x.proId as proId
+                    from ykb_kucun x
+                    where x.kind in('出库','原料出库','调库出库') and x.dateFasheng<'{$time[0]}' group by x.proId
+                     ) as a group by a.proId";
+
+        //本期发生
+        $bqSql = "
+            select 
+            null as initKucun,
+            sum(a.cntChuku) as cntChuku,
+            sum(a.cntChukuAuto) as cntChukuAuto,
+            sum(a.cntChukuQt) as cntChukuQt,
+            sum(a.cntRuku) as cntRuku,
+            a.proId
+            from (
+                select 
+                null as initKucun,
+                null as cntChuku,   
+                null as cntChukuAuto,   
+                null as cntChukuQt,	
+                sum(x.cntFasheng) as cntRuku,	
+                x.proId as proId
+                from ykb_kucun x 
+                where x.kind in('入库','原料入库','调库入库','原料退回')  and x.dateFasheng>='{$time[0]}' and x.dateFasheng<='{$time[1]}' group by x.proId
+
+                UNION
+
+                select 
+                null as initKucun,
+                sum(-x.cntFasheng) as cntChuku,
+                null as cntChukuAuto,   
+                null as cntChukuQt, 
+                null as cntRuku,
+                x.proId as proId
+                from ykb_kucun x 
+                where x.kind in('出库','原料出库','调库出库') and x.dateFasheng>='{$time[0]}' and x.dateFasheng<='{$time[1]}' group by x.proId
+
+                UNION
+
+                select 
+                null as initKucun,
+                null as cntChuku,   
+                sum(-x.cntFasheng) as cntChukuAuto,
+                null as cntChukuQt, 
+                null as cntRuku,
+                x.proId as proId
+                from ykb_kucun x 
+                LEFT JOIN ykb_chuku_product y on x.chuku2proId=y.id
+                where x.kind in('出库','原料出库','调库出库') and y.cpid>0 and x.dateFasheng>='{$time[0]}' and x.dateFasheng<='{$time[1]}' group by x.proId
+
+                UNION
+
+                select 
+                null as initKucun,
+                null as cntChuku,   
+                null as cntChukuAuto, 
+                sum(-x.cntFasheng) as cntChukuQt,
+                null as cntRuku,
+                x.proId as proId
+                from ykb_kucun x 
+                LEFT JOIN ykb_chuku_product y on x.chuku2proId=y.id
+                where x.kind in('出库','原料出库','调库出库') and y.cpid=0 and y.chukuId>0 and x.dateFasheng>='{$time[0]}' and x.dateFasheng<='{$time[1]}' group by x.proId
+                 ) as a group by a.proId";
+
+        $whereSql = isset($map['key'])?" (p.code like '%{$map['key']}%'
+             or p.kind like '%{$map['key']}%'
+             or p.name like '%{$map['key']}%'
+             or p.norms like '%{$map['key']}%' )":' 1 ';
+
+        //整合SQL
+        $sql = "SELECT 
+             a.proId,
+             round(IFNULL(sum(a.initKucun),0),2) as initKucun,
+             round(sum(a.cntRuku),2) as cntRuku,
+             round(sum(a.cntChuku),2) as cntChuku,
+             round(sum(a.cntChukuAuto),2) as cntChukuAuto,
+             round(sum(a.cntChukuQt),2) as cntChukuQt,
+             round((IFNULL(sum(a.initKucun),0)+IFNULL(sum(a.cntRuku),0)-IFNULL(sum(a.cntChuku),0)),2) as cnt,
+             p.code, 
+             p.kind, 
+             p.name, 
+             p.norms
+             from(
+                  $initSql UNION $bqSql 
+             ) as a 
+             left join ykb_base_product p on a.proId=p.id 
+             where  a.proId <> 0 and {$whereSql} 
+             group by a.proId order by a.proId  
+          ";
+        $Model = M();
+        $rows=$Model->query($sql);
+
+        foreach ($rows as & $row){
+            $row['initKucun'] = round($row['initKucun'], 0);
+            $row['cntRuku'] = round($row['cntRuku'], 0);
+            $row['cntChuku'] = round($row['cntChuku'], 0);
+            $row['cnt'] = round($row['cnt'], 0);
+        }
+        //导出
+        if($conditions['export']==1){
+            $rowset = array();
+            foreach ($rows as $row){
+                $rowset[] = array(
+                    'code' => $row['code'],
+                    'kind' => $row['kind'],
+                    'name' => $row['name'],
+                    'norms'=> $row['norms'],
+                    'initKucun'=> $row['initKucun'],
+                    'cntRuku'=>$row['cntRuku'],
+                    'cntChuku'=>$row['cntChuku'],
+                    'cnt'   => $row['cnt'],
+                );
+            }
+            $filename=date('Y-m-d',time()).'原料库存导出';
+            $this->exportexcel($rowset,array('原料编码','原料类型','原料名称','原料规格','期初数量','本期入库','本期出库','期末库存'),$filename);
+            exit;
+        }
+        $this->Kucun = $rows;
+        $this->arr = $arr;
+        $this->display();
+    }
+
+
+    /**
+     * 库存预警信息报告
+     */
+    public function kucunSafeReport(){
+
+        $map =  array();
+
+        $sql = "
+            SELECT sum(cntFasheng) as kucunNum,
+                   sum(cntFasheng) - pro.safeCnt  as num,
+                   pro.safeCnt as safeNum,
+                   pro.name,pro.code,pro.kind,pro.norms,pro.id,pro.maxBuyCnt
+            FROM  ykb_base_product pro
+            LEFT JOIN ykb_kucun ON pro.id = proId
+            WHERE 1
+            GROUP BY proId
+            HAVING (kucunNum - safeNum)<= 0
+            ORDER BY num
+        ";
+        $kucun = M()->query($sql);
+
+        foreach ($kucun as & $v){
+            $v['num'] = -$v['num'];
+        }
+
+        $this->rows = $kucun;
+        $this->display();
+    }
+
+
+    public function YlReport(){
+        $conditions = I('param.');
+        if($conditions['start_time'] != NULL && $conditions['end_time'] != NULL){
+            $time[0] = strtotime($conditions['start_time']);
+            $time[1] = strtotime($conditions['end_time']);
+            $map['dateFasheng'] = array('between',array($time[0],$time[1]));
+            $this->start_time = $conditions['start_time'];
+            $this->end_time = $conditions['end_time'];
+
+            $arr['start_time'] = $this->start_time;
+            $arr['end_time'] = $this->end_time;
+        }else{
+            //TODO:需优化！太难看了，虽然功能OK了
+            if($conditions['time_kind'] !=NULL){
+
+            }else{
+                $time[0] = strtotime(date('Y-m-1'));
+                $time[1] = strtotime(date("Y-m-d"));
+                $map['dateFasheng'] = array('between',array($time[0],$time[1]));
+                $this->start_time = date('Y-m-1');
+                $this->end_time = date("Y-m-d");
+
+                $arr['start_time'] = $this->start_time;
+                $arr['end_time'] = $this->end_time;
+            }
+        }
+        if($conditions['time_kind'] !=NULL){
+            $this->time_kind = $conditions['time_kind'];
+        }else{
+            $this->time_kind = 1;
+        }
+        $arr['time_kind'] = $this->time_kind;
+
+
+        if($conditions['key']!=NULL){
+            $map['key'] = trim($conditions['key']);
+            $this->key = $map['key'];
+        }
+        $arr['key'] = $this->key;
+
+        //期初库存
+        $initSql = "SELECT 
+                    (IFNULL(sum(a.initCnt),0) + IFNULL(sum(a.cntRuku),0) - IFNULL(sum(a.cntChuku),0)+ IFNULL(sum(a.curCntBack),0)) as initKucun,
+                    (IFNULL(sum(a.rukuMoney),0)- IFNULL(sum(a.chukuMoney),0)+IFNULL(sum(a.backMoney),0)) as initMoney,
+                    null as cntChuku, 
+                    null as cntRuku, 
+                    null as rukuMoney,   
+                    null as chukuMoney,   
+                    null as backMoney,
+                    null as curCntBack,
+                    a.proId  
+                from (
+                    SELECT 
+                    null as initCnt,
+                    null as cntChuku,
+                    sum(x.cntFasheng) as cntRuku,
+                    sum(x.cntFasheng*x.priceFasheng) as rukuMoney,
+                    null as chukuMoney,   
+                    null as backMoney,
+                    null as curCntBack,
+                    x.proId as proId
+                    from ykb_kucun x 
+                    where x.kind in('原料入库','入库')  and x.dateFasheng<'{$time[0]}' group by x.proId 
+
+                    UNION
+
+                    SELECT 
+                    null as initCnt,
+                    sum(-x.cntFasheng) as cntChuku,
+                    null as cntRuku,
+                    null as rukuMoney,   
+                    sum(-1*x.cntFasheng*x.priceFasheng) as chukuMoney,
+                    null as backMoney,
+                    null as curCntBack,
+                    x.proId as proId
+                    from ykb_kucun x
+                    where x.kind in('原料出库','出库')  and x.dateFasheng<'{$time[0]}' group by x.proId
+
+                    UNION
+
+                    SELECT 
+                    null as initCnt,
+                    null as cntChuku,
+                    null as cntRuku,
+                    null as rukuMoney,   
+                    null as chukuMoney,
+                    sum(x.cntFasheng*x.priceFasheng) as backMoney,
+                    sum(x.cntFasheng) as curCntBack,
+                    x.proId as proId
+                    from ykb_kucun x
+                    where x.kind = '原料退回' and x.dateFasheng<'{$time[0]}' group by x.proId
+                     ) as a group by a.proId";
+        //本期发生
+        $bqSql = "SELECT 
+            null as initKucun,
+            null as initMoney,
+            sum(a.cntChuku) as cntChuku,
+            sum(a.cntRuku) as cntRuku,
+            sum(a.rukuMoney) as rukuMoney,
+            sum(-a.chukuMoney) as chukuMoney,
+            sum(a.backMoney) as backMoney,
+            sum(a.curCntBack) as curCntBack,
+            a.proId
+            from (
+                SELECT 
+                null as initKucun,
+                null as initMoney,
+                null as cntChuku,   
+                sum(x.cntFasheng) as cntRuku,   
+                sum(x.cntFasheng*x.priceFasheng) as rukuMoney,   
+                null as chukuMoney,   
+                null as backMoney,
+                null as curCntBack,
+                x.proId as proId
+                from ykb_kucun x 
+                where x.kind in ('原料入库') and x.dateFasheng>='{$time[0]}' and x.dateFasheng<='{$time[1]}' group by x.proId
+
+                UNION
+
+
+                SELECT 
+                null as initKucun,
+                null as initMoney,
+                sum(-x.cntFasheng) as cntChuku,
+                null as cntRuku,
+                null as rukuMoney,   
+                sum(x.cntFasheng*x.priceFasheng) as chukuMoney,   
+                null as backMoney,
+                null as curCntBack,
+                x.proId as proId
+                from ykb_kucun x 
+                where x.kind = '原料出库' and x.dateFasheng>='{$time[0]}' and x.dateFasheng<='{$time[1]}' group by x.proId
+
+                UNION
+
+                SELECT 
+                null as initKucun,
+                null as initMoney,
+                null as cntChuku,
+                null as cntRuku,
+                null as rukuMoney,   
+                null as chukuMoney,   
+                sum(x.cntFasheng*x.priceFasheng) as backMoney,
+                sum(x.cntFasheng) as curCntBack,
+                x.proId as proId
+                from ykb_kucun x 
+                where x.kind = '原料退回' and x.dateFasheng>='{$time[0]}' and x.dateFasheng<='{$time[1]}' group by x.proId
+                 ) as a 
+                 
+                 
+             group by a.proId";
+
+        $whereSql = isset($map['key'])?"( p.code like '%{$map['key']}%'
+             or p.kind like '%{$map['key']}%'
+             or p.name like '%{$map['key']}%'
+             or p.norms like '%{$map['key']}%' )":' 1 ';
+        //整合SQL
+        $sql = "SELECT 
+             a.proId,
+             round(IFNULL(sum(a.initKucun),0),2) as initKucun,
+             round(IFNULL(sum(a.initMoney),0),2) as initMoney,
+             round(sum(a.cntRuku),2) as cntRuku,
+             round(sum(a.cntChuku),2) as cntChuku,
+             round((IFNULL(sum(a.initKucun),0)+IFNULL(sum(a.cntRuku),0)-IFNULL(sum(a.cntChuku),0) +IFNULL(sum(a.curCntBack),0) ),2) as cnt,
+             round(sum(a.rukuMoney),2) as rukuMoney,
+             round(sum(a.chukuMoney),2) as chukuMoney,
+             round((IFNULL(sum(a.initMoney),0)+IFNULL(sum(a.rukuMoney),0)-IFNULL(sum(a.chukuMoney),0)+IFNULL(sum(a.backMoney),0)),2) as kcMoney,
+             round(sum(a.backMoney),2) as backMoney,
+             round(sum(a.curCntBack),2) as curCntBack,
+             p.code, 
+             p.kind, 
+             p.name,
+             p.norms
+             from(
+                  $initSql UNION $bqSql 
+             ) as a 
+             left join ykb_base_product p on a.proId=p.id 
+             where a.proId <> 0 and {$whereSql} 
+             group by a.proId
+             having round((IFNULL(sum(a.initKucun),0)+IFNULL(sum(a.cntRuku),0)-IFNULL(sum(a.cntChuku),0)),2)<>0
+             order by a.proId";
+        // dump($sql);die;
+        $Model = M();
+        $rows=$Model->query($sql);
+
+
+        foreach ($rows as & $row){
+            $row['initKucun'] = round($row['initKucun'], 0);
+            $row['cntRuku'] = round($row['cntRuku'], 0);
+            $row['cntChuku'] = round($row['cntChuku'], 0);
+            $row['cnt'] = round($row['cnt'], 0);
+        }
+
+        //导出
+        if($conditions['export']==1){
+            $rowset = array();
+            foreach ($rows as $row){
+                $rowset[] = array(
+                    'code' => $row['code'],
+                    'kind' => $row['kind'],
+                    'name' => $row['name'],
+                    'norms'=> $row['norms'],
+                    'initKucun'=> $row['initKucun'],
+                    'cntRuku'=>$row['cntRuku'],
+                    'cntChuku'=>$row['cntChuku'],
+                    'cnt'   => $row['cnt'],
+                );
+            }
+            $filename=date('Y-m-d',time()).'成品库存导出';
+            $this->exportexcel($rowset,array('成品编码','成品类型','成品名称','成品规格','期初数量','本期入库','本期出库','期末库存'),$filename);
+            exit;
+        }
+
+        $heji = $this->getHeji($rows, array('kcMoney'));
+        $heji['code'] = '合计';
+        $rows[]=$heji;
+
+        $this->Kucun = $rows;
+        $this->arr = $arr;
+        $this->display();
+    }
+
+}
+?>

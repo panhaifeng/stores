@@ -1,0 +1,131 @@
+  </head>
+  <body>
+    <div class="modal-shiftfix"> 
+      <!-- Navigation -->
+      <div class="navbar navbar-fixed-top scroll-hide">
+        
+        <div class="container-fluid main-nav clearfix">
+          <div class="nav-collapse">
+            <ul class="nav">
+             <div class="cache pull-right">
+                  <a href="{:U('Cache/Cache/clearCacheInfo')}">清除缓存</a> 
+             </div>
+             <!--  <li class="dropdown"><a href="{:U('Memorandum/Index/index')}">  
+                <span aria-hidden="true" class="se7en-forms"></span>订单<b class="caret"></b></a>  
+              </li>  --> 
+              <li>
+                <a href="__ROOT__/"><span aria-hidden="true" class="se7en-home"></span>首页</a>
+              </li>
+                <li>
+                    <a href="{:U('Storehouse/Index/kucunSafeReport')}"><span aria-hidden="true" class="se7en-star"></span>库存警戒消息</a>
+                </li>
+                <li class="dropdown"><a data-toggle="dropdown" href="#">
+                <span aria-hidden="true" class="se7en-home"></span>仓库<b class="caret"></b></a> 	
+                <ul class="dropdown-menu"> 
+                  <li><a href="{:U('Cangku/Ruku/index')}"><p>入库管理</p></a></li>
+                  <li><a href="{:U('Profit/Plan/index')}"><p>采购计划</p></a></li>
+                  <li><a href="{:U('Storehouse/Index/index')}"><p>原料仓库</p></a></li> 
+                  <li><a href="{:U('Storehouse/Chengpin/index')}"><p>成品仓库</p></a></li> 
+                </ul>
+              </li> 
+              <li class="dropdown"><a data-toggle="dropdown" href="#">
+                <span aria-hidden="true" class="se7en-forms"></span>运营<b class="caret"></b></a>
+                  <ul class="dropdown-menu">
+                    <li><a href="{:U('Profit/Index/index')}"><p>利润表</p></a></li>
+                    <!--<li><a href="{:U('Profit/Product/index')}"><p>原料供应表</p></a></li>-->
+                  </ul>
+              </li>
+              <li class="dropdown"><a data-toggle="dropdown" href="#">  
+                <span aria-hidden="true" class="se7en-tables"></span>财务<b class="caret"></b></a> 
+                <ul class="dropdown-menu"> 
+                 <!--  <li><a href="{:U('Finance/Cpost/index')}"><p>过账管理</p></a></li>   -->
+                  <li><a href="{:U('Finance/Collection/index')}"><p>收款管理</p></a></li>  
+                  <li><a href="{:U('Finance/Payment/index')}"><p>付款管理</p></a></li>  
+                  <li><a href="{:U('Finance/Bank/index')}">内部转账</a></li> 
+                  <li><a href="{:U('Finance/Cash/index')}"><p>现金日报表</p></a></li>  
+                  <li><a href="{:U('Finance/Bankcash/index')}"><p>账户余额表</p></a></li>  
+                  <li><a href="{:U('Storehouse/Index/YlReport')}"><p>原料库存</p></a></li>  
+                  <li><a href="{:U('Finance/YfGz/index')}"><p>原料应付</p></a></li>  
+                  <li class="basenav"><a data-toggle="dropdown" href="#">基础资料</a>  
+                    <ul class="baseul"> 
+                      <li class="baseli"><a href="{:U('Finance/Base/bank')}"><p class="col-md-12" style="margin-left:-30%;font-size:10px;">银行账户管理</p></a></li>  
+	                  <li class="baseli"><a href="{:U('Finance/Base/collection')}"><p class="col-md-12" style="margin-left:-30%;font-size:10px;">收款项目管理</p></a></li>  
+	                  <li class="baseli"><a href="{:U('Finance/Base/payment')}"><p class="col-md-12" style="margin-left:-30%;font-size:10px;">付款项目管理</p></a></li> 
+                    </ul> 
+                  </li> 
+                </ul> 
+              </li>  
+              <li class="dropdown"><a data-toggle="dropdown" href="#">  
+                <span aria-hidden="true" class="se7en-flag"></span>售后<b class="caret"></b></a>  
+                <ul class="dropdown-menu"> 
+                  <!-- <li><a href="{:U('Profit/Aftersale/index')}"><p>售后服务</p></a></li> 
+                  <li><a href="{:U('Profit/Review/index')}"><p>售后服务审核</p></a></li> --> 
+                  <li><a href="{:U('Profit/Aftersales/index')}"><p>售后服务</p></a></li>
+                  <li><a href="{:U('Profit/Aftersales/secPage')}"><p>运营处理</p></a></li>
+                  <li><a href="{:U('Profit/Aftersales/thirdPage')}"><p>品控处理</p></a></li>
+                 <!--  <li><a href="{:U('Profit/Aftersales/fourthPage')}"><p>运营审核</p></a></li> -->
+                  <li><a href="{:U('Profit/Aftersales/report')}"><p>售后报表</p></a></li>
+                </ul>
+              </li> 
+              <li class="dropdown"><a data-toggle="dropdown" href="#"> 
+              	<span aria-hidden="true" class="se7en-pages"></span>基础<b class="caret"></b></a> 
+              	 <ul class="dropdown-menu"> 
+              	  <li><a href="{:U('Auth/Index/index')}"><p>权限设置</p></a></li> 
+                  <if condition="$_SESSION[C('ADMIN_AUTH_KEY')] eq true">
+                    <!-- <li><a href="{:U('Tool/Index/index')}"><p>工具入口</p></a></li>  -->
+                  </if>
+              	  <li class="basenav"><a data-toggle="dropdown" href="#"> 
+                                        基础资料</a>  
+                  <ul class="baseul"> 
+              	    <li class="baseli"><a href="{:U('Client/Client/indexClient')}"><p class="col-md-12" style="margin-left:-34%;font-size:10px;">客户档案</p></a></li>  
+                    <li class="baseli"><a href="{:U('Supplier/Index/index')}"><p class="col-md-12" style="margin-left:-34%;font-size:10px;">供应商档案</p></a></li> 
+                    <li class="baseli"><a href="{:U('Baseinfo/Product/index')}"><p class="col-md-12" style="margin-left:-34%;font-size:10px;">原料档案</p></a></li>
+                    <li class="baseli"><a href="{:U('Baseinfo/Chengpin/index')}"><p class="col-md-12" style="margin-left:-34%;font-size:10px;">成品档案</p></a></li> 
+                  </ul> 
+                </ul> 	
+              </li> 
+              <div class="aaaa pull-right">
+              <li class="dropdown user hidden-xs"><a data-toggle="dropdown" id="userinfo" class="dropdown-toggle" href="#">
+               {$_SESSION['real_name']}<b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                  <li><a href="JavaScript:;">
+                    <i class="icon-user"></i>个人中心</a>
+                  </li>
+                  <li><a href="{:U('Auth/User/resetPassword')}">
+                    <i class="icon-gear"></i>修改密码</a>
+                  </li>
+                  <li><a href="{:U('Home/Login/logout')}">
+                    <i class="icon-signout"></i>退出登录</a> 
+                  </li>
+                </ul>
+              </li>
+              </div>
+             <!--  <li class="dropdown"><a data-toggle="dropdown" href="#">  
+                <span aria-hidden="true" class="icon-cog"></span>系统设置<b class="caret"></b></a>
+                <ul class="dropdown-menu"> 
+                  
+                  <li>
+                    <a href="{:U('Baseinfo/BaseInfo/baseActiontype')}">数据字典</a> 
+                  </li> 
+                </ul>
+              </li> -->
+            <!--   <li class="dropdown"><a data-toggle="dropdown" href="#">
+                <span aria-hidden="true" class="se7en-feed"></span>办公<b class="caret"></b></a>
+                 <ul class="dropdown-menu">
+                  <li><a href="{:U('Notice/Notice/indexNotice')}"><p>公告</p></a></li> 
+                </ul>
+              </li> -->
+
+               <!-- <div class="cache pull-right">
+               		<a href="{:U('Cache/Cache/clearCacheInfo')}" class="btn btn-primary">清除缓存</a> 
+               </div> -->
+            </ul> 
+          </div>
+          
+        </div>
+       
+      </div>
+      <!-- End Navigation -->
+		
+
+		

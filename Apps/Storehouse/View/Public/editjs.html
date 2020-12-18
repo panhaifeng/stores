@@ -1,0 +1,156 @@
+<script type="text/javascript"> 
+	//原料入库登记界面
+	$(function(){
+		$('.contact2').hide();
+		//添加明细
+		$('.addproduct').click(function(){
+			_trModel = $('.contact2').eq(0).clone(true);
+				$('input,select',_trModel).val('');
+	 		$('#contactDiv').append(_trModel.clone(true)); 
+	 		$('#contactDiv').find('.contact2').show();
+		});
+		$('.ruku_remove').click(function(){
+			var sonid = $(this).parents('.product').find('#sonId').val();
+			$.post('{:U("Storehouse/Ruku/deletesonid")}',{id:sonid},function(){
+				location.reload(); 
+			})
+			$(this).parents('.product').remove();
+		});
+		//自动计算金额
+		$("[name='cnt[]']").change(function(){
+			var cnt = $(this).val();
+			var price = $(this).parents('.form-group').find("[name='price[]']").val();
+			if(price==""){
+				return false;
+			}
+			var money = $(this).parents('.form-group').find("[name='money[]']");
+			var m = parseFloat((parseFloat(cnt)*parseFloat(price)).toFixed(2));//js格式化数字并保留两位小数
+			money.val(m);
+		});
+
+		//自动计算金额
+		$("[name='price[]']").change(function(){
+			var price = $(this).val();
+			var cnt = $(this).parents('.form-group').find("[name='cnt[]']").val();
+			if(cnt=="" && price>0){
+				return false;
+			}
+			var money = $(this).parents('.form-group').find("[name='money[]']");
+			var m = parseFloat((parseFloat(cnt)*parseFloat(price)).toFixed(2));//js格式化数字并保留两位小数
+			money.val(m);
+		});
+		//判断是否填写了数量和金额
+		$("[name='money[]']").change(function(){
+			var cnt = $(this).parents('.form-group').find("[name='cnt[]']").val();
+			var price = $(this).parents('.form-group').find("[name='price[]']").val();
+			if(cnt==""||price==""){
+				alert("请先填写数量和单价,谢谢！");
+				$(this).val("");
+				return false;
+			}
+		})
+	});
+	//选择产品双击
+	function setProduct(id,name,code,norms,price,supplierId){
+		//将双击项填入表单
+		$('.aa').find('#product_name').val(name);
+		$('.aa').find('#product_code').val(code);
+		$('.aa').find('#product_norms').val(norms);
+		$('.aa').find('#productId').val(id);
+		$('.aa').find('#price').val(price);
+		$('.aa').find('#price').change();
+		$('.aa').find('#supplierId').val(supplierId);
+		$('#myModalc').modal('hide');
+		$('.product').removeClass('aa');//删除该class
+	}
+	//ajax分页
+	function product(id){    //test函数名 一定要和action中的第三个参数一致上面有
+		$.get('{:U("Storehouse/Ruku/productAjax")}', {'p':id}, function(data){  //用get方法发送信息到TestAction中的test方法
+     	var productHtml =  $('#product').html();
+     	if(data){ 
+    		$('#product').html("");
+			var html = "";
+			var name = "";
+			var id = "";
+			var code = "";
+			var norms = "";
+			var price = "";
+			var supplierId = "";
+
+			$.each(data.list,function(){
+				name = this['name'];
+				id = this['id'];
+				code = this['code'];
+				norms = this['norms'];
+				price = this['danjia']+0;
+				supplierId = this['supplierId'];
+				html += "<tr ondblclick=\"setProduct('"+id+"','"+name+"','"+code+"','"+norms+"','"+price+"','"+supplierId+"')\" style=\"cursor:pointer;\"><td style='width:200px;'>"+code+"</td><td style='width:200px;'>"+name+"</td><td style='width:200px;'>"+norms+"</td></tr>";
+				
+			});
+			$('#page2').html(data.page);
+			$("#product").html(html);
+		}
+		});
+	}
+	$(function(e) { 
+		$('.productSelect').click(function(){
+			$(this).parents('.product').addClass('aa');//目的是确定哪一个子类
+			$.get('{:U("Storehouse/Ruku/productAjax")}', {'p':1}, function(data){  //用get方法发送信息到TestAction中的test方法
+	     	var productHtml =  $('#product').html();
+	     	if(data){ 
+	    		$('#product').html("");
+				var html = "";
+				var name = "";
+				var id = "";
+				var code = "";
+				var norms = "";
+				var price = "";
+				var supplierId = "";
+				
+				$.each(data.list,function(){
+					name = this['name'];
+					id = this['id'];
+					code = this['code'];
+					norms = this['norms'];
+					price = this['danjia']+0;
+					supplierId = this['supplierId'];
+					html += "<tr ondblclick=\"setProduct('"+id+"','"+name+"','"+code+"','"+norms+"','"+price+"','"+supplierId+"')\" style=\"cursor:pointer;\"><td style='width:200px;'>"+code+"</td><td style='width:200px;'>"+name+"</td><td style='width:200px;'>"+norms+"</td></tr>";
+				});
+				$('#page2').html(data.page);
+				$("#product").html(html);
+			}
+			});
+	    })
+	//搜索
+	$('#searchList2').click(function(){
+	    	var name = $('#productKey').val(); 
+	       	var field = "id,name"; 
+			$.get('{:U("Storehouse/Ruku/getProductKey")}', {'p':1,'name':name}, function(data){  //用get方法发送信息到TestAction中的test方法
+		     	if(data){ 
+		    		$('#product').html("");
+					var html = "";
+					var name = "";
+					var id = "";
+					var code = "";
+					var norms = "";
+					var price = "";
+					var supplierId = "";
+
+					$.each(data.list,function(){
+						name = this['name'];
+						id = this['id'];
+						code = this['code'];
+						norms = this['norms'];
+						price = this['danjia']+0;
+						supplierId = this['supplierId'];
+						html += "<tr ondblclick=\"setProduct('"+id+"','"+name.replace(/<[^>].*?>/g,"")+"','"+code+"','"+norms+"','"+price+"','"+supplierId+"')\" style=\"cursor:pointer\"><td style='width:200px;'>"+code+"</td><td style='width:200px;'>"+name+"</td><td style='width:200px;'>"+norms+"</td></tr>";
+					});
+					$('#page2').html(data.page);
+					$("#product").html(html);
+			}else{
+				$("#product").html(" 您好，没有该产品，请先新增~");
+			}
+		})
+	})
+});
+</script>

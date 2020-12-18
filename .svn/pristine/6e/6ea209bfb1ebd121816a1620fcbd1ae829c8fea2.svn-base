@@ -1,0 +1,208 @@
+<script type="text/javascript">
+function deleteData(id,url,type) {
+	swal({
+		  title: "确定要删除吗？",
+		  text: "删除后不可恢复！",
+		  type: "error",
+		  showCancelButton: true,
+		  confirmButtonColor: "#DD6B55",
+		  confirmButtonText: "删除"
+		},
+		function(){
+			 $.post(url,{'id':id,'type':type},function(data){
+					if(data){
+						location.reload();
+					}else{
+						alert('删除失败！');
+					}
+				})
+		});
+};
+//新增时，锁定负责人选项
+$('#sltUid').change(function(){
+	$('[name="uid"]').val($(this).val());
+});
+//种菜额或种菜费用率改变 种菜费用和利润改变
+$('#zcMoney,#zcRate').change(function(){
+	var zcMoney = $('#zcMoney').val();
+	var zcRate = $('#zcRate').val();
+	var zcFeiyong = parseFloat(zcMoney*zcRate).toFixed(2);
+	$('#zcFeiyong').val(zcFeiyong);
+	$('#zcFeiyongShow').text("种菜费用："+zcFeiyong+"");
+
+	getProfitMoney();
+});
+
+//选择客户双击客户操作 
+function setClient2(id,clientName){
+	//将双击项填入表单
+	$('#clientName').val(clientName);
+	$('#clientName2').val(clientName);
+	$('#cid').val(id);
+	$('#myModalc').modal('hide');
+}
+
+//改变利润
+$('#realMoney,#refund,#tgFeiyong,#rate,#ptRate,#ptFeiyong,#proCost,#qtFeiyong').change(function(){
+	var realMoney = $('#realMoney').val();
+	var refund = $('#refund').val();		//退款额
+
+	//固定费用
+	var gdFeiyong = parseFloat((realMoney-refund)*13.8/100).toFixed(3);
+	$('#gdFeiyong').val(gdFeiyong);
+
+	
+	//平台费用
+	var ptRate = $('#ptRate').val();
+	var ptFeiyong = parseFloat((realMoney-refund)*ptRate).toFixed(2);
+	$('#ptFeiyongShow').text("平台费用："+ptFeiyong+"");
+	$('#ptFeiyong').val(ptFeiyong);
+	getProfitMoney();
+});
+
+function getProfitMoney(){
+	var realMoney = $('#realMoney').val(); //销售额
+	var refund = $('#refund').val();		//退款额
+	var zcFeiyong = $('#zcFeiyong').val(); //种菜费用
+	var gdFeiyong = $('#gdFeiyong').val(); //固定费用
+	var ptFeiyong = $('#ptFeiyong').val(); //平台费用
+	var proCost = $('#proCost').val(); //产品成本
+
+	var tgFeiyong = $('#tgFeiyong').val(); //推广费用
+	var qtFeiyong = $('#qtFeiyong').val();  //其他费用
+	var rate = $('#rate').val();
+	var profitMoney = parseFloat(realMoney-refund-zcFeiyong-gdFeiyong-ptFeiyong-tgFeiyong-proCost-qtFeiyong).toFixed(2);
+	$('#profitMoney').val(profitMoney);
+}
+
+function dateChange(value){
+		var date = new Date();
+		var year = parseInt(date.getFullYear());
+		var month = parseInt(date.getMonth())+1;
+		var last = new Date(year,month,0).getDate();
+		if(value==1){
+			var start_time = year+"-"+month+"-"+1;
+			var end_time = year+"-"+month+"-"+last;
+			$('#dpd1').val(start_time);
+			$('#dpd2').val(end_time);
+		}else if(value==2){
+			if(month==1){ 
+				var year = year - 1;
+				var month = 12;
+				var last = new Date(year,12,0).getDate();
+				var start_time = year+"-"+month+"-"+1;
+				var end_time = year+"-"+month+"-"+last;
+				$('#dpd1').val(start_time);
+				$('#dpd2').val(end_time);
+			}else{
+				var month = month - 1;
+				var last = new Date(year,month,0).getDate();
+				var start_time = year+"-"+month+"-"+1;
+				var end_time = year+"-"+month+"-"+last;
+				$('#dpd1').val(start_time);
+				$('#dpd2').val(end_time);
+			}
+		}else if(value==3){
+			var start_time = year+"-"+1+"-"+1;
+			var end_time = year+"-"+12+"-"+last;
+			$('#dpd1').val(start_time);
+			$('#dpd2').val(end_time);
+		}else{
+			$('#dpd1').val('');
+			$('#dpd2').val('');
+		};
+	} 
+	// 售后服务必填字段
+	$(function(){
+		$('#aftersale').validate({
+	        errorElement: 'span',
+	        errorClass: 'help-block',
+	        focusInvalid: false,
+	        rules: {
+	            store: 'required',
+	            uid:'required',
+	            date:'required',
+	            orderId:'required',
+	            saleID:'required',
+	            saleProblem:'required',
+	            handleMessuares:'required'
+	        },
+	        highlight: function(e) {
+	            $(e).closest('.form-group').removeClass('has-info').addClass('has-error');
+	        },
+	    });
+
+	    $('#aftersales').validate({
+	        errorElement: 'span',
+	        errorClass: 'help-block',
+	        focusInvalid: false,
+	        rules: {
+	            store: 'required',
+	            uid:'required',
+	            date:'required',
+	            orderId:'required',
+	            saleID:'required',
+	            saleProblem:'required',
+	            handleMessuares:'required'
+	        },
+	        highlight: function(e) {
+	            $(e).closest('.form-group').removeClass('has-info').addClass('has-error');
+	        },
+	    });
+
+	    $('#aftersalesThird').validate({
+	        errorElement: 'span',
+	        errorClass: 'help-block',
+	        focusInvalid: false,
+	        rules: {
+	            confirmQc: 'required',
+	        },
+	        highlight: function(e) {
+	            $(e).closest('.form-group').removeClass('has-info').addClass('has-error');
+	        },
+	    });
+
+	    $('#clientSelect').click(function(){
+			$.get('{:U("Client/Client/clientAjax")}', {'p':1}, function(data){  //用get方法发送信息到TestAction中的test方法
+	     	var clientsHtml =  $('#clients').html();
+	     	if(data){ 
+	    		$('#clients').html("");
+				var html = "";
+				var clientName = "";
+				var id = "";
+				
+				$.each(data.list,function(){
+					clientName = this['company'];
+					id = this['id'];
+					html += "<tr ondblclick=\"setClient2('"+id+"','"+clientName+"')\" style=\"cursor:pointer;\"><td style='width:500px;'>"+clientName+"</td></tr>";
+				});
+				$('#page2').html(data.page);
+				$("#clients").html(html);
+			}
+			});
+	    })
+
+	    	//搜索
+		$('#searchList2').click(function(){
+		    	var company = $('#clientKey2').val(); 
+		       	var field = "id,company"; 
+				$.get('{:U("Client/Client/getClientKey")}', {'p':1,'company':company}, function(data){  //用get方法发送信息到TestAction中的test方法
+			     	if(data){ 
+			    		$('#clients').html("");
+						var html = "";
+						var clientName = "";
+						var id = "";
+						$.each(data.list,function(){
+							clientName = this['company'];
+							id = this['id'];
+							html += "<tr ondblclick=\"setClient2('"+id+"','"+clientName.replace(/<[^>].*?>/g,"")+"')\" style=\"cursor:pointer\"><td style='width:700px;'>"+clientName+"</td></tr>";
+						});
+						$('#page2').html(data.page);
+						$("#clients").html(html);
+				}else{
+					$("#clients").html(" 您好，没有该客户，请先新增~");
+				}
+			})
+		})
+	});
+</script>

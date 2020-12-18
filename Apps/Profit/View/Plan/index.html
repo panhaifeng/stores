@@ -1,0 +1,230 @@
+<style>
+    .datepicker.datepicker-dropdown.dropdown-menu{
+        z-index: 1900!important;
+    }
+</style>
+<div class="row">
+  <div class="col-lg-12">
+    <div class="widget-container fluid-height clearfix">
+      <div class="heading">
+        <i class="icon-table"></i><a class="btn-primary" href="{:U('Profit/Plan/index')}" style="padding:4px;border-radius:3px">生产计划查询</a>
+
+        <a class="btn btn-sm btn-primary-outline pull-right" href="{:U('Profit/Plan/add')}">
+          <i class="icon-plus"></i><span>新增</span>
+        </a>
+
+        <a class="btn btn-sm btn-primary-outline pull-right" data-toggle="modal" href="#import_plan"><i class="icon-inbox"></i>导入</a>
+      </div>
+      <div class="widget-content padded clearfix normalSearch">
+      <form action="{:U('Profit/Plan/index')}" class="form-horizontal" method="get">
+          <table class="tab search">
+              <tbody>
+              <tr>
+                  <td>
+                      <select class="form-control" tabindex="1" name="time_kind" id="time_kind" onchange=dateChange(this.value)>
+                          <option value="0" <if condition="$time_kind==0">selected="selected"</if>>全部</option>
+                          <option value="1" <if condition="$time_kind==1">selected="selected"</if>>本月</option>
+                          <option value="2" <if condition="$time_kind==2">selected="selected"</if>>上月</option>
+                          <option value="3" <if condition="$time_kind==3">selected="selected"</if>>本年</option>
+                      </select>
+                  </td>
+                  <td>
+                      <input class="form-control" data-date-autoclose="true" data-date-format="yyyy-mm-dd" id="dpd1" name="start_time" placeholder="开始时间" type="text" value="{$start_time}">
+                  </td>
+                  <td>
+                      <input class="form-control" data-date-autoclose="true" data-date-format="yyyy-mm-dd" id="dpd2" name="end_time" placeholder="结束时间" type="text" value="{$end_time}">
+                  </td>
+                  <td>
+                      <input class="form-control" id="title" name="title" placeholder="关键词检索:标题" type="text" value="{$title}">
+                  </td>
+                  <td>
+                      <button type="submit"  class="btn btn-primary sousuo"><i class="icon-search"></i> 搜索</button>
+                  </td>
+              </tr>
+              </tbody>
+          </table>
+      </form>
+      </div>
+      <div class="widget-content padded clearfix rowsData">
+        <!-- <table class="table table-bordered table-striped" id="datatable-editable"> -->
+        <table class="table table-bordered table-striped">
+         <thead>
+            <th> 标题      </th>
+            <th> 计划编号      </th>
+            <th> 计划时间      </th>
+            <th> 负责人      </th>
+            <th> 创建时间      </th>
+            <th> 所需成品      </th>
+            <th> 采购预测     </th>
+            <th> 备注      </th>
+            <th> 操作          </th>
+          </thead>
+          <tbody>
+            <foreach name="Plans" item="v">
+              <tr>
+                <td>{$v['title']}</td>
+                <td>{$v['plan_code']}</td>
+                <td>{$v['plan_date']}</td>
+                <td>{$v['creator']}</td>
+                <td>{$v['ctime']}</td>
+                <td><a href="javascript:;" class="billDetail" data-id="{$v['id']}"  data-title="{$v['title']}">明细({:count($v['plan_production_bill'])})</a></td>
+                <td>
+                    <if condition="$v['forecast'] != 0">
+                        <a href="javascript:;" class="forecastDetail" data-id="{$v['id']}" data-title="{$v['title']}">预测明细({$v['forecast']})</a>
+                        <i class="icon-none">|</i>
+                        <a href="javascript:;" class="productDetail" data-id="{$v['id']}" data-fid="{$v['lastForecastId']}" data-title="{$v['title']}">所需原料({$v['productes']})</a>
+                        <i class="icon-none">|</i>
+                        <a href="{:U('Profit/Plan/exportForecastProduct', array('id'=>$v['id'], 'fid'=>$v['lastForecastId']))}" class="exportForecastProduct" data-id="{$v['id']}"><span>导出原料信息</span></a>
+                        <i class="icon-none">|</i>
+                        <a href="{:U('Profit/Plan/exportForecast', array('id'=>$v['id'], 'fid'=>$v['lastForecastId']))}" class="exportForecast" data-id="{$v['id']}"><span>导出采购计划</span></a>
+                    <else/>
+                        <a href="javascript:;" class="buildForecast" data-id="{$v['id']}">创建采购计划</a>
+                    </if>
+                </td>
+                <td>{$v['memo']}</td>
+                <td>
+                    <if condition="$v['edit']!=1">
+                        <div class="action-buttons">
+                            <a class="table-actions" href="{:U('Profit/Plan/edit',array('id'=>$v['id'],'p'=>$nowPage,'title'=>$title,'start_time'=>$start_time,'end_time'=>$end_time,'t_kind'=>$time_kind))}"><i class="icon-pencil"></i></a>
+                            <a class="table-actions" data-toggle="modal" href="#" onclick = "deleteData({$v['id']},'{:U('Profit/Plan/delete')}')"><i class="icon-trash"></i></a>
+                        </div>
+                    </if>
+                </td>
+              </tr>
+       </foreach>
+          </tbody>
+        </table>
+        <span>
+            {$page}
+        </span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 明细模态框 -->
+<div class="modal fade " id="forecastLogModal" >
+    <div class="modal-dialog  modal-lg" style="width:1000px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button aria-hidden="true" class="close" data-dismiss="modal" type="button">&times;</button>
+                <h4 class="modal-title">
+                    <span class="modalTitle"></span>预测记录明细
+                    <span class="pull-right">
+                <span id="spanInfo"></span>
+            </span>
+                </h4>
+            </div>
+            <div class="modal-body" style="min-height:500px;">
+                <!-- blank-->
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 成品生产清单-->
+<div class="modal fade " id="billModal" >
+    <div class="modal-dialog  modal-lg" style="width:1000px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button aria-hidden="true" class="close" data-dismiss="modal" type="button">&times;</button>
+                <h4 class="modal-title">
+                    <span class="modalTitle"></span>生产计划-成品清单
+                    <span class="pull-right">
+                <span id="spanInfo"></span>
+            </span>
+                </h4>
+            </div>
+            <div class="modal-body" style="min-height:500px;">
+                <!-- blank-->
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 原料清单-->
+<div class="modal fade " id="productModal" >
+    <div class="modal-dialog  modal-lg" style="width:1000px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button aria-hidden="true" class="close" data-dismiss="modal" type="button">&times;</button>
+                <h4 class="modal-title">
+                    <span class="modalTitle"></span>生产计划-原料清单
+                    <span class="pull-right">
+                <span id="spanInfo"></span>
+            </span>
+                </h4>
+            </div>
+            <div class="modal-body" style="min-height:500px;">
+                <!-- blank-->
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="import_plan">
+    <div class="modal-dialog">
+        <form id="formImport" name="formImport" class="form-horizontal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button aria-hidden="true" class="close" data-dismiss="modal" type="button">&times;</button>
+                    <h4 class="modal-title">生产计划导入</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="control-label col-md-2" for="importTitle">标题</label>
+                        <div class="col-md-8">
+                            <input id="importTitle" name="title" class="form-control"  type="text">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-2" for="importDate">时间</label>
+                        <div class="col-md-8">
+                            <div class="input-group date datepicker" data-date-autoclose="true" data-date-format="yyyy-mm-dd">
+                                <input id="importDate" name="plan_date" class="form-control" type="text">
+                                <span class="input-group-addon"><i class="icon-calendar"></i></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-2" for="importMemo">备注</label>
+                        <div class="col-sm-8">
+                            <textarea class="form-control" name="memo" rows="2" id="importMemo"></textarea>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="form-group">
+                        <label class="control-label col-md-2" for="plan_date">文件</label>
+                        <div class="col-md-10">
+                            <div class="fileupload fileupload-new" data-provides="fileupload"><input type="hidden" value="" name="">
+                                <div class="input-group">
+                                    <div class="form-control">
+                                        <i class="icon-file fileupload-exists"></i><span class="fileupload-preview"></span>
+                                    </div>
+                                    <div class="input-group-btn">
+                                        <a class="btn btn-default fileupload-exists" data-dismiss="fileupload" href="#">移除</a><span class="btn btn-default btn-file"><span class="fileupload-new">选择文件</span><span class="fileupload-exists">更改</span><input type="file" name="fileToUpload" id="fileToUpload"  multiple="multiple"/></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group hide" id="progress">
+                        <div class="col-md-12">
+                            <div class="progress progress-striped active" id="progress_line">
+                                <div class="progress-bar progress-bar-success" id="percent" style="width: 0%"><input id="judge" type="hidden" value="chengpin"/></div>
+                            </div>
+                            <p id="msg"></p>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <a class="btn btn-info" id="download" href="__PUBLIC__/download/生产计划导入模板.xls" target="_blank">下载模板</a>
+                    <button class="btn btn-primary" id="import" type="button">上传</button>
+                    <button class="btn btn-success" data-dismiss="modal" type="button" >完成</button>
+                </div>
+        </form>
+    </div>
+</div>
+
+<include file="Public:js" />
+<include file="Public:planIndexJs" />

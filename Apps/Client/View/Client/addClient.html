@@ -1,0 +1,101 @@
+
+<div class="container-fluid main-content">
+	<div class="row">
+		<div class="col-lg-12">
+			<div class="widget-container fluid-height clearfix"> 
+				<div class="heading">
+					<i class="icon-reorder"></i>添加客户
+				</div>
+				<div class="widget-content padded">
+					<form action="{:U('Client/Client/addClientHandle')}" id="validate-form" method="post" class="form-horizontal">
+						<div class="col-xs-12">
+							<h3 class="profile-details">基本信息</h3> 
+						</div>
+						<fieldset>
+							<div class="form-group">
+								<label class="control-label col-md-3">公司名称</label>
+								<div class="col-xs-6 col-sm-2">
+									<input class="form-control required" id="company" type="text" name="company" placeholder="公司名称">
+								</div>
+							</div> 
+							<div class="form-group">
+								<label class="control-label col-md-3">业务员</label>
+								<div class="col-xs-6 col-sm-2">
+									<select class="form-control" name="salesman">
+	                                   	<option value="">--请选择--</option>
+	                                   	<foreach name="salesman" item="v">
+	                                   		<option value="{$v['id']}">{$v['real_name']}</option> 
+	                                   	</foreach>
+	                                 </select>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="control-label col-md-3">详细地址</label>
+								<div class="col-xs-6 col-sm-6">
+									<input class="form-control" type="text" name="address" placeholder="详细地址">
+								</div>
+							</div> 
+							<div class="form-group">
+								<label class="control-label col-md-3">备注</label>
+								<div class="col-xs-6 col-sm-6">
+									<textarea class="form-control" name="memo" rows="2"></textarea>
+								</div>
+							</div>
+							<h3 class="profile-details">
+								首要联系人 <a href="javascript:;" class="addContact"><i class="icon-plus"></i></a>
+							</h3>
+							<div class="contact">
+							<div class="form-group">
+								<label class="control-label col-md-3">姓名</label>
+								<div class="col-xs-6 col-sm-2">
+									<input class="form-control" type="text" name="contact_name[]" placeholder="姓名">
+								</div>
+								<label class="control-label col-md-2">职位</label>
+								<div class="col-xs-6 col-sm-2">
+									<input class="form-control" type="text" name="position[]" placeholder="职位">
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="control-label col-md-3">手机</label>
+								<div class="col-xs-6 col-sm-2">
+									<input class="form-control  telephone"  id="telephone" type="text" name="telephone[]" placeholder="手机">
+								</div>
+								<label class="control-label col-md-2">邮箱</label>
+								<div class="col-xs-6 col-sm-2">
+									<input class="form-control email" type="text" id="email" name="email[]" placeholder="邮箱">
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="control-label col-md-3">身份证号</label>
+								<div class="col-xs-6 col-sm-2">
+									<input class="form-control  cardid"  id="cardid" type="text" name="card_id[]" placeholder="身份证号">
+								</div>
+								<label class="control-label col-md-2">生日</label>
+								<div class="col-xs-6 col-sm-2">
+						              <div class="input-group date datepicker" data-date-autoclose="true" data-date-format="yyyy-mm-dd">
+						                <input id="birthday" name="birthday[]" class="form-control" type="text" ><span class="input-group-addon"><i class="icon-calendar"></i></span></input>
+						              </div> 
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="control-label col-md-3">备注</label>
+								<div class="col-xs-6 col-sm-6">
+									<textarea class="form-control" name="contact_memo[]" rows="2"></textarea>
+								</div>
+							</div>
+							<hr>
+							</div>
+							<div id="contactDiv"></div>
+							<div class="form-group">
+								<label class="control-label col-md-3"></label>
+								<div class="col-xs-9 col-md-2">
+									<button class="btn btn-primary" type="submit">保存</button>
+								</div>
+							</div>
+						</fieldset> 
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

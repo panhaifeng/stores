@@ -1,0 +1,84 @@
+<script type="text/javascript">
+	function getorderDate(id){
+		var orderDate=document.getElementById(id).value;
+		var startyear = orderDate.substring(4,orderDate.length);
+		var endyear = parseInt(orderDate.substring(0,4))+1;
+		var endtime = endyear+startyear;
+		document.getElementById('dpd1').value = orderDate;
+		document.getElementById('dpd2').value = endtime;
+	}
+	//选择客户双击客户操作 
+	function setClient2(id,clientName){
+		//将双击项填入表单
+		$('#clientName').val(clientName);
+		$('#cid').val(id);
+		$('#myModalc').modal('hide');
+	}
+	//ajax分页
+	function clients(id){    //test函数名 一定要和action中的第三个参数一致上面有
+		$.get('{:U("Client/Client/clientAjax")}', {'p':id}, function(data){  //用get方法发送信息到TestAction中的test方法
+     	var clientsHtml =  $('#clients').html();
+     	if(data){ 
+    		$('#clients').html("");
+			var html = "";
+			var clientName = "";
+			var id = "";
+			
+			$.each(data.list,function(){
+				clientName = this['company'];
+				id = this['id'];
+				html += "<tr ondblclick=\"setClient2('"+id+"','"+clientName+"')\" style=\"cursor:pointer;\"><td style='width:700px;'>"+clientName+"</td></tr>";
+			});
+			$('#page').html(data.page);
+			$("#clients").html(html);
+		}
+		});
+	}
+	$(function(e) { 
+		$('#clientSelect').click(function(){
+			$.get('{:U("Client/Client/clientAjax")}', {'p':1}, function(data){  //用get方法发送信息到TestAction中的test方法
+	     	var clientsHtml =  $('#clients').html();
+	     	if(data){ 
+	    		$('#clients').html("");
+				var html = "";
+				var clientName = "";
+				var id = "";
+				
+				$.each(data.list,function(){
+					clientName = this['company'];
+					id = this['id'];
+					html += "<tr ondblclick=\"setClient2('"+id+"','"+clientName+"')\" style=\"cursor:pointer;\"><td style='width:500px;'>"+clientName+"</td></tr>";
+				});
+				$('#page').html(data.page);
+				$("#clients").html(html);
+			}
+			});
+	    })
+	//搜索
+	$('#searchList2').click(function(){
+	    	var company = $('#clientKey2').val(); 
+	       	var field = "id,company"; 
+			$.get('{:U("Client/Client/getClientKey")}', {'p':1,'company':company}, function(data){  //用get方法发送信息到TestAction中的test方法
+		     	if(data){ 
+		    		$('#clients').html("");
+					var html = "";
+					var clientName = "";
+					var id = "";
+					$.each(data.list,function(){
+						clientName = this['company'];
+						id = this['id'];
+						html += "<tr ondblclick=\"setClient2('"+id+"','"+clientName.replace(/<[^>].*?>/g,"")+"')\" style=\"cursor:pointer\"><td style='width:700px;'>"+clientName+"</td></tr>";
+					});
+					$('#page').html(data.page);
+					$("#clients").html(html);
+			}else{
+				$("#clients").html(" 您好，没有该客户，请先新增~");
+			}
+		})
+	})
+});
+	//查看图片
+	$("#iframe").fancybox({
+		'autoSize':true
+	});
+</script>

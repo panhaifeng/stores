@@ -1,0 +1,66 @@
+<div class="row">
+  <div class="col-lg-12"> 
+    <div class="widget-container fluid-height clearfix">
+      <div class="heading">
+        <i class="icon-table"></i><a class="btn-primary" href="{:U('Finance/Post/index')}" style="padding:4px;border-radius:3px">原料入库过账</a>  
+        <a href="{:U('Finance/Cpost/index')}" style="margin-left:5%;">成品出库过账</a>  
+      </div> 
+      <div class="widget-content padded clearfix"> 
+      <form action="{:U('Finance/Post/index')}" class="form-horizontal" method="post">  
+	    <table class="tab search"> 
+	      <tbody> 
+	        <tr> 
+	          <td><input class="form-control"  name="supplier" type="text" placeholder="供应商" value="{$supplier}"> 
+	          <td><button type="submit"  class="btn btn-primary sousuo"><i class="icon-search"></i>搜索</button></td> 
+	        </tr>
+	      </tbody> 
+	    </table> 
+	  </form> 
+	  </div> 
+      <div class="widget-content padded clearfix"> 
+        <!-- <table class="table table-bordered table-striped" id="datatable-editable"> -->
+        <table class="table table-bordered table-striped"> 
+         <thead>
+            <th> 入库时间      </th> 
+            <th> 入库编号      </th>  
+            <th> 供应商      </th> 
+            <th> 编号      </th> 
+            <th> 名称      </th>
+            <th> 规格      </th>
+            <th> 数量      </th> 
+            <th> 单价     </th> 
+            <th> 金额      </th> 
+            <th> 备注      </th> 
+            <th> 操作      </th>  
+          </thead> 
+          <tbody> 
+         	<foreach name="Ruku" item="v"> 
+              <tr class="newSon" style="cursor:pointer;"> 
+              	<td style="display:none;"><input type="hidden" class="id" id="id" value="{$v['id']}"/></td>
+                <td>{$v['ruku_date']}</td>
+                <td>{$v['ruku_code']}</td> 
+                <td>{$v['supplier_name']}</td> 
+                <td>{$v['code']}</td> 
+                <td>{$v['name']}</td> 
+                <td>{$v['norms']}</td> 
+                <td>{$v['cnt']}</td> 
+                <td>{$v['price']}</td> 
+                <td>{$v['money']}</td> 
+                <td>{$v['memo']}</td> 
+                 <td> 
+				  <div class="action-buttons">
+                    <a class="table-actions" href="{:U('Finance/Post/edit',array('id'=>$v['id']))}"><i class="icon-pencil"></i></a>
+                  </div> 
+				</td>
+              </tr>
+            </foreach>  
+          </tbody>
+        </table>
+        <span>
+			{$page} 
+		</span>
+      </div>
+    </div>
+  </div> 
+</div>
+<include file="Public:Postjs" />

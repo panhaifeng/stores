@@ -1,0 +1,42 @@
+<div class="container-fluid main-content">
+	<div class="row">
+		<div class="col-lg-12">
+			<div class="widget-container fluid-height clearfix">
+				<div class="heading">
+					<i class="icon-reorder"></i>编辑行动方式
+				</div>
+				<div class="widget-content padded">
+					<form action="{:U('Baseinfo/BaseInfo/editHandleBase',array('id'=>$id,'type'=>'baseActiontype'))}" method="post" class="form-horizontal">
+						<div class="form-group">
+							<label class="control-label col-md-2">行动方式名称</label>
+							<div class="col-md-4">
+								<input class="form-control" type="text" name="name" placeholder="行动方式名称" value="{$baseActiontype['name']}">
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="control-label col-md-2">行动方式描述</label>
+							<div class="col-md-4">
+								<textarea class="form-control" rows="3" name="description" >{$baseActiontype['description']}</textarea>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="control-label col-md-2">排序</label>
+							<div class="col-md-4">
+								<input class="form-control" type="text" name="sort" value="{$baseActiontype['sort']}">
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label class="control-label col-md-3"></label>
+							<div class="col-md-4">
+								<button class="btn btn-primary" type="submit">保存</button>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+	</div>
+
+

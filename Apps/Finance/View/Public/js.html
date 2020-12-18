@@ -1,0 +1,541 @@
+<script type="text/javascript"> 
+	//转账登记界面
+	$('#transfer_save').click(function(){
+		var collection_bankid = $('#collection_bankid').val();
+		var payment_bankid = $('#payment_bankid').val();
+		if(payment_bankid==collection_bankid){
+			alert('转出银行和转入银行不能一致');
+			return false;
+		}
+	})
+	$('#transfer_memo').val('内部转账');
+/****************************************************************/ 
+ 	
+ 	//选择客户双击客户操作 
+	function setClient2(id,clientName){
+		//将双击项填入表单
+		$('#clientName').val(clientName);
+		$('#clientName2').val(clientName);
+		$('#cid').val(id);
+		$('#myModalc').modal('hide');
+	}
+
+	//选择供应商双击操作 
+	function setSupplier(id,supplierName){
+		//将双击项填入表单
+		$('#supplierName').val(supplierName);
+		$('#supplierName2').val(supplierName);
+		$('#sid').val(id);
+		$('#myModalS').modal('hide');
+	}
+	//ajax分页 
+	function clients(id){    //test函数名 一定要和action中的第三个参数一致上面有
+		$.get('{:U("Client/Client/clientAjax")}', {'p':id}, function(data){  //用get方法发送信息到TestAction中的test方法
+     	var clientsHtml =  $('#clients').html();
+     	if(data){ 
+    		$('#clients').html("");
+			var html = "";
+			var clientName = "";
+			var id = "";
+			
+			$.each(data.list,function(){
+				clientName = this['company'];
+				id = this['id'];
+				html += "<tr ondblclick=\"setClient2('"+id+"','"+clientName+"')\" style=\"cursor:pointer;\"><td style='width:700px;'>"+clientName+"</td></tr>";
+			});
+			$('#page2').html(data.page);
+			$("#clients").html(html);
+		}
+		});
+	}
+	//ajax分页
+	function clientss(id){ 
+			var company = $('#clientKey2').val(); 
+			$.get('{:U("Client/Client/getClientKey")}', {'p':id,'company':company}, function(data){  //用get方法发送信息到TestAction中的test方法
+	     	var clientsHtml =  $('#clients').html();
+	     	if(data){ 
+	    		$('#clients').html("");
+				var html = "";
+				var clientName = "";
+				var id = "";
+				$.each(data.list,function(){
+					clientName = this['company'];
+					id = this['id'];
+					html += "<tr ondblclick=\"setClient('"+id+"','"+clientName.replace(/<[^>].*?>/g,"")+"')\" style=\"cursor:pointer\"><td style='width:700px;'>"+clientName+"</td></tr>";
+				});
+				$('#page2').html(data.page);
+				$("#clients").html(html);
+			}
+			});
+		 }
+
+	//ajax分页 
+	function suppliers(id){    //test函数名 一定要和action中的第三个参数一致上面有
+		$.get('{:U("Client/Client/clientAjax")}', {'p':id}, function(data){  //用get方法发送信息到TestAction中的test方法
+     	var clientsHtml =  $('#suppliers').html();
+     	if(data){ 
+    		$('#suppliers').html("");
+			var html = "";
+			var clientName = "";
+			var id = "";
+			
+			$.each(data.list,function(){
+				clientName = this['supplier_name'];
+				id = this['id'];
+				html += "<tr ondblclick=\"setClient2('"+id+"','"+clientName+"')\" style=\"cursor:pointer;\"><td style='width:700px;'>"+clientName+"</td></tr>";
+			});
+			$('#page2').html(data.page);
+			$("#suppliers").html(html);
+		}
+		});
+	}
+
+	$(function(e) { 
+		$('#clientSelect').click(function(){
+			$.get('{:U("Client/Client/clientAjax")}', {'p':1}, function(data){  //用get方法发送信息到TestAction中的test方法
+	     	var clientsHtml =  $('#clients').html();
+	     	if(data){ 
+	    		$('#clients').html("");
+				var html = "";
+				var clientName = "";
+				var id = "";
+				
+				$.each(data.list,function(){
+					clientName = this['company'];
+					id = this['id'];
+					html += "<tr ondblclick=\"setClient2('"+id+"','"+clientName+"')\" style=\"cursor:pointer;\"><td style='width:500px;'>"+clientName+"</td></tr>";
+				});
+				$('#page2').html(data.page);
+				$("#clients").html(html);
+			}
+			});
+	    })
+		//搜索
+		$('#searchList2').click(function(){
+		    	var company = $('#clientKey2').val(); 
+		       	var field = "id,company"; 
+				$.get('{:U("Client/Client/getClientKey")}', {'p':1,'company':company}, function(data){  //用get方法发送信息到TestAction中的test方法
+			     	if(data){ 
+			    		$('#clients').html("");
+						var html = "";
+						var clientName = "";
+						var id = "";
+						$.each(data.list,function(){
+							clientName = this['company'];
+							id = this['id'];
+							html += "<tr ondblclick=\"setClient2('"+id+"','"+clientName.replace(/<[^>].*?>/g,"")+"')\" style=\"cursor:pointer\"><td style='width:700px;'>"+clientName+"</td></tr>";
+						});
+						$('#page2').html(data.page);
+						$("#clients").html(html);
+				}else{
+					$("#clients").html(" 您好，没有该客户，请先新增~");
+				}
+			})
+		})
+
+		$('#gysSelect').click(function(){
+			$.get('{:U("Supplier/Index/supplierAjax")}', {'p':1}, function(data){  //用get方法发送信息到TestAction中的test方法
+	     	var clientsHtml =  $('#suppliers').html();
+	     	if(data){ 
+	    		$('#suppliers').html("");
+				var html = "";
+				var clientName = "";
+				var id = "";
+				$.each(data.list,function(){
+					clientName = this['supplier_name'];
+					id = this['id'];
+					html += "<tr ondblclick=\"setSupplier('"+id+"','"+clientName+"')\" style=\"cursor:pointer;\"><td style='width:500px;'>"+clientName+"</td></tr>";
+				});
+				$('#page2').html(data.page);
+				$("#suppliers").html(html);
+			}
+			});
+	    })
+	    //搜索
+		$('#searchSuppliers').click(function(){
+	    	var company = $('#supplierKey').val(); 
+	       	var field = "id,company"; 
+			$.get('{:U("Supplier/Index/getSupplierKey")}', {'p':1,'company':company}, function(data){ 
+		     	if(data){ 
+		    		$('#suppliers').html("");
+					var html = "";
+					var clientName = "";
+					var id = "";
+					$.each(data.list,function(){
+						clientName = this['supplier_name'];
+						id = this['id'];
+						html += "<tr ondblclick=\"setSupplier('"+id+"','"+clientName.replace(/<[^>].*?>/g,"")+"')\" style=\"cursor:pointer\"><td style='width:700px;'>"+clientName+"</td></tr>";
+					});
+					$('#page2').html(data.page);
+					$("#suppliers").html(html);
+				}else{
+					$("#suppliers").html(" 您好，没有该供应商，请先新增~");
+				}
+			})
+		})
+	});
+
+	$(function(){
+		$('.mshow').show();
+		$('.mhide').hide();
+		if($('#isNew').val()==1){
+			$('.sonitem').hide();
+		}
+		$('[name="item"]').change(function(){
+			var parent = $('[name="item"]').val();
+			var isCollection = $('[name="isCollection"]').val();
+			if(isCollection==1){
+				url = '{:U("Finance/Collection/getSonId")}';
+			}else{
+				url = '{:U("Finance/Payment/getSonId")}';
+			}
+			$.post(url,{'parentId':parent,'isCollection':isCollection},function(res){
+				if(res){
+					//清空原来的option
+					$('[name="son"] option[value!=""]').remove();
+					//添加新的option
+					var options=[];
+					if(res[0].kind==1){
+						for(var i=0; res[i];i++){ 
+							var temp=res[i];
+							options.push("<option value='"+temp.id+"'>"+temp.collection_name+"</option>");
+						} 
+					}else{
+						for(var i=0; res[i];i++){ 
+							var temp=res[i];
+							options.push("<option value='"+temp.id+"'>"+temp.payment_name+"</option>");
+						} 
+					}
+					var option = options.join('');
+					$('[name="son"]').append(option);
+					$('.sonitem').show();
+				}else{
+					//清空原来的option
+					$('[name="son"] option[value!=""]').remove();
+					$('.sonitem').hide();
+				} 
+			})
+		})
+	});
+	//新增保存，删除
+	$(function(){
+		$('.Rowcollect').hide();
+		$('.Soncollect').hide();
+		$('#addrow2').click(function(){
+			$('.Rowcollect').show();
+			$('[name="newedit"]').hide();
+		});
+		$('#rowdelect').click(function(){
+			$('.Rowcollect').hide();
+			window.location.reload();
+		});
+		$('.newSon').click(function(){
+			$('#addson2').show();
+			var id = $(this).find('.id').val();
+			var kind = $(this).find('.kind').val();
+			var aa = $('#sonpid').val('id');
+			if(kind==1){
+				var url_new = "{:U('Finance/Collection/getSonId')}"
+			}else{
+				var url_new = "{:U('Finance/Payment/getSonId')}"
+			} 
+			$.ajax({ 
+			     type:"POST", //请求方式
+			     url:url_new, //请求路径
+			     cache: false,   //(默认: true) 设置为 false 将不缓存此页面。
+			     data:"parentId="+id,  //传参
+			     dataType: "json",   //返回值类型 
+			     success:function(res){ 
+			       if(res[0]){
+						var id = ""; 
+						var collection_code = "";
+						var collection_name = "";
+						var parentId = "";
+						var memo = "";
+						var html = ""; 
+						var exist = "";
+						var sonpid = res[0].parentId;
+						var kind = res[0].kind;
+						$('.newson').remove();
+						$.each(res,function(){ 
+							id = this['id']; 
+							parentId = this['parentId'];
+							$('#sonpid').val(parentId);
+							if(kind==1){
+								code = this['collection_code']; 
+								name = this['collection_name']; 
+								var href = "./delectcollection/id/"+id+".html";
+							}else{
+								code = this['payment_code']; 
+								name = this['payment_name']; 
+								var href = "./delectpayment/id/"+id+".html";
+							}
+							parentId = this['parentId']; 
+							memo = this['memo']; 
+							exist = this['exist'];
+							if(exist==0){
+								html += "<tr class='newson'><td style='display:none;' id='id"+id+"'><input type='hidden' id='sid' value='"+id+"'/><input type='hidden' id='parentId' value='"+parentId+"'/></td><td id='code"+id+"'>"+code+"<input type='hidden' id='scode' name='scode' value='"+code+"' /></td><td id='name"+id+"'>"+name+"<input type='hidden' id='sname' name='sname' value='"+name+"' /></td><td id='memo"+id+"'>"+memo+"<input type='hidden' id='smemo' name='smemo' value='"+memo+"' /></td><td id='edit"+id+"'>"+
+								"<div id='sonedit"+id+"' name='newedit' class='action-buttons'>"+ 
+								"<span name='sonedit'><a class='table-actions' href='#'><input type='hidden' id='edidson' value='"+id+"'/><input type='hidden' class='kind' id='kind' value='"+kind+"'/><i class='icon-pencil' title='修改'></i></a></span>"+
+			                    "<if condition='"+exist+"==0'><a class='table-actions' data-toggle='modal' href='#myModal"+id+"'><i class='icon-trash' title='删除'></i></a></if>"+
+							    "<div class='modal fade' id='myModal"+id+"'> "+ 
+				                "    <div class='modal-dialog'>"+
+				                "      <div class='modal-content'>"+
+				                "        <div class='modal-header'>"+
+				                "          <button aria-hidden='true' class='close' data-dismiss='modal' type='button'>&times;</button>"+
+				                "          <h4 class='modal-title'>"+
+				                "         	   注意！"+
+				                "          </h4>"+
+				                "        </div>"+
+				                "        <div class='modal-body'>"+ 
+				                "          <p>"+
+				                "        	  确认删除吗?删除后将不可恢复！！！"+ 
+				                "          </p>"+ 
+				                "        </div>"+ 
+				                "        <div class='modal-footer'>"+
+				                "          <a class='btn btn-primary' type='button' href='"+href+"'>删除</a>"+
+				                "          <button class='btn btn-default-outline' data-dismiss='modal' type='button'>取消</button>"+ 
+				                "        </div>"+
+				                "   	</div>"+
+				                "    </div>"+
+					            "</div>"+
+			                    "</div> </td></tr>";
+							}else{
+								html += "<tr class='newson'><td style='display:none;' id='id"+id+"'><input type='hidden' id='sid' value='"+id+"'/><input type='hidden' id='parentId' value='"+parentId+"'/></td><td id='code"+id+"'>"+code+"<input type='hidden' id='scode' name='scode' value='"+code+"' /></td><td id='name"+id+"'>"+name+"<input type='hidden' id='sname' name='sname' value='"+name+"' /></td><td id='memo"+id+"'>"+memo+"<input type='hidden' id='smemo' name='smemo' value='"+memo+"' /></td><td id='edit"+id+"'>"+
+								"<div id='sonedit"+id+"' name='newedit' class='action-buttons'>"+ 
+								"<span name='sonedit'><a class='table-actions' href='#'><input type='hidden' id='edidson' value='"+id+"'/><input type='hidden' class='kind' id='kind' value='"+kind+"'/><i class='icon-pencil' title='修改'></i></a></span>"+
+			                    "</div> </td></tr>";
+							}
+							 
+						});
+						$(".Soncollect").after(html);
+						$('#addson2').click(function(){
+							$('.Soncollect').show();
+							$('[name="newedit"]').hide();
+						});
+						$('#sondelect').click(function(){
+							$('.Soncollect').hide();
+							window.location.reload();
+						});
+						//修改
+						$('[name="sonedit"]').click(function(){
+							$(this).parents('.newson').siblings('.newson').find('[name="newedit"]').hide();
+							$('#addson2').hide();
+							var id =$(this).find('#edidson').val();
+							var kind =$(this).find('#kind').val();
+							var code =$(this).parent().parent().siblings('#code'+id).find('#scode').val();
+							var name =$(this).parent().parent().siblings('#name'+id).find('#sname').val();
+							var memo =$(this).parent().parent().siblings('#memo'+id).find('#smemo').val();
+							var parentId =$(this).parent().parent().siblings('#id'+id).find('#parentId').val();
+							$("#code"+id).html("<input type='text' id='collection_codes' name='collection_codes' value='"+code+"'/><input type='hidden' id='snewid' name='snewid' value='"+id+"'/><input type='hidden' id='sparentId' name='sparentId' value='"+parentId+"'/><input type='hidden' id='newkind' name='newkind' value='"+kind+"'/>");
+							$("#name"+id).html("<input type='text' name='collection_names' id='collection_names' value='"+name+"'/>");
+							$("#memo"+id).html("<input type='text' name='newmemos' id='newmemos' value='"+memo+"'/>");
+							$("#edit"+id).html("<button class='btn btn-xs btn-primary' id='button"+id+"' type='button'>保存</button>");
+							$("#button"+id).click(function(){
+								var collection_code = $("#collection_codes").val();
+								var collection_name = $("#collection_names").val();
+								var memo = $("#newmemos").val();
+								var new_parentId = $("#sparentId").val();
+								var new_id = $("#snewid").val();
+								var new_kind = $("#newkind").val();
+								if(new_kind==1){
+									$.post("{:U('Finance/Base/collectionInsert')}",{id:new_id,collection_code:collection_code,collection_name:collection_name,memo:memo},function(res){
+										window.location.reload();
+									})
+								}else{
+									$.post("{:U('Finance/Base/paymentInsert')}",{id:new_id,payment_code:collection_code,payment_name:collection_name,memo:memo},function(res){
+										window.location.reload();
+									}) 
+								}
+							})
+						})
+			    	} else { 
+			    		$('.newson').remove();
+						$('#addson2').click(function(){
+							$('#sonpid').val(res.parentId);
+							$('.Soncollect').show();
+						});
+						$('#sondelect').click(function(){
+							$('.Soncollect').hide();
+							window.location.reload();
+						});
+						
+			    	}
+			     }
+			});
+		})
+	});
+	//修改
+	$(function(){
+		$('[name="rowedit"]').click(function(){
+			$('#addrow2').hide();
+			$(this).parents(".newSon").siblings(".newSon").find('[name="newedit"]').hide();
+			var id =$(this).find('#editid').val();
+			var kind =$(this).find('#kind').val();
+			var code =$(this).parent().parent().siblings('#code'+id).find('#code').val();
+			var name =$(this).parent().parent().siblings('#name'+id).find('#name').val();
+			var memo =$(this).parent().parent().siblings('#memo'+id).find('#memo').val();
+			$("#code"+id).html("<input type='text' id='collection_code1' name='collection_code1' value='"+code+"'/><input type='hidden' id='newid' name='newid' value='"+id+"'/><input type='hidden' id='newkind' name='newkind' value='"+kind+"'/>");
+			$("#name"+id).html("<input type='text' name='collection_name1' id='collection_name1' value='"+name+"'/>");
+			$("#memo"+id).html("<input type='text' name='newmemo' id='newmemo' value='"+memo+"'/>");
+			$("#rowedit"+id).html("<button class='btn btn-xs btn-primary' id='button"+id+"' type='button'>保存</button>");
+			$("#button"+id).click(function(){ 
+				var collection_code = $("#collection_code1").val();
+				var collection_name = $("#collection_name1").val();
+				var memo = $("#newmemo").val();
+				var new_id = $("#newid").val();
+				var new_kind = $("#newkind").val();
+				if(new_kind==1){
+					$.post("{:U('Finance/Base/collectionInsert')}",{id:new_id,collection_code:collection_code,collection_name:collection_name,memo:memo},function(res){
+						window.location.reload();
+					})
+				}else{
+					$.post("{:U('Finance/Base/paymentInsert')}",{id:new_id,payment_code:collection_code,payment_name:collection_name,memo:memo},function(res){
+						window.location.reload();
+					})
+				}
+				
+			})
+		})
+	});
+	//付款查询搜索
+	$('[name="payment_type"]').change(function(){
+		var parent = $('[name="payment_type"]').val();
+		var url = '{:U("Finance/Payment/getSonId")}';
+		$.post(url,{'parentId':parent},function(res){
+			if(res){
+				//清空原来的option
+				$('[name="payment_type2"] option[value!=""]').remove();
+				//添加新的option
+				var options=[];
+				if(res[0].kind==1){
+					for(var i=0; res[i];i++){ 
+						var temp=res[i];
+						options.push("<option value='"+temp.id+"'>"+temp.collection_name+"</option>");
+					} 
+				}else{
+					for(var i=0; res[i];i++){ 
+						var temp=res[i];
+						options.push("<option value='"+temp.id+"'>"+temp.payment_name+"</option>");
+					} 
+				}
+				var option = options.join('');
+				$('[name="payment_type2"]').append(option);
+			}
+		})
+	});
+	
+	
+	//账户明细表
+	$('.mingxi').click(function(){
+		var id = $(this).attr('value');
+		var timekind = $(this).attr('timekind');
+		var begintime = $(this).attr('begintime');
+		var endtime = $(this).attr('endtime');
+		//查询该账户明细
+		$.post("{:U('Finance/Bankcash/mingxiAjax')}",{'id':id,'timekind':timekind,'begintime':begintime,'endtime':endtime},function(data){
+	/* 		$("#myModaWang input[name='id']").val(id);
+			$("input[name='user_name']").val(data.user_name);
+			$("input[name='user_id']").val(data.user_id);
+			$("input[name='real_name']").val(data.real_name);
+			$("input[name='telephone']").val(data.telephone);
+			$("input[name='email']").val(data.email);
+			$("select[name='bid'] option[value='"+data.bid+"']").prop('selected','selected');
+			$("select[name='isattend'] option[value='"+data.isattend+"']").prop('selected','selected');
+			var groups = [];
+			$.each(data.group, function(i, item){ 
+				$("select[name='position[]'] option[value='"+item.group_id+"']").attr('selected','selected');
+				groups.push(item.group_id);
+			});
+			$(".select2able").val(groups).trigger("change"); */
+			
+			$('#mingxi').html("");
+			var html = " <tr><th>时间 </th><th>项目类型 </th><th> 客户/供应商名称 </th><th>收入</th><th>支出</th><th>备注</th></tr>";
+			var clientName = "";
+			var date = "";
+			var son_name = "";
+			var expense = "";
+			var income = "";
+			var memo = "";
+			var moneyIncom=data.moneyIncome;
+			var moneyExpense=data.moneyExpense;
+			$.each(data.list,function(i, item){
+				clientName=item.clientName ?  item.clientName : '';
+				date=item.date ? item.date : '';
+				son_name=item.son_name ?  item.son_name : '';
+				expense=item.expense ?  item.expense : '';
+				income=item.income ?  item.income : '';
+				memo=item.memo ?  item.memo : '';
+				html += "<tr><td>"+date+"</td><td>"+son_name+"</td><td>"+clientName+"</td><td>"+income+"</td><td>"+expense+"</td><td>"+memo+"</td></tr>";
+			});
+			html += "<tr><th>合计 </th><th></th><th></th><th>"+moneyIncom+"</th><th>"+moneyExpense+"</th><th></th></tr>"; 
+			$("#mingxi").html(html);
+		})
+		$('#myModaWang').modal();
+	});
+	
+	
+	//收款查询搜索
+	$('[name="collection_type"]').change(function(){
+		var parent = $('[name="collection_type"]').val();
+		var url = '{:U("Finance/Collection/getSonId")}';
+		$.post(url,{'parentId':parent},function(res){
+			if(res){
+				//清空原来的option
+				$('[name="collection_type2"] option[value!=""]').remove();
+				//添加新的option
+				var options=[];
+				if(res[0].kind==1){
+					for(var i=0; res[i];i++){ 
+						var temp=res[i];
+						options.push("<option value='"+temp.id+"'>"+temp.collection_name+"</option>");
+					} 
+				}else{
+					for(var i=0; res[i];i++){ 
+						var temp=res[i];
+						options.push("<option value='"+temp.id+"'>"+temp.payment_name+"</option>");
+					} 
+				}
+				var option = options.join('');
+				$('[name="collection_type2"]').append(option);
+			}
+		})
+	});
+	function dateChange(value){
+		var date = new Date();
+		var year = parseInt(date.getFullYear());
+		var month = parseInt(date.getMonth())+1;
+		var last = new Date(year,month,0).getDate();
+		if(value==1){
+			var start_time = year+"-"+month+"-"+1;
+			var end_time = year+"-"+month+"-"+last;
+			$('#dpd1').val(start_time);
+			$('#dpd2').val(end_time);
+		}else if(value==2){
+			if(month==1){ 
+				var year = year - 1;
+				var month = 12;
+				var last = new Date(year,12,0).getDate();
+				var start_time = year+"-"+month+"-"+1;
+				var end_time = year+"-"+month+"-"+last;
+				$('#dpd1').val(start_time);
+				$('#dpd2').val(end_time);
+			}else{
+				var month = month - 1;
+				var last = new Date(year,month,0).getDate();
+				var start_time = year+"-"+month+"-"+1;
+				var end_time = year+"-"+month+"-"+last;
+				$('#dpd1').val(start_time);
+				$('#dpd2').val(end_time);
+			}
+		}else if(value==3){
+			var start_time = year+"-"+1+"-"+1;
+			var end_time = year+"-"+12+"-"+last;
+			$('#dpd1').val(start_time);
+			$('#dpd2').val(end_time);
+		}else{
+			$('#dpd1').val('');
+			$('#dpd2').val('');
+		};
+	} 
+</script> 

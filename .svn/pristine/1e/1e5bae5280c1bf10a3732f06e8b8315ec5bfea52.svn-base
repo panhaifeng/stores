@@ -1,0 +1,70 @@
+<div class="row">
+  <div class="col-lg-12"> 
+    <div class="widget-container fluid-height clearfix">  
+      <div class="heading">
+        <i class="icon-reorder"></i>转账登记 
+      </div>
+      <div class="widget-content padded"> 
+        <form action="{:U('Finance/Bank/addInsert')}" class="form-horizontal" method="post"> 
+           <fieldset disabled>
+           <div class="form-group">
+             <label class="control-label col-md-2">转账单号<i style="color:red;">*</i></label> 
+             <div class="col-md-3"> 
+               <input id="transfer_number" name="transfer_number" class="form-control" placeholder="系统自动生成" type="text" value="{$Transfer['transfer_number']}"> 
+             </div>  
+           </div> 
+           </fieldset>
+           <div class="form-group">
+            <label class="control-label col-md-2">转账时间<i style="color:red;">*</i></label>  
+            <div class="col-md-3"> 
+              <div class="input-group date datepicker" data-date-autoclose="true" data-date-format="yyyy-mm-dd">
+                <input id="transfer_date" name="transfer_date" class="form-control" type="text" value="{$Transfer_date}"><span class="input-group-addon"><i class="icon-calendar"></i></span></input>
+              </div> 
+            </div> 
+          </div> 
+          <div class="form-group"> 
+            <label class="control-label col-md-2">转出银行<i style="color:red;">*</i></label>
+            <div class="col-md-3"> 
+              <select id="payment_bankid" name="payment_bankid" class="form-control"> 
+              	<option value="">请选择</option> 
+              	<foreach name="payment_bank" item="v"> 
+              		<option value="{$v['id']}" <if condition="$Transfer['payment_bankid']==$v['id']">selected="selected"</if>>{$v['bankname']}</option> 
+              	</foreach>
+              </select> 
+            </div> 
+          </div>
+          <div class="form-group"> 
+            <label class="control-label col-md-2">转入银行<i style="color:red;">*</i></label>
+            <div class="col-md-3"> 
+              <select id="collection_bankid" name="collection_bankid" class="form-control"> 
+              	<option value="">请选择</option> 
+              	<foreach name="collection_bank" item="v"> 
+              		<option value="{$v['id']}" <if condition="$Transfer['collection_bankid']==$v['id']">selected="selected"</if>>{$v['bankname']}</option> 
+              	</foreach>
+              </select> 
+            </div> 
+          </div>
+          <div class="form-group"> 
+             <label class="control-label col-md-2">转账金额<i style="color:red;">*</i></label>  
+             <div class="col-md-3"> 
+               <input id="transfer_money" name="transfer_money" class="form-control" placeholder="转账金额" type="text" value="{$Transfer['transfer_money']}"> 
+             </div> 
+          </div>
+          <div class="form-group"> 
+            <label class="control-label col-md-2">转账备注<i style="color:red;">*</i></label> 
+            <div class="col-md-3"> 
+              <input type="hidden" id="id" name="id" value="{$Transfer['id']}"></input>
+              <input id="transfer_memo" name="transfer_memo" class="form-control" placeholder="转账备注" type="text" value="{$Transfer['memo']}"> 
+            </div>
+          </div> 
+          <div class="form-group"> 
+            <label class="control-label col-md-2"></label> 
+            <div class="col-md-7">
+              <button class="btn btn-primary" id="transfer_save" type="submit">保存</button> 
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,44 @@
+{__NOLAYOUT__}
+<style>
+    .tooltip-inner{
+        min-width: 450px;
+        max-width: 450px;
+    }
+    .tooltip-inner table{
+        text-align: left;
+        min-width: 440px;
+        max-width: 440px;
+    }
+    .tooltip-inner table tr{
+    }
+    .tooltip-inner table tr td{
+    }
+    .tooltip-inner table tr.head td{
+    }
+</style>
+<table class="table table-bordered table-striped logTable">
+    <thead>
+    <tr>
+        <th> 成品名称 </th>
+        <th> 编码  </th>
+        <th> 类型  </th>
+        <th> 数量  </th>
+        <th> 颜色  </th>
+        <th> 规格  </th>
+        <th> 创建时间     </th>
+    </tr>
+    </thead>
+    <tbody>
+    <foreach name="rows" item="v">
+        <tr class="model">
+            <td><span class="name">{$v['name']}</span></td>
+            <td><span class="code">{$v['code']}</span></td>
+            <td><span class="kind">{$v['kind']}</span></td>
+            <td><span class="num">{$v['num']}</span></td>
+            <td><span class="color">{$v['color']}</span></td>
+            <td><span class="norms">{$v['norms']}</span></td>
+            <td><span class="ctime">{$v['ctime']}</span></td>
+        </tr>
+    </foreach>
+    </tbody>
+</table>

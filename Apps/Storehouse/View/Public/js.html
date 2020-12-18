@@ -1,0 +1,129 @@
+<script type="text/javascript">
+	//选择供应商双击供应商操作 
+	function setSupplier(id,supplierName){
+		//将双击项填入表单
+		$('#supplier_name').val(supplierName);
+		$('#sid').val(id);
+		$('#myModal').modal('hide');
+	} 
+	//ajax分页
+	function supplier(id){    //test函数名 一定要和action中的第三个参数一致上面有 
+		$.get('{:U("Storehouse/Ruku/supplierAjax")}', {'p':id}, function(data){  //用get方法发送信息到TestAction中的test方法
+     	var supplierHtml =  $('#supplier').html();
+     	if(data){ 
+    		$('#supplier').html("");
+			var html = "";
+			var supplier_name = "";
+			var id = "";
+			
+			$.each(data.list,function(){
+				supplier_name = this['supplier_name'];
+				id = this['id'];
+				html += "<tr ondblclick=\"setSupplier('"+id+"','"+supplier_name+"')\" style=\"cursor:pointer;\"><td style='width:700px;'>"+supplier_name+"</td></tr>";
+			});
+			$('#page').html(data.page);
+			$("#supplier").html(html);
+		}
+		});
+	}
+	$(function(e) { 
+		$('#supplierSelect').click(function(){
+			$.get('{:U("Storehouse/Ruku/supplierAjax")}', {'p':1}, function(data){  //用get方法发送信息到TestAction中的test方法
+	     	var supplierHtml =  $('#supplier').html();
+	     	if(data){ 
+	    		$('#supplier').html("");
+				var html = "";
+				var supplier_name = "";
+				var id = "";
+				
+				$.each(data.list,function(){
+					supplier_name = this['supplier_name'];
+					id = this['id'];
+					html += "<tr ondblclick=\"setSupplier('"+id+"','"+supplier_name+"')\" style=\"cursor:pointer;\"><td style='width:500px;'>"+supplier_name+"</td></tr>";
+				});
+				$('#page').html(data.page);
+				$("#supplier").html(html);
+			}
+			});
+	    })
+	//搜索
+	$('#searchList').click(function(){
+	    	var supplier_name = $('#supplierKey').val(); 
+	       	var field = "id,supplier_name"; 
+			$.get('{:U("Storehouse/Ruku/getSupplierKey")}', {'p':1,'supplier_name':supplier_name}, function(data){  //用get方法发送信息到TestAction中的test方法
+		     	if(data){ 
+		    		$('#supplier').html("");
+					var html = "";
+					var supplier_name = "";
+					var id = "";
+					$.each(data.list,function(){
+						supplier_name = this['supplier_name'];
+						id = this['id'];
+						html += "<tr ondblclick=\"setSupplier('"+id+"','"+supplier_name.replace(/<[^>].*?>/g,"")+"')\" style=\"cursor:pointer\"><td style='width:700px;'>"+supplier_name+"</td></tr>";
+					});
+					$('#page').html(data.page);
+					$("#supplier").html(html);
+			}else{
+				$("#supplier").html(" 您好，没有该供应商，请先新增~");
+			}
+		})
+	})
+});
+	
+$(function(){
+	$('.newSon').click(function(){
+		var id = $(this).find('.id').val();
+		var url = "{:U('Storehouse/Ruku/getProduct')}";
+		$.ajax({ 
+		     type:"POST", //请求方式
+		     url:url, //请求路径
+		     cache: false,   //(默认: true) 设置为 false 将不缓存此页面。
+		     data:"rukuId="+id,  //传参
+		     dataType: "json",   //返回值类型 
+		     success:function(res){
+		    	var id = ""; 
+				var code = "";
+				var name = "";
+				var cnt = "";
+				var html = "";
+				$.each(res,function(){
+					code = this['code']; 
+					name = this['name'];
+					norms = this['norms'];
+					cnt = this['cnt'];
+					html += "<tr><td>"+code+"</td><td>"+name+"</td><td>"+norms+"</td><td>"+cnt+"</td></tr>"
+				})
+				$("#show").html(html);
+		     }
+		})
+	})
+}); 
+$(function(){
+	$('.newSoncp').click(function(){
+		var id = $(this).find('.id').val();
+		var url = "{:U('Storehouse/Cpruku/getProduct')}";
+		$.ajax({ 
+		     type:"POST", //请求方式
+		     url:url, //请求路径
+		     cache: false,   //(默认: true) 设置为 false 将不缓存此页面。
+		     data:"rukuId="+id,  //传参
+		     dataType: "json",   //返回值类型 
+		     success:function(res){
+		    	var id = ""; 
+				var code = "";
+				var name = "";
+				var cnt = "";
+				var html = "";
+				$.each(res,function(){
+					code = this['code']; 
+					name = this['name'];
+					norms = this['norms'];
+					cnt = this['cnt'];
+					html += "<tr><td>"+code+"</td><td>"+name+"</td><td>"+norms+"</td><td>"+cnt+"</td></tr>"
+				})
+				$("#show").html(html);
+		     }
+		})
+	})
+}) 
+</script>

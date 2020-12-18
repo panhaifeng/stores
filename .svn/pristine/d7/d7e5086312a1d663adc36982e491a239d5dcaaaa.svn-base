@@ -1,0 +1,9 @@
+CREATE TABLE `ykb_login_logs` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '日志id',
+  `login_ip` varchar(20) DEFAULT NULL COMMENT '登录IP地址',
+  `login_user_id` int(11) DEFAULT NULL COMMENT '登录用户ID',
+  `logout_time` int(10) DEFAULT NULL COMMENT '登出时间',
+  `memo` varchar(30) DEFAULT NULL COMMENT '备注，登录用户名',
+  `ctime` int(10) DEFAULT NULL COMMENT '创建时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='用户登录日志表'

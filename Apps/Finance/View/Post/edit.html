@@ -1,0 +1,107 @@
+
+<div class="container-fluid main-content">
+	<div class="row">
+		<div class="col-lg-12">
+			<div class="widget-container fluid-height clearfix">
+				<div class="heading">
+					<i class="icon-reorder"></i>过账
+				</div>
+				<div class="widget-content padded">
+					<form action="{:U('Finance/Post/addInsert')}" id="validate-form" method="post" class="form-horizontal">
+							<div class="form-group"> 
+								<input name="id" type="hidden" value="{$Main['id']}" /> 
+								<input name="ruku_date" type="hidden" value="{$Main['date']}" />
+								<input type="hidden" id="supplier_name" name="supplier_name" value="{$Main['supplier_name']}" />
+			                    <input type="hidden" id="sid" name="sid" value="{$Main['sid']}" /> 
+			                    <input id="ruku_code" name="ruku_code" type="hidden" value="{$Main['ruku_code']}" /> 
+								<input type="hidden" name="memo" value="{$Main['memo']}" />
+								<fieldset disabled> 
+								<label class="control-label col-md-3">入库时间</label> 
+								<div class="col-xs-6 col-sm-2"> 
+						           <input id="ruku_date" name="ruku_date" class="form-control" type="text" value="{$Main['date']}" />
+								</div> 
+					            <div class="form-group">
+					              <label class="control-label col-md-2">入库编号</label> 
+					              <div class="col-xs-6 col-sm-2"> 
+					                <input id="code" name="code" class="form-control" placeholder="系统自动生成" type="text" value="{$Main['ruku_code']}"> 
+					              </div>  
+					            </div> 
+						        </fieldset> 
+							</div> 
+							<div class="form-group">
+							  <fieldset disabled> 
+				              <label class="control-label col-md-3">供应商名称</label> 
+				              <div class="col-xs-6 col-sm-2"> 
+				                  <input class="form-control" type="text" id="supplier_name" name="supplier_name" value="{$Main['supplier_name']}" />
+				                  <input type="hidden" id="sid" name="sid" value="{$Main['sid']}"> 
+				                  <input id="ruku_code" name="ruku_code" type="hidden" value="{$Main['ruku_code']}"> 
+				              </div> 
+				              </fieldset> 
+				            </div> 
+							<div class="form-group"> 
+							    <fieldset disabled> 
+								<label class="control-label col-md-3">备注</label>
+								<div class="col-xs-6 col-sm-6">
+									<textarea class="form-control" name="memo" rows="2">{$Main['memo']}</textarea> 
+								</div> 
+								</fieldset> 
+							</div>
+							<div class="heading">
+								<i class="icon-reorder"></i>添加明细
+							</div> 
+							<div class="head" style="margin-top:-1%;">
+								<div class="form-group">
+									<label class="control-label col-md-3" style="margin-left:-2.7%;">产品编码</label> 
+									<label class="control-label col-md-1"style="margin-left:2%;">产品名称</label> 	
+									<label class="control-label col-md-1" style="margin-left:1.7%;">产品型号</label> 
+									<label class="control-label col-md-1" style="margin-left:1.7%;">入库数量</label> 
+									<label class="control-label col-md-1" style="margin-left:1.7%;">入库单价</label> 
+									<label class="control-label col-md-1" style="margin-left:1.7%;">入库金额</label> 	
+								</div>
+							</div>
+							<foreach name="Ruku" item="v"> 
+							<div class="form-group product" style="margin-bottom:5px;"> 
+								<input type="hidden" id="productId" name="productId[]" value="{$v['productId']}"> 
+				              	<input type="hidden" id="sonId" name="sonId[]" value="{$v['rukuProId']}"> 
+				              	<input type="hidden" id="product_code" value="{$v['code']}" />
+				              	<input type="hidden" id="product_norms" value="{$v['norms']}" />
+				              	<input type="hidden" id="product_name" value="{$v['name']}" />
+				              	<input type="hidden" name="cnt[]" value="{$v['cnt']}">  
+							    <fieldset disabled class="col-md-7">
+					            <label class="control-label col-md-3"></label> 
+					            <div class="col-sm-2"> 
+					                <input class="form-control" type="text" id="product_code" value="{$v['code']}" />
+					            </div> 
+								<div class="col-sm-2" style="margin-left:1.7%;"> 
+									<input class="form-control" type="text" id="product_name" value="{$v['name']}">  
+								</div>
+					            <div class="col-sm-2" style="margin-left:1.7%;"> 
+					                <input class="form-control" type="text" id="product_norms" value="{$v['norms']}"> 
+					            </div> 
+					            <div class="col-sm-2" style="margin-left:1.7%;"> 
+									<input class="form-control" type="text" name="cnt[]" value="{$v['cnt']}">  
+								</div>
+								</fieldset> 
+								<div class="col-sm-1 pull-left" style="margin-left:-1.7%;"> 
+									<input class="form-control" type="text" name="price[]" value="{$v['price']}">   
+								</div>
+								<div class="col-sm-1" style="margin-left:1%;"> 
+									<input class="form-control" type="text" name="money[]" value="{$v['money']}">  
+								</div> 
+							</div>
+							</foreach> 
+							<div id="contactDiv"></div> 
+							<hr> 
+							<div class="form-group">
+								<label class="control-label col-md-3"></label>
+								<div class="col-xs-9 col-md-2">
+									<button class="btn btn-primary" type="submit">保存</button>
+								</div>
+							</div> 
+							</form> 
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<include file="Public:Postjs" /> 

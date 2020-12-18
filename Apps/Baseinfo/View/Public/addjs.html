@@ -1,0 +1,13 @@
+<script type="text/javascript">
+	$('.contact2').hide();
+	//添加明细
+	$('.addproduct').click(function(){
+		_trModel = $('.contact2').eq(0).clone(true);
+			$('input,select',_trModel).val('');
+			$('#contactDiv').append(_trModel.clone(true)); 
+			$('#contactDiv').find('.contact2').show();
+	});
+	$('.ruku_remove').click(function(){
+		$(this).parents('.product').remove();
+	});
+</script> 

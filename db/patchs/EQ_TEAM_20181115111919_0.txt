@@ -1,0 +1,26 @@
+CREATE TABLE `ykb_yf_guozhang` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `rukuId` int(11) NOT NULL,
+  `ruku2ProId` int(11) NOT NULL,
+  `supplierId` int(10) NOT NULL COMMENT '加工户Id',
+  `guozhangDate` date NOT NULL,
+  `kind` varchar(20) COLLATE utf8_bin NOT NULL COMMENT '应付款类型',
+  `cnt` decimal(10,2) NOT NULL,
+  `unit` char(20) COLLATE utf8_bin NOT NULL COMMENT '单位',
+  `productId` varchar(30) COLLATE utf8_bin NOT NULL COMMENT '编号',
+  `danjia` decimal(10,3) NOT NULL,
+  `money` decimal(15,3) NOT NULL,
+  `zhekouMoney` decimal(10,3) NOT NULL COMMENT '折扣金额',
+  `qitaMemo` varchar(200) COLLATE utf8_bin NOT NULL COMMENT '批号',
+  `memo` varchar(200) COLLATE utf8_bin NOT NULL COMMENT '备注',
+  `creater` varchar(20) COLLATE utf8_bin NOT NULL COMMENT '制单人',
+  `dt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '时间',
+  `rukuDate` date NOT NULL COMMENT '应付发生日期',
+  `_money` decimal(10,3) NOT NULL COMMENT '发生金额，入库单价*数量',
+  PRIMARY KEY (`id`),
+  KEY `rukuId` (`rukuId`) USING BTREE,
+  KEY `guozhangDate` (`guozhangDate`) USING BTREE,
+  KEY `kind` (`kind`) USING BTREE,
+  KEY `ruku2proId` (`ruku2ProId`) USING BTREE
+) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='应付入账表';
+

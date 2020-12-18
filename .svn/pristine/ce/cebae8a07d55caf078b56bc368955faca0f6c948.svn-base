@@ -1,0 +1,23 @@
+
+<script type="text/javascript">
+
+	 function deleteData(id,url) {
+		swal({
+			  title: "确定要删除吗？",
+			  text: "删除后不可恢复！",
+			  type: "error",
+			  showCancelButton: true,
+			  confirmButtonColor: "#DD6B55",
+			  confirmButtonText: "删除"
+			},
+			function(){
+				 $.post(url,{'id':id},function(data){
+						if(data){
+							location.reload();
+						}else{
+							alert('删除失败！');
+						}
+					})
+			});
+	} 
+</script>

@@ -1,0 +1,244 @@
+<style type="text/css">
+  table.table-content>tbody>tr:nth-child(2n+1)>td{
+    background-color: #F8F8F8;
+  }
+  table.table-content>tbody>tr:nth-child(2n+1).showDetail>td{
+    background: linear-gradient(to bottom, white 0,#EEE 1%, #FFF 90%,white 100%);
+  }
+  table.table-content>tbody>tr>th{
+    font-size: 16px;
+    border: 0;
+  }
+  table.table-content>tbody>tr>td{
+    font-size: 14px;
+    border: 0;
+  }
+  table.table-content>tbody>tr>td>span{
+    font-size:.8em;
+    color:black;
+  }
+  table.table-content>tbody>tr>th.careInfo{
+    width: 25%
+  }
+  table.table-content>tbody>tr>td.careInfo{
+    width: 25%
+  }
+  table.table-content>tbody>tr>td>textarea{
+    height: 100%;
+    width: 100%;
+    border-color: #EEEEEE;
+    resize: none;
+  }
+</style>
+<div class="row">
+  <div class="col-lg-12"> 
+    <div class="widget-container fluid-height clearfix">
+      <div class="heading">
+          <i class="icon-table"></i>品控管理
+
+          <a class="btn btn-sm btn-primary-outline pull-right" href="{:U('Profit/Aftersales/exportThird',$arr+array('export'=>1))}">导出数据</a>
+      </div>
+      <div class="widget-content padded clearfix">
+      <form action="{:U('Profit/Aftersales/thirdPage')}" class="form-horizontal" method="post">
+	    <table class="tab search"> 
+	      <tbody> 
+	        <tr>
+                <td>
+                    <select class="form-control" tabindex="1" name="time_kind" id="time_kind" onchange=dateChange(this.value)>
+                        <option value="0" <if condition="$time_kind==0">selected="selected"</if>>全部</option>
+                        <option value="1" <if condition="$time_kind==1">selected="selected"</if>>本月</option>
+                        <option value="2" <if condition="$time_kind==2">selected="selected"</if>>上月</option>
+                        <option value="3" <if condition="$time_kind==3">selected="selected"</if>>本年</option>
+                    </select>
+                </td>
+                <td>
+                    <input class="form-control" style="width:8em;" data-date-autoclose="true" data-date-format="yyyy-mm-dd" id="dpd1" name="start_time" placeholder="开始时间" type="text" value="{$arr['start_time']}">
+                </td>
+                <td>
+                    <input class="form-control" style="width:8em;" data-date-autoclose="true" data-date-format="yyyy-mm-dd" id="dpd2" name="end_time" placeholder="结束时间" type="text" value="{$arr['end_time']}">
+                </td>
+                <td>
+                    <select class="form-control" tabindex="1" name="audit" id="audit">
+                        <option value="0" <if condition="$arr['audit']==0">selected="selected"</if>>未审核</option>
+                        <option value="1" <if condition="$arr['audit']!=0">selected="selected"</if>>已审核</option>
+                    </select>
+                </td>
+                <td>
+	            <select class="form-control"  name="store"  name="store">
+	              <option value="">选择店铺</option>
+	              <foreach name="stores" item="v" key="key"> 
+                  <option value="{$key}" <if condition="$arr['store'] == $key">selected="selected"</if> >{$v}</option>
+                </foreach> 
+	            </select>
+	          </td>
+            <td>
+              <input class="form-control" id="orderId" name="orderId" placeholder="订单号" type="text" value="{$arr['orderId']}">
+            </td> 
+            <td>
+              <input class="form-control" id="uid" name="userName" placeholder="客服姓名" type="text" value="{$arr['userName']}">
+            </td> 
+            <td>
+              <input class="form-control" id="transId" name="transId" placeholder="快递单号" type="text" value="{$arr['transId']}">
+            </td>
+           <!--  
+            <td>
+              <input class="form-control" id="saleID" name="saleID" placeholder="ID" type="text" value="{$arr['saleID']}">
+            </td> 
+             -->
+	          <td><button type="submit"  class="btn btn-primary sousuo"><i class="icon-search"></i> 搜索</button></td>
+	        </tr>
+	      </tbody>
+	    </table> 
+	  </form> 
+	  </div> 
+      <div class="widget-content padded clearfix"> 
+        <table class="table table-bordered  table-content">
+         <thead>
+            <th>日期/客服</th>
+            <th>订单信息</th>
+            <th class="memoInfo">售后问题/处理措施/运营处理反馈</th>
+            <th class="memoInfo">售后问题确认</th>
+            <th class="careInfo">售后备注/运营备注/品控处理备注/审核备注</th>
+            <th colspan="2">操作</th>
+          </thead>
+          <tbody> 
+         	<foreach name="list" item="v">
+              <tr> 
+                <td>{$v['date']}<br />{$v['uid']}</td>
+                <td><span>店铺: </span>{$v['store']}<br /><span>订单: </span>{$v['orderId']}<br /><span>型号: </span>{$v['saleID']}<br /><span>客户：</span>{$v['clientName']}<br /><span>快递单号：</span>{$v['transId']}</td> 
+                <td class="memoInfo"><span>问题: </span>{$v['saleProblem']}<br /><span>措施: </span>{$v['handleMessuares']}<br /><span>运营处理反馈: </span>{$v['handleProcess']}</td> 
+
+                <td class="memoInfo"><textarea readonly="readonly">{$v['confirmQcText']}</textarea></td>
+                <td class="careInfo"><span>售后备注: </span>{$v['cserviceMemo']}<br /><span>运营备注: </span>{$v['memoYy']}<br /><span>品控备注: </span>{$v['memoQc']}<br /><span>审核备注: </span>{$v['operatorMemo']}</td> 
+
+                <td>
+                  <a class="table-actions" data-toggle="modal" href="#myModalp{$v['id']}"><i class="glyphicon glyphicon-credit-card" title="运营"></i></a>
+                  <!--模态框 -->
+                  <div class="modal fade" id="myModalp{$v['id']}">
+                    <div class="modal-dialog">
+                      <form action="{:U('Profit/Aftersales/QcSave')}" class="form-horizontal" method="post" id="aftersalesThird">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <button aria-hidden="true" class="close" data-dismiss="modal" type="button">&times;</button>
+                          <h4 class="modal-title">
+                               运营确认
+                          </h4>
+                        </div>
+                       
+
+                        <div class="form-group">
+                           <label class="control-label col-md-2">操作人<i style="color:red;">*</i></label> 
+                           <div class="col-md-8"> 
+                              <select class="form-control"  id="sltUid" disabled="disabled">
+                                <option value="">--请选择--</option>
+                                <foreach name="user" item="a">
+                                  <option value="{$a['id']}" <if condition="$operatorId==$a['id']">selected="selected"</if>>{$a['real_name']}</option> 
+                                </foreach>
+                              </select>
+                              <input type="hidden" name="uid" value="{$operatorId}"/>
+                            </div>  
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="control-label col-md-2">处理反馈<i style="color:red;">*</i></label> 
+                            <div class="col-md-8"> 
+                              <select class="form-control" name="confirmQc">
+                                <option value="">--请选择--</option>
+                                <foreach name="confirmQcs" item="vv" key="key">
+                                    <option value="{$key}" <if condition="$v['confirmQc']==$key">selected="selected"</if> <if condition="$key==4">disabled="true"</if>>{$vv}</option> 
+                                </foreach>
+                              </select>
+                              <input id="aId" name="aId" class="form-control" type="hidden" value="{$v['id']}">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="control-label col-md-2">品控处理备注</label> 
+                            <div class="col-md-8"> 
+                                <textarea id="memoQc" name="memoQc" class="form-control" type="text" rows="3" cols="20">{$v['memoQc']}</textarea>
+                            </div>
+                        </div>
+
+                        <div class="modal-footer">
+                          <button class="btn btn-primary" type="submit">确认</button>
+                          <input type="hidden" id='pagePk' name="pagePk" value="{$nowPage}">
+                          <button class="btn btn-default-outline" data-dismiss="modal" type="button">取消</button>
+                        </div>
+                      </div>
+                      </form>
+                    </div>
+                  </div>
+                  <!-- 模态框结束 -->
+
+                
+                </td>
+                <td>
+                    <!-- 运营审核 -->
+                  <a class="table-actions" data-toggle="modal" href="#myModalp1{$v['id']}"><i class="glyphicon glyphicon glyphicon-check" title="运营审核"></i></a>
+                  <!--模态框 -->
+                  <div class="modal fade" id="myModalp1{$v['id']}">
+                    <div class="modal-dialog">
+                      <form action="{:U('Profit/Aftersales/shenheSave')}" class="form-horizontal" method="post">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <button aria-hidden="true" class="close" data-dismiss="modal" type="button">&times;</button>
+                          <h4 class="modal-title">
+                               运营确认
+                          </h4>
+                        </div>
+                       
+
+                        <div class="form-group">
+                           <label class="control-label col-md-2">操作人<i style="color:red;">*</i></label> 
+                           <div class="col-md-8"> 
+                              <select class="form-control"  id="sltUid" disabled="disabled">
+                                <option value="">--请选择--</option>
+                                <foreach name="user" item="a">
+                                  <option value="{$a['id']}" <if condition="$operatorId==$a['id']">selected="selected"</if>>{$a['real_name']}</option> 
+                                </foreach>
+                              </select>
+                              <input type="hidden" name="uid" value="{$operatorId}"/>
+                            </div>  
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="control-label col-md-2">审核<i style="color:red;">*</i></label> 
+                            <div class="col-md-8"> 
+                              <label class="radio-inline">
+                                <input name="audit" <if condition="$v['audit'] == 1">checked="checked" </if> type="radio" value="1"><span>通过</span>
+                              </label>
+                              <!-- <label class="radio-inline">
+                                <input name="audit"  <if condition="$v['audit'] == 2">checked="checked" </if> type="radio" value="2"><span>拒绝</span>
+                              </label> -->
+                              <input id="aId" name="aId" class="form-control" type="hidden" value="{$v['id']}">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-md-2">审核备注</label> 
+                            <div class="col-md-8"> 
+                                <textarea id="operatorMemo" name="operatorMemo" class="form-control" type="text" rows="3" cols="20">{$v['operatorMemo']}</textarea>
+                            </div>
+                        </div>
+
+                        <div class="modal-footer">
+                          <button class="btn btn-primary" type="submit">确认</button>
+                          <button class="btn btn-default-outline" data-dismiss="modal" type="button">取消</button>
+                        </div>
+                      </div>
+                      </form>
+                    </div>
+                  </div>
+                  <!-- 模态框结束 -->
+                </td>
+              </tr>
+            </foreach>
+          </tbody>
+        </table>
+        <span>
+			{$page} 
+		</span>
+      </div>
+    </div>
+  </div>
+</div>

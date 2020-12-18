@@ -1,0 +1,47 @@
+{__NOLAYOUT__}
+<style>
+    .tooltip-inner{
+        min-width: 450px;
+        max-width: 450px;
+    }
+    .tooltip-inner table{
+        text-align: left;
+        min-width: 440px;
+        max-width: 440px;
+    }
+    .tooltip-inner table tr{
+    }
+    .tooltip-inner table tr td{
+    }
+    .tooltip-inner table tr.head td{
+    }
+</style>
+<table class="table table-bordered table-striped logTable">
+    <thead>
+    <tr>
+        <th> 时间    </th>
+        <th> 创建人 </th>
+        <th> 成品清单  </th>
+        <th> 原料清单  </th>
+        <th> 创建时间     </th>
+        <th> 操作    </th>
+    </tr>
+    </thead>
+    <tbody>
+    <foreach name="Logs" item="v">
+        <tr class="model">
+            <td><span class="date">{$v['date']}</span></td>
+            <td><span class="creator">{$v['creator']}</span></td>
+            <td><span class="text-primary memo" data-toggle="tooltip " class="tooltip-top" data-placement="bottom" data-title="{$v['cpMore']}" data-html="true" title="">明细({:count($v['plan_forecast_bill'])})</span></td>
+            <td><span class="text-primary memo" data-toggle="tooltip " class="tooltip-top" data-placement="bottom" data-title="{$v['proMore']}" data-html="true"  title="">明细（{:count($v['plan_forecast_product'])}）</span></td>
+            <!--<td><a href="{:U('Profit/Plan/showForecast', array('id'=>$v['id']))}" target="_blank">查看详细信息</a></td>-->
+            <td><span class="ctime">{$v['ctime']}</span></td>
+            <td>
+                <div class="action-buttons">
+                    <a class="table-actions" data-toggle="modal" href="#" onclick = "deleteData({$v['id']},'{:U('Profit/Plan/deleteForecast')}')"><i class="icon-trash"></i></a>
+                </div>
+            </td>
+        </tr>
+    </foreach>
+    </tbody>
+</table>

@@ -1,0 +1,38 @@
+
+<div class="container-fluid main-content">
+	<!-- Day Table -->
+	<div class="row">
+		<div class="col-lg-12">
+			<div class="widget-container fluid-height clearfix">
+				<div class="heading">
+					<i class="icon-table"></i>当月考勤迟到详情
+				</div>
+				<div class="widget-content padded clearfix">
+					<div class="table-responsive">
+						<table class="table table-hover table-bordered ">
+							<thead>
+								<tr>
+									<th>姓名</th>
+									<th>签到时间</th>
+									<th>地点</th>
+									<th>备注</th>
+								</tr>
+							</thead>
+							<tbody>
+								<foreach name="list" item="v">
+								<tr>
+									<td>{$v['id']}</td>
+									<td>{$v['ctime']|default='无'|date='Y-m-d
+										H:i',###}</td>
+									<td>{$v['label']}</td>
+									<td>{$v['memo']}</td>
+								</tr>
+								</foreach>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

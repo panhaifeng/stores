@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" type="text/css" href="css/normalize.css" />
+<link rel="stylesheet" type="text/css" href="css/default.css">
+<link rel="stylesheet" media="screen" href="css/main.css"/>
+<!--[if IE]>
+		<script src="../bigclock/js/html5shiv.min.js"></script>
+	<![endif]-->
+</head>
+<body>
+<div class="container">
+  <div id="myclock"></div>
+</div>
+<script src="../bigclock/js/jquery-2.1.1.min.js" type="text/javascript"></script>
+<script language="javascript" type="text/javascript" src="js/jquery.thooClock.js"></script> 
+<script language="javascript">
+		var intVal, myclock;
+
+		$(window).resize(function(){
+			window.location.reload()
+		});
+
+		$(document).ready(function(){
+
+			var audioElement = new Audio("");
+
+			//clock plugin constructor
+			$('#myclock').thooClock({
+				size:250,
+				showNumerals:true,
+				//brandText:'EQINFO',
+				//brandText2:'Germany',
+				onEverySecond:function(){
+					//callback that should be fired every second
+				}
+			});
+
+		});
+</script>
+</body>
+</html>

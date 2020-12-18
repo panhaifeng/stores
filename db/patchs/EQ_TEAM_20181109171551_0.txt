@@ -1,0 +1,3 @@
+ALTER TABLE `ykb_ruku`
+ADD COLUMN `rukuKind`  varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '入库类型' AFTER `ruku_date`;
+

@@ -1,0 +1,6 @@
+ALTER TABLE `ykb_base_product`
+ADD COLUMN `maxBuyCnt`  decimal(12,2) NOT NULL COMMENT '最高采购量' AFTER `safeCnt`;
+
+ALTER TABLE `ykb_kucun`
+ADD INDEX `proId` (`proId`) ;
+

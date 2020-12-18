@@ -1,0 +1,2 @@
+ALTER TABLE `ykb_base_product`
+ADD COLUMN `safeCnt` decimal(12,0) NOT NULL COMMENT '安全库存数';

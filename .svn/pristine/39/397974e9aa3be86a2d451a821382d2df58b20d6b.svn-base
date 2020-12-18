@@ -1,0 +1,119 @@
+<script type="text/javascript"> 
+$(function(){
+	$('.yffs').click(function(){
+		var supplierId = $(this).attr('supplierId');
+		var begintime = $(this).attr('begintime');
+		var endtime = $(this).attr('endtime');
+		//查询该账户明细
+		$.post("{:U('Finance/YfGz/mingxiAjax')}",{'supplierId':supplierId,'start_time':begintime,'end_time':endtime},function(data){
+
+			$('#yffs').html("");
+			var html = " <tr><th>时间 </th><th>发生类型 </th><th> 供应商名称 </th><th>数量</th><th>金额</th><th>备注</th></tr>";
+			var rukuDate = "";
+			var kind = "";
+			var supplier_name = "";
+			var money = "";
+			var cnt = "";
+			var memo = "";
+			$.each(data.list,function(i, item){
+				rukuDate=item.rukuDate ?  item.rukuDate : '';
+				kind=item.kind ? item.kind : '';
+				supplier_name=item.supplier_name ?  item.supplier_name : '';
+				money=item.money ?  item.money : '';
+				cnt=item.cnt ?  item.cnt : '';
+				memo=item.memo ?  item.memo : '';
+				html += "<tr><td>"+rukuDate+"</td><td>"+kind+"</td><td>"+supplier_name+"</td><td>"+cnt+"</td><td>"+money+"</td><td>"+memo+"</td></tr>";
+			});
+			// html += "<tr><th>合计 </th><th></th><th></th><th>"+moneyIncom+"</th><th>"+moneyExpense+"</th><th></th></tr>"; 
+			$("#yffs").html(html);
+		})
+		$('#myModaWang').modal();
+	});
+
+
+	$('.ysk').click(function(){
+		var clientId = $(this).attr('clientId');
+		var begintime = $(this).attr('begintime');
+		var endtime = $(this).attr('endtime');
+		//查询该账户明细
+		$.post("{:U('Finance/YsGz/mingxiAjax')}",{'clientId':clientId,'start_time':begintime,'end_time':endtime},function(data){
+
+			$('#ysk').html("");
+			var html = " <tr><th>时间 </th><th>发生类型 </th><th> 客户名称 </th><th>数量</th><th>单价</th><th>金额</th><th>备注</th></tr>";
+			var chukuDate = "";
+			var kind = "";
+			var client_name = "";
+			var money = "";
+			var cnt = "";
+			var danjia = "";
+			var memo = "";
+			$.each(data.list,function(i, item){
+				chukuDate=item.chukuDate ?  item.chukuDate : '';
+				kind=item.kind ? item.kind : '';
+				client_name=item.client_name ?  item.client_name : '';
+				money=item.money ?  item.money : '';
+				cnt=item.cnt ?  item.cnt : '';
+				danjia=item.danjia ?  item.danjia : '';
+				memo=item.memo ?  item.memo : '';
+				html += "<tr><td>"+chukuDate+"</td><td>"+kind+"</td><td>"+client_name+"</td><td>"+cnt+"</td><td>"+danjia+"</td><td>"+money+"</td><td>"+memo+"</td></tr>";
+			});
+			// html += "<tr><th>合计 </th><th></th><th></th><th>"+moneyIncom+"</th><th>"+moneyExpense+"</th><th></th></tr>"; 
+			$("#ysk").html(html);
+		})
+		$('#myModaYs').modal();
+	});
+
+
+	$('.bqfk').click(function(){
+		var supplierId = $(this).attr('supplierId');
+		var begintime = $(this).attr('begintime');
+		var endtime = $(this).attr('endtime');
+		//查询该账户明细
+		$.post("{:U('Finance/YfGz/BqFkAjax')}",{'supplierId':supplierId,'start_time':begintime,'end_time':endtime},function(data){
+			$('#bqfk').html("");
+
+			var html = " <tr><th>时间 </th><th>付款编码 </th><th>金额</th><th>备注</th></tr>";
+			var paymentDate = "";
+			var payment_number = "";
+			var money = "";
+			var memo = "";
+			$.each(data.list,function(i, item){
+				paymentDate=item.paymentDate ?  item.paymentDate : '';
+				payment_number=item.payment_number ? item.payment_number : '';
+				money=item.money ?  item.money : '';
+				memo=item.memo ?  item.memo : '';
+				html += "<tr><td>"+paymentDate+"</td><td>"+payment_number+"</td><td>"+money+"</td><td>"+memo+"</td></tr>";
+			});
+			// html += "<tr><th>合计 </th><th></th><th></th><th>"+moneyIncom+"</th><th>"+moneyExpense+"</th><th></th></tr>"; 
+			$("#bqfk").html(html);
+		})
+		$('#myModaWang2').modal();
+	});
+
+	$('.bqsk').click(function(){
+		var clientId = $(this).attr('clientId');
+		var begintime = $(this).attr('begintime');
+		var endtime = $(this).attr('endtime');
+		//查询该账户明细
+		$.post("{:U('Finance/YsGz/BqSkAjax')}",{'clientId':clientId,'start_time':begintime,'end_time':endtime},function(data){
+
+			$('#bqsk').html("");
+			var html = " <tr><th>时间 </th><th>发生类型 </th><th>金额</th><th>备注</th></tr>";
+			var collection_date = "";
+			var collection_number = "";
+			var money = "";
+			var memo = "";
+			$.each(data.list,function(i, item){
+				collection_date=item.collection_date ?  item.collection_date : '';
+				collection_number=item.collection_number ? item.collection_number : '';
+				money=item.money ?  item.money : '';
+				memo=item.memo ?  item.memo : '';
+				html += "<tr><td>"+collection_date+"</td><td>"+collection_number+"</td><td>"+money+"</td><td>"+memo+"</td></tr>";
+			});
+			// html += "<tr><th>合计 </th><th></th><th></th><th>"+moneyIncom+"</th><th>"+moneyExpense+"</th><th></th></tr>"; 
+			$("#bqsk").html(html);
+		})
+		$('#myModaYs2').modal();
+	});
+}) 
+</script> 

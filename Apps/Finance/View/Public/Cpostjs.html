@@ -1,0 +1,57 @@
+<script type="text/javascript"> 
+$(function(){
+	$('.newSon').click(function(){
+		var id = $(this).find('.id').val();
+		var url = "{:U('Storehouse/Cpchuku/getProduct')}";
+		$.ajax({ 
+		     type:"POST", //请求方式
+		     url:url, //请求路径
+		     cache: false,   //(默认: true) 设置为 false 将不缓存此页面。
+		     data:"chukuId="+id,  //传参
+		     dataType: "json",   //返回值类型 
+		     success:function(res){
+		    	var id = ""; 
+				var code = "";
+				var name = "";
+				var cnt = "";
+				var price = "";
+				var money = "";
+				var html = "";
+				$.each(res,function(){
+					code = this['code']; 
+					name = this['name'];
+					norms = this['norms'];
+					cnt = this['cnt'];
+					price = this['price'];
+					money = this['money'];
+					html += "<tr><td>"+code+"</td><td>"+name+"</td><td>"+norms+"</td><td>"+cnt+"</td><td>"+price+"</td><td>"+money+"</td></tr>"
+				})
+				$("#show").html(html);
+		     }
+		})
+	});
+	//自动计算金额
+	$("[name='price[]']").change(function(){
+		var price = $(this).val();
+		var cnt = $(this).parents('.form-group').find("[name='cnt[]']").val();
+		if(cnt==""){
+			alert("请先填写数量,谢谢！");
+			$(this).val("");
+			return false;
+		}
+		var money = $(this).parents('.form-group').find("[name='money[]']");
+		var m = parseFloat((parseFloat(cnt)*parseFloat(price)).toFixed(2));//js格式化数字并保留两位小数
+		money.val(m);
+	});
+	//判断是否填写了数量和金额
+	$("[name='money[]']").change(function(){
+		var cnt = $(this).parents('.form-group').find("[name='cnt[]']").val();
+		var price = $(this).parents('.form-group').find("[name='price[]']").val();
+		if(cnt==""||price==""){
+			alert("请先填写数量和单价,谢谢！");
+			$(this).val("");
+			return false;
+		}
+	})
+}) 
+</script> 

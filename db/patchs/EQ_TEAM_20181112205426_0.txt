@@ -1,0 +1,3 @@
+ALTER TABLE `ykb_ruku`
+ADD COLUMN `pId`  int(10) NULL COMMENT '退库操作的对象id' AFTER `utime`;
+

@@ -1,0 +1,149 @@
+<div class="row">
+  <div class="col-lg-12">
+    <div class="widget-container fluid-height clearfix">
+      <div class="heading">
+        <i class="icon-table"></i>付款管理
+        <a class="btn btn-sm btn-primary-outline pull-right" href="{:U('Finance/Payment/add')}">
+          <i class="icon-plus"></i>新增付款
+        </a>
+         <!--<a data-toggle="modal" class="btn btn-sm btn-primary-outline pull-right"  href="#delAll" title="点击后将会把所有的付款清空" >清除所有数据</a>-->
+         <a class="btn btn-sm btn-primary-outline pull-right" href="{:U('Finance/Payment/index',$arr+array('export'=>1))}">
+        导出数据</a>
+      </div>
+      <div class="widget-content padded clearfix">
+      <form action="{:U('Finance/Payment/index')}" class="form-horizontal" method="post">
+        <table class="tab search">
+          <tbody>
+            <tr>
+              <td>
+                <select class="form-control" tabindex="1" name="time_kind" id="time_kind" onchange=dateChange(this.value)>
+                  <option value="0" <if condition="$time_kind==0">selected="selected"</if>>全部</option>
+                  <option value="1" <if condition="$time_kind==1">selected="selected"</if>>本月</option>
+                  <option value="2" <if condition="$time_kind==2">selected="selected"</if>>上月</option>
+                  <option value="3" <if condition="$time_kind==3">selected="selected"</if>>本年</option>
+                </select>
+              </td>
+              <td>
+                  <input class="form-control" data-date-autoclose="true" data-date-format="yyyy-mm-dd" id="dpd1" name="start_time" placeholder="开始时间" type="text" value="{$start_time}">
+              </td>
+              <td>
+                  <input class="form-control" data-date-autoclose="true" data-date-format="yyyy-mm-dd" id="dpd2" name="end_time" placeholder="结束时间" type="text" value="{$end_time}">
+              </td>
+              <td>
+               <select class="form-control" name="payment_type">
+                 <option value="">选择项目大类</option>
+                 <foreach name="payment" item="v">
+                    <option value="{$v['id']}" <if condition="$pkind == $v['id']">selected="selected"</if> >{$v['payment_name']}</option>
+                 </foreach>
+               </select>
+              </td>
+              <td>
+               <select class="form-control" name="payment_type2">
+                 <option value="">选择项目子类</option>
+                 <foreach name="payment2" item="v">
+                    <option value="{$v['id']}" <if condition="$pkind2 == $v['id']">selected="selected"</if> >{$v['payment_name']}</option>
+                 </foreach>
+               </select>
+              </td>
+              <td><input class="form-control"  name="memo" type="text" placeholder="备注"  autocomplete="off" value="{$memo}"></td>
+              <td><button type="submit"  class="btn btn-primary sousuo"><i class="icon-search"></i> 搜索</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </form>
+      </div>
+      <div class="widget-content padded clearfix">
+        <!-- <table class="table table-bordered table-striped" id="datatable-editable"> -->
+        <table class="table table-bordered table-hover">
+          <thead>
+           <tr>
+                <th> 付款单号  </th>
+                <th> 付款时间  </th>
+                <th> 操作员    </th>
+                <th> 银行账号  </th>
+                <th> 付款项目  </th>
+                <th> 付款金额  </th>
+                <!-- <th> 付款类型  </th> -->
+                <th> 备注          </th>
+                <th> 操作          </th>
+            </tr>
+          </thead>
+          <tbody>
+            <foreach name="money" item="v">
+              <tr class="trRow">
+                <td>{$v['payment_number']}</td>
+                <td>{$v['payment_date']}</td>
+                <td>{$v['creator']}</td>
+                <td>{$v['bankname']}</td>
+                <td>{$v['son_name']}</td>
+                <td>{$v['payment_money']}</td>
+                <!-- <td>{$v['payment_type']}</td> -->
+                <td>{$v['memo']}</td>
+                <td>
+                  <if condition="$v['edit']!=1">
+                  <div class="action-buttons">
+                    <a class="table-actions" href="{:U('Finance/Payment/edit',array('id'=>$v['id'],'bankid'=>$v['bankid']))}"><i class="icon-pencil" name="cedit"></i></a>
+                    <input name="cval" type="hidden" value="{$v['item']}">
+                    <a class="table-actions" data-toggle="modal" href="#myModal{$v['id']}"><i class="icon-trash"></i></a>
+                      <!--删除模态框 -->
+                      <div class="modal fade" id="myModal{$v['id']}">
+                        <div class="modal-dialog">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <button aria-hidden="true" class="close" data-dismiss="modal" type="button">&times;</button>
+                              <h4 class="modal-title">
+                                   注意！
+                              </h4>
+                            </div>
+                            <div class="modal-body">
+                              <p>
+                                  确认删除吗?删除后将不可恢复！！！
+                              </p>
+                            </div>
+                            <div class="modal-footer">
+                              <a class="btn btn-primary" type="button" href="{:U('Finance/Payment/delect',array('id'=>$v['id']))}">删除</a>
+                              <button class="btn btn-default-outline" data-dismiss="modal" type="button">取消</button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <!-- 模态框结束 -->
+                  </div>
+                </td>
+                </if>
+              </tr>
+            </foreach>
+          </tbody>
+        </table>
+        <span>
+            {$page}
+        </span>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="delAll">
+  <div class="modal-dialog">
+    <div class="modal-content">
+    <form action="{:U('Finance/Payment/delAll')}" class="form-horizontal" method="post">
+      <div class="modal-header">
+        <button aria-hidden="true" class="close" data-dismiss="modal" type="button">&times;</button>
+        <h4 class="modal-title">请输入登录密码</h4>
+      </div>
+      <div class="modal-body">
+            <div  class="widget-content padded">
+                 <div class="form-group">
+                    <label class="control-label col-md-2">密码</label>
+                    <div class="col-md-6">
+                        <input class="form-control" name="password" placeholder=密码 type="password">
+                    </div>
+                  </div>
+            </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-primary" type="submit">确定</button><button class="btn btn-default-outline" data-dismiss="modal" type="button">取消</button>
+      </div>
+      </form>
+    </div>
+  </div>
+</div>

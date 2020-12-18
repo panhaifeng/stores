@@ -1,0 +1,8 @@
+ALTER TABLE `ykb_profit`
+ADD COLUMN `gdFeiyong`  decimal(10,3) NOT NULL COMMENT '固定费用' AFTER `zcRate`,
+ADD COLUMN `ptRate`  decimal(10,3) NOT NULL COMMENT '平台费用率' AFTER `gdFeiyong`,
+ADD COLUMN `ptFeiyong`  decimal(10,3) NOT NULL COMMENT '平台费用' AFTER `ptRate`,
+ADD COLUMN `proCost`  decimal(10,3) NOT NULL COMMENT '产品成本' AFTER `ptFeiyong`,
+ADD COLUMN `qtFeiyong`  decimal(10,3) NOT NULL COMMENT '其他费用' AFTER `proCost`,
+ADD COLUMN `profitMoney`  decimal(10,3) NOT NULL COMMENT '利润' AFTER `qtFeiyong`;
+

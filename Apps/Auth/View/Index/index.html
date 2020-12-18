@@ -1,0 +1,385 @@
+<div class="container-fluid main-content">
+        <div class="row">
+          <!-- Conversation -->
+          <div class="col-lg-12">
+            <div class="widget-container scrollable chat chat-page">
+              <div class="contact-list">
+                <div class="heading">组织架构<i class="icon-plus pull-right dropdown-toggle" data-toggle="dropdown"></i>
+                  	<div class="dropdown-menu pull-right">
+                        <li> 
+                          <a data-toggle="modal" href="#myModal"><i class="icon-plus-sign"></i>添加员工</a>
+                        </li>
+                        <li>
+                          <a href="#"><i class="icon-inbox"></i>批量导入</a>
+                        </li>
+                      </div>
+                </div>
+                <ul id="main" data-toggle="context">
+                  <li class=""><a href="{:U('Auth/Index/index')}">&nbsp;&nbsp;全部</a></li>
+                  <foreach name="departments" item="v">
+	                  <li class="dep"><a href="{:U('Auth/Index/index',array('id'=>$v['id']))}" id="{$v['id']}" value="{$v['name']}" >{$v['tags']}<i class="icon-folder-open text-info"></i>&nbsp;&nbsp;{$v['name']}</a></li>
+	                  <foreach name="v['child']" item="vr">
+		                  <li class="pos"><a href="{:U('Auth/Index/index',array('pid'=>$vr['id']))}" id="{$vr['id']}" bid="{$vr['bid']}" value="{$vr['title']}" pid="{$vr['pid']}" >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="icon-user text-info"></i>&nbsp;&nbsp;{$vr['title']}</a><span class="access label label-primary">授权</span></li>
+	                  </foreach>
+                  </foreach>
+                </ul>
+                
+                
+              </div>
+              <div class="heading text-center" style="background:#f2f2f2; border-bottom:1px solid #DDDDDD"> 成员列表</div>
+              <div class="widget-content padded">
+                <table class="table table-hover">
+                  <thead>
+                    <tr>
+                    	<th style="min-width:80px;">姓名</th>
+                    	<th>账号</th>
+                    	<th>微信号</th>
+                    	<th>手机</th>
+                    	<th>邮箱</th>
+                    	<th>职位</th>
+                    	<!-- <th>店铺</th> -->
+                    	<!-- th>状态</th -->
+                    </tr>
+                  </thead>
+                  <tbody>
+                  	<foreach name="users" item="uv">
+		                <tr>
+	                      <td>{$uv['real_name']}
+		                      <a href="JavaScript:;" value="{$uv['id']}" class="editBtn hide" >
+		                      <i class="icon-edit text-info"></i>
+		                      </a>
+	                       	  <a  data-toggle="modal" href="#"  onclick = "deleteData({$uv['id']},'{:U('Auth/User/delete')}')" class="deleteBtn hide"><i class="icon-trash text-danger"></i></a>
+	                      </td>
+	                      <td>{$uv['user_name']}</td>
+	                      <td>{$uv['user_id']}</td>
+	                      <td>{$uv['telephone']}</td>
+	                      <td>{$uv['email']}</td>
+	                      <td><foreach name="uv['group']" item="groups"><span class="label label-info">{$role_name[$groups['group_id']]}</span></foreach></td>
+	                      <!-- <td><foreach name="uv['store']" item="stores" key='k'><span class="label label-info">{$store_name[$stores['storeId']]}</span></foreach></td> -->
+	                      <!-- td><span class="clock" value="{$uv['status']}"  id="{$uv['id']}"><span class="label label-success">{:C('STATUS.'.$uv['status'])}</span></span></td -->
+	                    </tr>
+	                     <!--删除莫泰框 -->
+							      <div class="modal fade" id="myModal{$uv['id']}"> 
+				                  <div class="modal-dialog">
+				                    <div class="modal-content">
+				                      <div class="modal-header">
+				                        <button aria-hidden="true" class="close" data-dismiss="modal" type="button">&times;</button>
+				                        <h4 class="modal-title">
+				                         	 注意！
+				                        </h4>
+				                      </div>
+				                      <div class="modal-body">
+				                        <p>
+				                        	确认删除吗?删除后将不可恢复！！！
+				                        </p>
+				                      </div> 
+				                      <div class="modal-footer">
+				                        <a class="btn btn-primary" type="button" href="{:U('Auth/User/delete',array('id'=>$uv['id']))}">删除</a>
+				                        <button class="btn btn-default-outline" data-dismiss="modal" type="button">取消</button>
+				                      </div>
+				                      
+				                    </div>
+				                  </div>
+				                </div>
+				               <!-- 莫泰框结束 -->
+	                </foreach>
+                    
+                  </tbody>
+                </table>
+              </div>
+              
+            </div>
+          </div>
+        </div>
+      </div>
+      
+<div id="context-menu">
+  <ul class="dropdown-menu">
+      <li><a href="javascript:;" tabindex="-1" value="1">添加子部门</a></li>
+      <li><a href="javascript:;" tabindex="-1" value="4">添加职位</a></li>
+      <li><a href="javascript:;" tabindex="-1" value="2">重命名</a></li>
+      <li><a href="javascript:;" tabindex="-1" value="3">删除</a></li>
+  </ul>
+</div>  
+<div id="context-menu-pos">
+  <ul class="dropdown-menu">
+      <li><a href="javascript:;" tabindex="-1" value="2">重命名</a></li>
+      <li><a href="javascript:;" tabindex="-1" value="3">删除</a></li>
+  </ul>
+</div>     
+<div class="modal fade" id="department">
+  <div class="modal-dialog">
+    <div class="modal-content">
+    	<form action="{:U('Auth/Index/update')}" class="form-horizontal" method="post">
+		      <div class="modal-header">
+		        <button aria-hidden="true" class="close" data-dismiss="modal" type="button">&times;</button>
+		        <h4 class="modal-title">部门</h4>
+		      </div>
+		      <div class="modal-body">
+		          <div  class="widget-content padded">
+		          		<input name="pid" type="hidden">
+		          		<input name="id" type="hidden">
+			            <label class="control-label col-md-2">部门名称</label>
+			            <div class="col-md-7">
+			              	<input class="form-control" name="name" placeholder=部门名称 type="text">
+			            </div>
+		          </div>
+		      </div>
+		      <div class="modal-footer">
+		        <button class="btn btn-primary" type="submit">保存</button><button class="btn btn-default-outline" data-dismiss="modal" type="button">取消</button>
+		      </div>
+      	</form>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="deldepartment">
+  <div class="modal-dialog">
+    <div class="modal-content">
+    	<form action="{:U('Auth/Index/delete')}" class="form-horizontal" method="post">
+		      <div class="modal-header">
+		        <button aria-hidden="true" class="close" data-dismiss="modal" type="button">&times;</button>
+		        <h4 class="modal-title">删除部门</h4>
+		      </div>
+		      <div class="modal-body">
+		          <div  class="widget-content padded">
+		          		<input name="id" type="hidden">
+		          		<div class="row">
+				            <div class="col-md-3">
+				                <img src="__PUBLIC__/weixin/error.png"/>
+				            </div>
+				            <div class="col-md-9">
+				              	<br/>
+				                <h3>确认删除部门？</h3><p>没有子部门且没有成员的部门才可以被删除</p>
+				            </div>
+				          </div>
+		          </div>
+		      </div>
+		      <div class="modal-footer">
+		        <button class="btn btn-primary" type="submit">确定</button><button class="btn btn-default-outline" data-dismiss="modal" type="button">取消</button>
+		      </div>
+        </form>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="myModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+    <form action="{:U('Auth/User/update')}" class="form-horizontal" method="post">
+      <div class="modal-header">
+        <button aria-hidden="true" class="close" data-dismiss="modal" type="button">&times;</button>
+        <h4 class="modal-title">员工</h4>
+      </div>
+      <div class="modal-body">
+      		
+      		<div  class="widget-content padded">
+          		<input name="id" type="hidden">
+          		
+		          <div class="form-group">
+		            <label class="control-label col-md-2">账号</label>
+		            <div class="col-md-6">
+		              	<input class="form-control" name="user_name" placeholder=账号 type="text">
+		            </div>
+		          </div>
+		         <div class="form-group">
+		            <label class="control-label col-md-2">密码</label>
+		            <div class="col-md-6">
+		              	<input class="form-control" name="password" placeholder=密码 type="password">
+		            </div>
+		          </div>
+	            <div class="form-group">
+		            <label class="control-label col-md-2">姓名</label>
+		            <div class="col-md-6">
+		              	<input class="form-control" name="real_name" placeholder=姓名 type="text">
+		            </div>
+		          </div>
+		          <div class="form-group">
+		            <label class="control-label col-md-2">微信号</label>
+		            <div class="col-md-6">
+		              	<input class="form-control" name="user_id" placeholder=微信号 type="text">
+		            </div>
+		          </div>
+		          <div class="form-group">
+		            <label class="control-label col-md-2">手机号</label>
+		            <div class="col-md-6">
+		              	<input class="form-control" name="telephone" placeholder=手机号 type="text">
+		            </div>
+		          </div>
+		          <div class="form-group">
+		            <label class="control-label col-md-2">邮箱</label>
+		            <div class="col-md-6">
+		              	<input class="form-control" name="email" placeholder=邮箱 type="text">
+		            </div>
+		          </div>
+		          <div class="form-group">
+		            <label class="control-label col-md-2">部门</label>
+		            <div class="col-md-6">
+		              <select class="form-control" name="bid">
+			              <foreach name="departments" item="v">
+			              <option value="{$v['id']}">{$v['tags']}&nbsp;&nbsp; {$v['name']}</option>
+		                  </foreach>
+	                  </select>
+		            </div>
+		          </div>
+		          <div class="form-group">
+		            <label class="control-label col-md-2">职位</label>
+		            <div class="col-md-6">
+		              <select class="select2able ll" multiple="" name="position[]">
+		              	  <foreach name="roles" item="v">
+			              		<option value="{$v['id']}">&nbsp;&nbsp; {$v['title']}</option>
+		                  </foreach>
+		              </select>
+		            </div>
+		          </div>
+	              <div class="form-group">
+		            <label class="control-label col-md-2">店铺</label>
+		            <div class="col-md-6">
+		              <select class="select2able ss" multiple="" name="store[]">
+		              	  <foreach name="store" item="v" key='kks'>
+			              		<option value="{$kks}">&nbsp;&nbsp; {$v}</option>
+		                  </foreach>
+		              </select>
+		            </div>
+		          </div>
+            </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-primary" type="submit">保存</button><button class="btn btn-default-outline" data-dismiss="modal" type="button">取消</button>
+      </div>
+      </form>
+    </div>
+  </div>
+</div> 
+<div class="modal fade" id="position">
+  <div class="modal-dialog">
+    <div class="modal-content">
+    <form action="{:U('Auth/Role/update')}" class="form-horizontal" method="post">
+      <input name="id" type="hidden"/>
+      <input name="bid" type="hidden">
+      <input name="pid" type="hidden">
+      <input name="status" type="hidden" value="1">
+      <div class="modal-header">
+        <button aria-hidden="true" class="close" data-dismiss="modal" type="button">&times;</button>
+        <h4 class="modal-title">职位</h4>
+      </div>
+      <div class="modal-body">
+      		<div class="widget-content padded">
+          		  <div class="form-group">
+		            <label class="control-label col-md-2">职位名称</label>
+		            <div class="col-md-6">
+		              	<input class="form-control" name="title" placeholder=职位名称 type="text">
+		            </div>
+		          </div>
+		          <div class="form-group">
+		            <label class="control-label col-md-2">上级岗位</label>
+		            <div class="col-md-6">
+		              <select class="form-control" name="pid">
+		              <foreach name="roles" item="v">
+		              		<option value="{$v['id']}">{$v['tags']}{$v['title']}</option>
+	                  </foreach>
+	                  </select>
+		            </div>
+		          </div>
+		    </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-primary" type="submit">保存</button><button class="btn btn-default-outline" data-dismiss="modal" type="button">取消</button>
+      </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="editposition">
+  <div class="modal-dialog">
+    <div class="modal-content">
+    <form action="{:U('Auth/Role/update')}" class="form-horizontal" method="post">
+      <input name="id" type="hidden"/>
+      <div class="modal-header">
+        <button aria-hidden="true" class="close" data-dismiss="modal" type="button">&times;</button>
+        <h4 class="modal-title">职位</h4>
+      </div>
+      <div class="modal-body">
+      		<div class="widget-content padded">
+          		  <div class="form-group">
+		            <label class="control-label col-md-2">职位名称</label>
+		            <div class="col-md-6">
+		              	<input class="form-control" name="title" placeholder=职位名称 type="text">
+		            </div>
+		          </div>
+		    </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-primary" type="submit">保存</button><button class="btn btn-default-outline" data-dismiss="modal" type="button">取消</button>
+      </div>
+      </form>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="delposition">
+  <div class="modal-dialog">
+    <div class="modal-content">
+    	<form action="{:U('Auth/Role/delete')}" class="form-horizontal" method="post">
+		      <div class="modal-header">
+		        <button aria-hidden="true" class="close" data-dismiss="modal" type="button">&times;</button>
+		        <h4 class="modal-title">删除岗位</h4>
+		      </div>
+		      <div class="modal-body">
+		          <div  class="widget-content padded">
+		          		<input name="id" type="hidden">
+		          		<div class="row">
+				            <div class="col-md-3">
+				                <img src="__PUBLIC__/weixin/error.png"/>
+				            </div>
+				            <div class="col-md-9">
+				              	<br/>
+				                <h3>确认删除岗位？</h3><p>没有成员的岗位才可以被删除，否则相关岗位人员将失去原有系统权限</p>
+				            </div>
+				          </div>
+		          </div>
+		      </div>
+		      <div class="modal-footer">
+		        <button class="btn btn-primary" type="submit">确定</button><button class="btn btn-default-outline" data-dismiss="modal" type="button">取消</button>
+		      </div>
+        </form>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="access">
+  <div class="modal-dialog">
+    <div class="modal-content">
+    	<form action="{:U('Auth/Role/setAccess')}" class="form-horizontal" method="post">
+    		  <input type="hidden" id="access_id" name="id"/>
+		      <div class="modal-header">
+		        <button aria-hidden="true" class="close" data-dismiss="modal" type="button">&times;</button>
+		        <h4 class="modal-title">授权</h4>
+		      </div>
+		      <div class="modal-body">
+		      	  
+		      	  <div class="form-group">
+		            <label class="control-label col-md-2"></label>
+		            <div class="col-md-10">
+		            	<label class="checkbox-inline"><input type="checkbox" class="checkAll" name="chk"><span>全选</span></label>
+		            </div>
+		          </div>
+		      	  <foreach name="navs" item="v">
+		      	  	<div class="form-group">
+		      	  		
+			            <label class="control-label col-md-2">{$v['name']}</label>
+			            <div class="col-md-10">
+			            	<foreach name="v['child']" item="node">
+			              		<label class="checkbox-inline" style="min-width:120px;"><input type="checkbox" value="{$node['id']}" name="rules[]"><span>{$node['title']}</span></label>
+			            	</foreach>
+			            </div>
+			          </div>
+                 </foreach>
+		          
+		      </div>
+		      <div class="modal-footer">
+		        <button class="btn btn-primary" type="submit">确定</button><button class="btn btn-default-outline" data-dismiss="modal" type="button">取消</button>
+		      </div>
+        </form>
+    </div>
+  </div>
+</div> 
+

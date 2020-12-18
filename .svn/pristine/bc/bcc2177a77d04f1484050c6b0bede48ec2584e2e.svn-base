@@ -1,0 +1,39 @@
+{__NOLAYOUT__}
+<!DOCTYPE html>
+<head>
+  <meta charset="utf-8" />
+  <title>易客宝</title>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <meta content="易客宝" name="description" />
+  <meta content="易客宝" name="author" />
+  <link href="__PUBLIC__/css/bootstrap.min.css" rel="stylesheet" />
+  <style type="text/css">
+  	body { font-family:微软雅黑;}
+	a { text-decoration:none; color:#000;}
+	a:hover { text-decoration:none; }
+  	.browser { position:absolute; width:552px; height:252px; background:url(__PUBLIC__/images/browser.jpg) no-repeat; left:50%; top:30%; margin-left:-276px; margin-top:-101px;}
+	.google { position:absolute; bottom:0px; left:22px;}
+	.firefox { position:absolute; bottom:0px; left:220px;}
+	.ie { position:absolute; bottom:0px; right:28px;}
+  </style>
+</head>
+<!-- END HEAD -->
+<!-- BEGIN BODY -->
+<body>
+  <div class="browser">
+           <div class="btn google"><a href="http://www.google.cn/intl/zh-CN/chrome/" target="_blank">去谷歌官网下载</a></div>
+           <div class="btn firefox"><a href="http://www.firefox.com.cn/download/" target="_blank">去火狐官网下载</a></div>
+           <div class="btn ie"><a href="http://windows.microsoft.com/en-us/internet-explorer/download-ie" target="_blank">去IE官网下载</a></div>
+  </div>
+  
+  <!-- BEGIN JAVASCRIPTS -->
+  <script src="__PUBLIC__/assets/js/jquery-1.8.3.min.js"></script>
+  <script>
+    jQuery(document).ready(function() {     
+      
+    });
+  </script>
+  <!-- END JAVASCRIPTS -->
+</body>
+<!-- END BODY -->
+</html>

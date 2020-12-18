@@ -1,0 +1,42 @@
+<div class="container-fluid main-content">
+        <div class="row">
+          <!-- Conversation -->
+          <div class="col-lg-12">
+            <div class="widget-container scrollable chat chat-page">
+              <div class="contact-list">
+                <div class="heading">自定义字段
+                </div>
+                <ul id="main" data-toggle="context">
+                  <li class=""><a href="{:U('Baseinfo/Custom/fieldCustom')}">&nbsp;&nbsp;全部</a></li>
+                  <li class=""><a href="{:U('Baseinfo/Custom/fieldCustom',array('place'=>'1'))}">&nbsp;&nbsp;客户模块</a></li>
+                </ul>
+              </div>
+              <div class="heading text-center" style="background:#f2f2f2; border-bottom:1px solid #DDDDDD">自定义字段</div>
+              <div class="widget-content padded">
+                <form action="{:U('Baseinfo/Custom/fieldHandle')}" method="post">
+                    <foreach name="fields" item="v">
+                    	<div class="form-group">
+				            <label class=" control-label col-md-2" name=''>{:C("table.".$v['table'])}</label>
+				            <div class="col-md-10">
+				            	<foreach name="v['field']" item="node" key="key" >
+				              		<label class="checkbox-inline" style="min-width:100px;"><input type="checkbox" value="{$key}" name="{$v['table']}-fields[]" <if condition="$node['status'] == 1">checked='checked'</if> /><span>{$node['text']}</span></label>
+				            	</foreach>
+				            </div>
+				          </div>
+                    </foreach>
+		      	  	
+			       <div class="form-group">
+						<label class="control-label col-md-3"></label>
+						<div class="col-xs-9 col-md-2">
+							<button class="btn btn-primary" type="submit">保存</button>
+						</div>
+					</div>
+			        </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+
+

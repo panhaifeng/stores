@@ -1,0 +1,172 @@
+<div class="row"> 
+  <div class="col-lg-6">
+    <div class="widget-container fluid-height clearfix">
+      <div class="heading">
+        <i class="icon-table"></i><if condition="$kind ==1">收款项目管理<else />付款项目管理</if>
+        <if condition="$kind==1">
+        <a id="addrow2" class="btn btn-sm btn-primary-outline pull-right" href="#">
+          <i class="icon-plus"></i>新增项目
+        </a>
+        <else />
+        <a id="addrow2" class="btn btn-sm btn-primary-outline pull-right" href="#">
+          <i class="icon-plus"></i>新增项目
+        </a>
+        </if> 
+      </div> 
+      <div class="widget-content padded clearfix"> 
+      <form <if condition="$kind ==1">action="{:U('Finance/Base/collection')}"<else />action="{:U('Finance/Base/payment')}"</if> class="form-horizontal" method="post">
+	    <table class="tab search"> 
+	      <tbody>
+	        <tr>
+	          <if condition="$kind==1">
+	          <td><input class="form-control"  name="collection_name" type="text" placeholder="项目名称" value="{$name}"></td>
+	          <else />
+	          <td><input class="form-control"  name="payment_name" type="text" placeholder="项目名称" value="{$name}"></td>
+	          </if> 
+	          <td><input class="form-control"  name="parentId" type="hidden" value="{$parentId}"></td> 
+	          <td><button type="submit"  class="btn btn-primary sousuo"><i class="icon-search"></i> 搜索</button></td> 
+	        </tr>
+	      </tbody> 
+	    </table> 
+	  </form> 
+	  </div> 
+      <div class="widget-content padded clearfix"> 
+        <!-- <table class="table table-bordered table-striped" id="datatable-editable"> -->
+        <table class="table table-bordered table-striped"> 
+          <thead>
+           <tr>
+	            <th> 项目编码  </th>
+	            <th> 项目名称  </th>
+	            <th> 备注          </th>
+	            <th> 操作          </th> 
+            </tr> 
+          </thead>
+          <tbody class="newTr"> 
+            <form <if condition="$kind ==1">action="{:U('Finance/Base/collectionInsert')}"<else />action="{:U('Finance/Base/paymentInsert')}"</if> method="post">
+            <if condition="$kind ==1">
+            <tr class="Rowcollect">
+              <td><input type="text" id="collection_code" name="collection_code" value=""><input type="hidden" id="id" name="id"></td>
+              <td><input type="text" id="collection_name" name="collection_name" value=""></td> 
+              <td><input type="text" id="memo" name="memo" value=""></td>
+              <td><button class="btn btn-xs btn-primary" type="submit">保存</button>&nbsp;<a id="rowdelect" class="btn btn-xs btn-danger" >删除</a></td>
+            </tr> 
+            <else />
+            <tr class="Rowcollect">
+              <td><input type="text" id="payment_code" name="payment_code" value=""><input type="hidden" id="id" name="id"></td>
+              <td><input type="text" id="payment_name" name="payment_name" value=""></td> 
+              <td><input type="text" id="memo" name="memo" value=""></td>
+              <td><button class="btn btn-xs btn-primary" type="submit">保存</button>&nbsp;<a id="rowdelect" class="btn btn-xs btn-danger" >删除</a></td>
+            </tr>
+            </if>
+            </form> 
+         	<foreach name="items" item="v"> 
+              <tr class="newSon" style="cursor:pointer;"> 
+                <td style="display:none;"><input type="hidden" class="id" id="id" value="{$v['id']}"/><input type="hidden" class="kind" id="kind" value="{$kind}"/></td> 
+                <td id="code{$v['id']}">{$v['code']}<input type="hidden" class="code" id="code" name="code" value="{$v['code']}" /></td>
+                <td id="name{$v['id']}">{$v['name']}<input type="hidden" class="name" id="name" value="{$v['name']}"/></td> 
+                <td id="memo{$v['id']}">{$v['memo']}<input type="hidden" class="memo" id="memo" value="{$v['memo']}"/></td> 
+                <td>
+				  <div id="rowedit{$v['id']}" name="newedit" class="action-buttons"> 
+                    <span name="rowedit"><a class="table-actions" href="#"><input type="hidden" id="editid" value="{$v['id']}"/><input type="hidden" class="kind" id="kind" value="{$kind}"/><i id="edit{$v['id']}" class="icon-pencil" title="修改"></i></a></span>
+                    <if condition="$v['exist']==0"><a class="table-actions" data-toggle="modal" href="#myModal{$v['id']}"><i class="icon-trash" title="删除"></i></a></if>
+					  <!--删除模态框 --> 
+				      <div class="modal fade" id="myModal{$v['id']}"> 
+	                    <div class="modal-dialog">
+	                      <div class="modal-content">
+	                        <div class="modal-header">
+	                          <button aria-hidden="true" class="close" data-dismiss="modal" type="button">&times;</button>
+	                          <h4 class="modal-title">
+	                         	   注意！
+	                          </h4>
+	                        </div>
+	                        <div class="modal-body">
+	                          <p>
+	                        	  确认删除吗?删除后将不可恢复！！！
+	                          </p>
+	                        </div> 
+	                        <div class="modal-footer">
+	                          <a class="btn btn-primary" type="button" <if condition="$kind == 1">href="{:U('Finance/Base/delectcollection',array('id'=>$v['id']))}"<else />href="{:U('Finance/Base/delectpayment',array('id'=>$v['id']))}"</if>>删除</a>
+	                          <button class="btn btn-default-outline" data-dismiss="modal" type="button">取消</button> 
+	                        </div>
+	                   	  </div>
+	                    </div>
+		              </div>
+		              <!-- 模态框结束 --> 
+                  </div>
+				</td>
+              </tr>
+            </foreach>
+          </tbody>
+        </table>
+        <span>
+			{$page} 
+		</span>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-6"> 
+    <div class="widget-container fluid-height clearfix"> 
+      <div class="heading">
+        <i class="icon-table"></i><if condition="$kind ==1">收款子项目<else />付款子项目</if> 
+        <if condition="$kind==1">
+        <a id="addson2" class="btn btn-sm btn-primary-outline pull-right" href="#">
+          <i class="icon-plus"></i>新增子项目
+        </a>
+        <else />
+        <a id="addson2" class="btn btn-sm btn-primary-outline pull-right" href="#">
+          <i class="icon-plus"></i>新增子项目 
+        </a>
+        </if> 
+      </div> 
+      <!-- <div class="widget-content padded clearfix">
+      <form <if condition="$kind ==1">action="{:U('Finance/Base/collection')}"<else />action="{:U('Finance/Base/payment')}"</if> class="form-horizontal" method="post">
+	    <table class="tab search"> 
+	      <tbody> 
+	        <tr>
+	          <if condition="$kind==1">
+	          <td><input class="form-control"  name="collection_name" type="text" placeholder="子项目名称" value="{$name}"></td>
+	          <else />
+	          <td><input class="form-control"  name="payment_name" type="text" placeholder="子项目名称" value="{$name}"></td>
+	          </if> 
+	          <td><input class="form-control"  name="parentId" type="hidden" value="{$parentId}"></td> 
+	          <td><button type="submit"  class="btn btn-primary sousuo"><i class="icon-search"></i> 搜索</button></td> 
+	        </tr>
+	      </tbody> 
+	    </table> 
+	  </form> 
+	  </div>  -->
+      <div class="widget-content padded clearfix"> 
+        <!-- <table class="table table-bordered table-striped" id="datatable-editable"> -->
+        <table class="table table-bordered table-striped"> 
+          <thead>
+           <tr>
+	            <th> 项目编码  </th>
+	            <th> 项目名称  </th>
+	            <th> 备注          </th>
+	            <th> 操作          </th> 
+            </tr> 
+          </thead>
+          <tbody id="show">
+            <form <if condition="$kind==1"> action='{:U('Finance/Base/collectionInsert')}'<else />action='{:U('Finance/Base/paymentInsert')}'</if> method='post'>
+           	<if condition="$kind==1">
+            <tr class='Soncollect'> 
+              <td><input type='text' id='collection_code' name='collection_code' value=''><input type='hidden' id='id' name='id'><input type='hidden' id='sonpid' name='parentId'></td> 
+              <td><input type='text' id='collection_name' name='collection_name' value=''></td> 
+              <td><input type='text' id='memo' name='memo' value=''></td>
+              <td><button class='btn btn-xs btn-primary' type='submit'>保存</button>&nbsp;<a id='sondelect' class='btn btn-xs btn-danger' >删除</a></td>
+            </tr> 
+            <else /> 
+            <tr class='Soncollect'> 
+              <td><input type='text' id='payment_code' name='payment_code' value=''><input type='hidden' id='id' name='id'><input type='hidden' id='sonpid' name='parentId'></td> 
+              <td><input type='text' id='payment_name' name='payment_name' value=''></td> 
+              <td><input type='text' id='memo' name='memo' value=''></td>
+              <td><button class='btn btn-xs btn-primary' type='submit'>保存</button>&nbsp;<a id='sondelect' class='btn btn-xs btn-danger' >删除</a></td>
+            </tr>
+            </if>
+            </form> 
+          </tbody> 
+        </table> 
+      </div>
+    </div>
+  </div>
+</div>

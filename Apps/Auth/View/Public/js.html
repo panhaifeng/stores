@@ -1,0 +1,161 @@
+<script src="__PUBLIC__/js/bootstrap-contextmenu.js"></script>
+<script type="text/javascript">
+var temp="";
+$('#main .dep').contextmenu({
+  target: '#context-menu',
+  onItem: function (context, e) {
+	  //获取操作类型和相关数据;
+	  //aid为操作类型：1为添加子部门，2为重命名，3为删除部门，4为添加职位
+	  var aid = $(e.target).attr('value');
+	  //alert(aid);
+	  switch (aid) {
+	  	  case "1":
+	  		  $('input[name="name"]').val("");
+			  var pid = context.find('a').attr('id');
+			  $('input[name="pid"]').val(pid);
+			  $('#department').modal();
+			  break;
+		  case "2":
+			  var name = context.find('a').attr('value');
+			  var id = context.find('a').attr('id');
+			  $('input[name="id"]').val(id);
+			  $('input[name="name"]').val(name);
+			  $('#department').modal();
+		      break;
+		  case "3":
+			  var id = context.find('a').attr('id');
+			  $('input[name="id"]').val(id);
+			  $('#deldepartment').modal();
+			  break;
+		  case "4":
+			  var bid = context.find('a').attr('id');
+			  $('input[name="bid"]').val(bid);
+			  $('#position').modal();
+			  break;
+		  default:
+		      break;
+	  }
+	  
+      
+    }
+});
+$('#main .pos').contextmenu({
+	  target: '#context-menu-pos',
+	  onItem: function (context, e) {
+		  //获取操作类型和相关数据;
+		  //aid为操作类型：，2为重命名，3为删除
+		  var aid = $(e.target).attr('value');
+		  switch (aid) {
+		  	  case "2":
+				  var title = context.find('a').attr('value');
+				  var id = context.find('a').attr('id');
+				  //修改上级部门代码
+				  //var pid = context.find('a').attr('pid');
+				  //var bid = context.find('a').attr('bid');
+				  $('input[name="id"]').val(id);
+				  $('input[name="title"]').val(title);
+				  /* $('input[name="bid"]').val(bid);
+				  $("select[name='pid'] option[value='"+pid+"']").attr('selected','selected'); */
+				  $('#editposition').modal();
+			      break;
+			  case "3":
+				  var id = context.find('a').attr('id');
+				  $('input[name="id"]').val(id);
+				  $('#delposition').modal();
+				  break;
+			  default:
+			      break;
+		  }
+		  
+	      
+	    }
+	});
+
+//编辑删除按钮显示隐藏方法
+$('tr').mouseover(function(){
+	$(this).find('a').addClass('show');
+	$(this).find('a').removeClass('hide');
+}).mouseleave(function(){
+	$(this).find('a').removeClass('show');
+	$(this).find('a').addClass('hide');
+})
+//授权
+$('.access').click(function(){
+	var id = $(this).siblings('a').attr('id');
+	$('#access_id').val(id);
+	//查询角色已有的角色
+	$.post("{:U('Auth/Role/access')}",{'id':id},function(data){
+		$("input[name='rules[]']").prop('checked',false);
+		$.each(data, function(i, item){
+			$("input[name='rules[]'][value='"+item+"']").prop('checked',true);
+		});
+	})
+	$('#access').modal();
+})
+
+//点击全选
+$('.checkAll').click(function(){
+	   if($('input[name="chk"]').prop("checked")){
+	   $("input[name='rules[]']").each(function() {
+		   $(this).prop("checked", true);
+		   });
+	   }else{
+		$("input[name='rules[]']").each(function() {
+		   $(this).attr("checked", false);
+		   });
+	   }
+});
+//编辑用户
+$('.editBtn').click(function(){
+	var id = $(this).attr('value');
+	
+	//查询角色已有的角色
+	$.post("{:U('Auth/User/getUserInfo')}",{'id':id},function(data){
+		$("#myModal input[name='id']").val(id);
+		$("input[name='user_name']").val(data.user_name);
+		$("input[name='user_id']").val(data.user_id);
+		$("input[name='real_name']").val(data.real_name);
+		$("input[name='telephone']").val(data.telephone);
+		$("input[name='email']").val(data.email);
+		$("select[name='bid'] option[value='"+data.bid+"']").attr('selected','selected');
+		var groups = [];
+		$.each(data.group, function(i, item){ 
+			$("select[name='position[]'] option[value='"+item.group_id+"']").attr('selected','selected');
+			groups.push(item.group_id);
+		});
+		$(".ll").val(groups).trigger("change");
+		var stores = [];
+		if(data.store){
+			$.each(data.store,function(i,item){
+				$("select[name='store[]'] option[value='"+item.storeId+"']").attr('selected','selected');
+				stores.push(item.storeId);
+			});
+			$(".ss").val(stores).trigger('change');
+		}else{
+			$(".ss").val('').trigger('change');
+		}
+	
+	})
+	$('#myModal').modal();
+});
+//更改用户状态
+$('.clock').click(function(){
+	var status = $(this).attr('value');
+	var id = $(this).attr('id');
+	$.post("{:U('Auth/User/changeUserLockStatus')}",{'id':id,'status':status},function(data){
+		if(!data.success) {
+			return false;
+		}else{
+			alert(data.msg);
+			window.location.reload();
+		}
+	});
+	
+	})
+	
+	
+	
+	
+	
+	
+</script>

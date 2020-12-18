@@ -1,0 +1,38 @@
+<div class="row">
+  <div class="col-lg-12"> 
+    <div class="widget-container fluid-height clearfix">  
+      <div class="heading">
+        <i class="icon-reorder"></i>供应商登记  
+      </div> 
+      <div class="widget-content padded"> 
+        <form action="{:U('Supplier/Index/addInsert')}" class="form-horizontal" method="post"> 
+          <div class="form-group mclient">
+             <label class="control-label col-md-2">供应商名称<i style="color:red;">*</i></label> 
+             <div class="col-md-3"> 
+               <input class="form-control" type="text" id="supplier_name" name="supplier_name" placeholder="供应商名称" value="{$Supplier['supplier_name']}" />
+               <input class="form-control" type="hidden" name="id" value="{$Supplier['id']}" />
+             </div> 
+          </div> 
+          <div class="form-group"> 
+            <label class="control-label col-md-2">联系人<i style="color:red;">*</i></label> 
+            <div class="col-md-3"> 
+              <input id="supplier_people" name="supplier_people" class="form-control" placeholder="联系人" type="text" value="{$Supplier['supplier_people']}"> 
+            </div>
+          </div> 
+          <div class="form-group"> 
+            <label class="control-label col-md-2">电话<i style="color:red;">*</i></label> 
+            <div class="col-md-3"> 
+              <input id="supplier_tel" name="supplier_tel" class="form-control" placeholder="联系电话" type="text" value="{$Supplier['supplier_tel']}"> 
+            </div> 
+          </div> 
+          <div class="form-group"> 
+            <label class="control-label col-md-2"></label> 
+            <div class="col-md-7">
+              <button class="btn btn-primary" type="submit">保存</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

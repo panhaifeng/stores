@@ -1,0 +1,209 @@
+
+<div class="container-fluid main-content">
+	<div class="row">
+		<div class="col-lg-12">
+			<div class="widget-container fluid-height clearfix">  
+				<div class="heading">
+					<i class="icon-reorder"></i>添加成品 
+				</div>
+				<div class="widget-content padded">
+					<form
+						action="{:U('Baseinfo/Chengpin/addInsert')}" method="post" class="form-horizontal">
+						<div class="form-group"> 
+							<label class="control-label col-md-3">编码</label> 
+							<div class="col-md-3">
+								<input class="form-control" type="text" name="code" value="{$product['code']}" 
+									placeholder="编码"> 
+							</div>
+							<label class="control-label col-md-1">型号</label> 
+							<div class="col-md-3">
+								<input class="form-control" type="text" name="kind" value="{$product['kind']}" 
+									placeholder="型号"> 
+							</div>
+						</div> 
+						<div class="form-group"> 
+							<label class="control-label col-md-3">品牌</label> 
+							<div class="col-md-3">
+								<input class="form-control" type="text" name="name" value="{$product['name']}"
+									placeholder="品牌"> 
+							</div>
+							<label class="control-label col-md-1">颜色</label> 
+							<div class="col-md-3">
+								<input class="form-control" type="text" name="color" value="{$product['color']}" 
+									placeholder="颜色"> 
+							</div>
+						</div>
+						<!-- <div class="form-group"> 
+							<label class="control-label col-md-2">规格</label> 
+							<div class="col-md-4">
+								<input class="form-control" type="text" name="norms" value="{$product['norms']}" 
+									placeholder="规格"> 
+								<input type="hidden" name="id" value="{$product['id']}">
+							</div>
+						</div> --> 
+						<div class="heading">
+								<i class="icon-reorder"></i>原料构成&nbsp;&nbsp;&nbsp;<a href="javascript:;" class="addproduct"><i class="icon-plus"></i></a>
+							</div> 
+							<div class="head" style="margin-top:-1%;">
+								<div class="form-group">
+									<label class="control-label col-md-3" style="margin-left:2%;">原料编码</label> 
+									<label class="control-label col-md-2">原料名称</label> 	
+									<label class="control-label col-md-2">原料型号</label> 
+									<label class="control-label col-md-2">数量</label> 	
+								</div>
+							</div> 
+							<div class="contact"> 
+							<div class="form-group product" style="margin-bottom:5px;"> 
+							    <label class="control-label col-md-2"></label>
+					            <div class="col-sm-2"> 
+					              <div class="input-group"> 
+					                <input class="form-control" type="text" id="product_code" value="{$Product['product_code']}"><span class="input-group-btn"><a id="productSelect" class="btn btn-default productSelect" type="button" data-toggle="modal" href="#myModalc">请选择</a></span></input>
+					              	<input type="hidden" id="productId" name="productId[]" value="{$Ruku['sid']}"> 
+					              	<input type="hidden" id="isbox" name="isbox[]" value="0"> 
+					              </div> 
+					            </div> 
+								<div class="col-sm-2"> 
+									<input class="form-control" type="text" id="product_name" value="{$Product['product_name']}">  
+								</div>
+					            <div class="col-sm-2"> 
+					                <input class="form-control" type="text" id="product_norms" value="{$Product['product_norms']}"> 
+					            </div> 
+					            <div class="col-sm-2"> 
+									<input class="form-control" type="text" name="cnt[]" value="{$Ruku['cnt']}">  
+								</div>
+							</div>
+							<div class="form-group product" style="margin-bottom:5px;"> 
+						        <a class="ruku_remove btn btn-sm btn-primary-outline pull-left" style="position:absolute;z-index:99;margin-left:5%;" href="javascript:;">
+						          <i class="icon-minus"></i>删除明细  
+						        </a>
+					            <label class="control-label col-md-2"></label>
+					            <div class="col-sm-2"> 
+					              <div class="input-group"> 
+					                <input class="form-control" type="text" id="product_code" value="{$Product['product_code']}"><span class="input-group-btn"><a id="productSelect" class="btn btn-default productSelect" type="button" data-toggle="modal" href="#myModalc">请选择</a></span></input>
+					              	<input type="hidden" id="productId" name="productId[]" value="{$Ruku['sid']}"> 
+					              	<input type="hidden" id="isbox" name="isbox[]" value="0"> 
+					              </div> 
+					            </div> 
+								<div class="col-sm-2"> 
+									<input class="form-control" type="text" id="product_name" value="{$Product['product_name']}">  
+								</div>
+					            <div class="col-sm-2"> 
+					                <input class="form-control" type="text" id="product_norms" value="{$Product['product_norms']}"> 
+					            </div> 
+					            <div class="col-sm-2"> 
+									<input class="form-control" type="text" name="cnt[]" value="{$Ruku['cnt']}">  
+								</div>
+							</div>
+							<div class="form-group product" style="margin-bottom:5px;"> 
+						        <a class="ruku_remove btn btn-sm btn-primary-outline pull-left" style="position:absolute;z-index:99;margin-left:5%;" href="javascript:;">
+						          <i class="icon-minus"></i>删除明细  
+						        </a>
+					            <label class="control-label col-md-2"></label>
+					            <div class="col-sm-2"> 
+					              <div class="input-group"> 
+					                <input class="form-control" type="text" id="product_code" value="{$Product['product_code']}"><span class="input-group-btn"><a id="productSelect" class="btn btn-default productSelect" type="button" data-toggle="modal" href="#myModalc">请选择</a></span></input>
+					              	<input type="hidden" id="productId" name="productId[]" value="{$Ruku['sid']}"> 
+					              	<input type="hidden" id="isbox" name="isbox[]" value="0"> 
+					              </div> 
+					            </div> 
+								<div class="col-sm-2"> 
+									<input class="form-control" type="text" id="product_name" value="{$Product['product_name']}">  
+								</div>
+					            <div class="col-sm-2"> 
+					                <input class="form-control" type="text" id="product_norms" value="{$Product['product_norms']}"> 
+					            </div> 
+					            <div class="col-sm-2"> 
+									<input class="form-control" type="text" name="cnt[]" value="{$Ruku['cnt']}">  
+								</div>
+							</div>
+							</div>
+							<div id="contactDiv"></div> 
+							<div class="heading">
+								<i class="icon-reorder"></i>包装
+							</div> 
+							<div class="form-group product" style="margin-bottom:5px;"> 
+					            <label class="control-label col-md-2"></label>
+					            <div class="col-sm-2"> 
+					              <div class="input-group"> 
+					                <input class="form-control" type="text" id="product_code" value="{$Product['product_code']}"><span class="input-group-btn"><a id="productSelect" class="btn btn-default productSelect" type="button" data-toggle="modal" href="#myModalc">请选择</a></span></input>
+					              	<input type="hidden" id="productId" name="productId[]" value="{$Ruku['sid']}"> 
+					              	<input type="hidden" id="isbox" name="isbox[]" value="1"> 
+					              </div> 
+					            </div> 
+								<div class="col-sm-2"> 
+									<input class="form-control" type="text" id="product_name" value="{$Product['product_name']}">  
+								</div>
+					            <div class="col-sm-2"> 
+					                <input class="form-control" type="text" id="product_norms" value="{$Product['product_norms']}"> 
+					            </div> 
+					            <div class="col-sm-2"> 
+									<input class="form-control" type="text" name="cnt[]" value="{$Ruku['cnt']}">  
+								</div>
+							</div> 
+							<div id="boxDiv"></div> 
+							<hr> 
+								<div class="form-group">
+									<label class="control-label col-md-3"></label>
+									<div class="col-md-4">
+										<button class="btn btn-primary" type="submit">保存</button> 
+									</div>
+								</div>
+							</form> 
+							<div class="contact2 product">  
+								<div class="form-group" style="margin-bottom:5px;"> 
+							        <a class="ruku_remove btn btn-sm btn-primary-outline pull-left" style="position:absolute;z-index:99;margin-left:5%;" href="javascript:;">
+							          <i class="icon-minus"></i>删除明细  
+							        </a>
+						            <label class="control-label col-md-2"></label>
+						            <div class="col-sm-2"> 
+						              <div class="input-group"> 
+						                <input class="form-control" type="text" id="product_code" value="{$Product['product_code']}"><span class="input-group-btn"><a id="productSelect" class="btn btn-default productSelect" type="button" data-toggle="modal" href="#myModalc">请选择</a></span></input>
+						              	<input type="hidden" id="productId" name="productId[]" value="{$Ruku['sid']}"> 
+						              	<input type="hidden" id="isbox" name="isbox[]" value="0"> 
+						              </div> 
+						            </div> 
+									<div class="col-sm-2" > 
+										<input class="form-control" type="text" id="product_name" value="{$Product['product_name']}">  
+									</div>
+						            <div class="col-sm-2"> 
+						                <input class="form-control" type="text" id="product_norms" value="{$Product['product_norms']}"> 
+						            </div> 
+						            <div class="col-sm-2"> 
+										<input class="form-control" type="text" name="cnt[]" value="{$Ruku['cnt']}">  
+									</div> 
+								</div> 
+							</div>
+					
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="modal fade" id="myModalc"> 
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header"> 
+        <button aria-hidden="true" class="close" data-dismiss="modal" type="button">&times;</button>
+        <h4 class="modal-title"> 
+          	原料选择
+        </h4>
+      </div>
+      <div id="productList">  
+        <div class="form-group">
+	      <div class="modal-body">
+	        <div class="col-md-5"> 
+	          <div class="input-group">
+	            <input id="productKey" class="form-control" type="text" placeholder="原料名称"><span class="input-group-btn"><button id="searchList2" class="btn btn-default" type="button">搜索</button></span></input> 
+	          </div> 
+	        </div> 
+            <table class="table table-striped "> 
+              <tbody id="product"></tbody>  
+            </table>
+            <div class="pull-right" id="page2"></div> 
+	      </div>
+        </div>
+      </div>
+    </div>
+  </div> 
+</div> 
+<include file="Public:addjs" /> 

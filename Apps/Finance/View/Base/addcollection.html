@@ -1,0 +1,72 @@
+<div class="row">
+  <div class="col-lg-12"> 
+    <div class="widget-container fluid-height clearfix">  
+      <div class="heading">
+        <i class="icon-reorder"></i><if condition="$kind == 1" >收款项目登记 <else />付款项目登记 </if> 
+      </div>
+      <if condition="$kind == 1">
+      <div class="widget-content padded"> 
+        <form action="{:U('Finance/Base/collectionInsert')}" class="form-horizontal" method="post"> 
+          <div class="form-group"> 
+            <label class="control-label col-md-2">项目编号</label>  	
+            <div class="col-md-3"> 
+              <input id="collection_code" name="collection_code" class="form-control" placeholder="系统自动生成" type="text" value="{$collection['collection_code']}">
+              <input id="id" name="id" class="form-control" type="hidden" value="{$collection['id']}">
+              <input id="parentId" name="parentId" class="form-control" type="hidden" value="{$parentId}">  	
+            </div> 
+          </div> 
+          <div class="form-group">
+            <label class="control-label col-md-2">项目名称</label> 
+            <div class="col-md-3"> 
+              <input id="collection_name" name="collection_name" class="form-control" placeholder="项目名称" type="text" value="{$collection['collection_name']}"> 
+            </div> 
+          </div> 
+          <div class="form-group">
+            <label class="control-label col-md-2">账户备注</label> 
+            <div class="col-md-3">
+              <textarea id="memo" name="memo" class="form-control" rows="3">{$collection['memo']}</textarea> 
+            </div> 
+          </div> 
+          <div class="form-group">
+            <label class="control-label col-md-2"></label>
+            <div class="col-md-7">
+              <button class="btn btn-primary" type="submit">保存</button> 
+            </div>
+          </div>
+        </form>
+      </div>
+      <else />
+      <div class="widget-content padded"> 
+        <form action="{:U('Finance/Base/paymentInsert')}" class="form-horizontal" method="post"> 
+          <div class="form-group"> 
+            <label class="control-label col-md-2">项目编号</label>  	
+            <div class="col-md-3"> 
+              <input id="payment_code" name="payment_code" class="form-control" placeholder="系统自动生成" type="text" value="{$payment['payment_code']}">
+              <input id="id" name="id" class="form-control" type="hidden" value="{$payment['id']}">
+              <input id="parentId" name="parentId" class="form-control" type="hidden" value="{$parentId}">  
+            </div> 
+          </div> 
+          <div class="form-group">
+            <label class="control-label col-md-2">项目名称</label> 
+            <div class="col-md-3"> 
+              <input id="payment_name" name="payment_name" class="form-control" placeholder="项目名称" type="text" value="{$payment['payment_name']}"> 
+            </div> 
+          </div> 
+          <div class="form-group">
+            <label class="control-label col-md-2">账户备注</label> 
+            <div class="col-md-3">
+              <textarea id="memo" name="memo" class="form-control" rows="3">{$payment['memo']}</textarea> 
+            </div> 
+          </div> 
+          <div class="form-group">
+            <label class="control-label col-md-2"></label>
+            <div class="col-md-7">
+              <button class="btn btn-primary" type="submit">保存</button> 
+            </div>
+          </div>
+        </form>
+      </div>
+      </if>
+    </div>
+  </div>
+</div>

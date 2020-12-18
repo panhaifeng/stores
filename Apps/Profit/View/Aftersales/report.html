@@ -1,0 +1,71 @@
+<div class="row">
+  <div class="col-lg-12"> 
+    <div class="widget-container fluid-height clearfix">
+      <div class="heading">
+          <i class="icon-table"></i>售后统计
+          <a class="btn btn-sm btn-primary-outline pull-right" href="{:U('Profit/Aftersales/exportReport',$arr+array('export'=>1))}">导出数据</a>
+      </div>
+      <div class="widget-content padded clearfix">
+      <form action="{:U('Profit/Aftersales/report')}" class="form-horizontal" method="post">
+	    <table class="tab search"> 
+	      <tbody> 
+	        <tr>
+	           <td>
+		      	<select class="form-control" tabindex="1" name="time_kind" id="time_kind" onchange=dateChange(this.value)> 
+	              <option value="0" <if condition="$time_kind==0">selected="selected"</if>>全部</option> 
+	              <option value="1" <if condition="$time_kind==1">selected="selected"</if>>本月</option>
+	              <option value="2" <if condition="$time_kind==2">selected="selected"</if>>上月</option> 
+	              <option value="3" <if condition="$time_kind==3">selected="selected"</if>>本年</option> 
+	            </select> 
+		      </td> 
+	          <td>
+	              <input class="form-control" data-date-autoclose="true" data-date-format="yyyy-mm-dd" id="dpd1" name="start_time" placeholder="开始时间" type="text" value="{$start_time}"> 
+	          </td> 
+	          <td>
+	          	  <input class="form-control" data-date-autoclose="true" data-date-format="yyyy-mm-dd" id="dpd2" name="end_time" placeholder="结束时间" type="text" value="{$end_time}"> 
+	          </td> 
+	          <td>
+	            <select class="form-control"  name="store"  name="store">
+	              <option value="">选择店铺</option>
+	              <foreach name="stores" item="v" key="key"> 
+                  <option value="{$key}" <if condition="$store == $key">selected="selected"</if> >{$v}</option>
+                </foreach> 
+	            </select>
+	          </td>
+	          <td><button type="submit"  class="btn btn-primary sousuo"><i class="icon-search"></i> 搜索</button></td>
+	        </tr>
+	      </tbody>
+	    </table> 
+	  </form> 
+	  </div> 
+      <div class="widget-content padded clearfix"> 
+        <table class="table table-bordered table-striped">
+         <thead>
+            <!-- <th> 日期</th> -->
+            <if condition="$arr['store']!=''">
+              <th> 店铺</th>
+            </if>
+            <th> 问题类型</th>
+            <th> 数量  </th>
+           
+          </thead>
+          <tbody> 
+         	<foreach name="aftersales" item="v"> 
+              <tr> 
+                <!-- <td>{$v['date']}</td>  -->
+                <if condition="$arr['store']!=''">
+                  <td>{$v['store']}</td>
+                </if>
+                <td>{$v['confirmQcText']}</td> 
+                <td>{$v['cnt']}</td>
+              </tr>
+            </foreach>
+          </tbody>
+        </table>
+        <span>
+			{$page} 
+		</span>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,56 @@
+ALTER TABLE ykb_ruku 
+ADD COLUMN user_id int(11) DEFAULT 0 COMMENT '操作员Id',
+ADD COLUMN creator VARCHAR(50) NULL,
+ADD COLUMN `ctime` int(10) COMMENT '创建时间',
+ADD COLUMN `utime` timestamp NOT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间' AFTER `ctime`;
+
+ALTER TABLE ykb_ruku 
+CHANGE COLUMN `sid` `sid` int(11) DEFAULT 0 COMMENT '供应商Id';
+
+ALTER TABLE ykb_ruku_product 
+ADD COLUMN user_id int(11) DEFAULT 0 COMMENT '操作员Id',
+ADD COLUMN creator VARCHAR(50) NULL,
+ADD COLUMN `ctime` int(10) COMMENT '创建时间',
+ADD COLUMN `utime` timestamp NOT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间' AFTER `ctime`;
+
+ALTER TABLE ykb_chuku 
+ADD COLUMN user_id int(11) DEFAULT 0 COMMENT '操作员Id',
+ADD COLUMN creator VARCHAR(50) NULL,
+ADD COLUMN `ctime` int(10) COMMENT '创建时间',
+ADD COLUMN `utime` timestamp NOT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间' AFTER `ctime`;
+
+ALTER TABLE ykb_chuku_product 
+ADD COLUMN user_id int(11) DEFAULT 0 COMMENT '操作员Id',
+ADD COLUMN creator VARCHAR(50) NULL,
+ADD COLUMN `ctime` int(10) COMMENT '创建时间',
+ADD COLUMN `utime` timestamp NOT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间' AFTER `ctime`;
+
+ALTER TABLE ykb_cp_ruku 
+ADD COLUMN user_id int(11) DEFAULT 0 COMMENT '操作员Id',
+ADD COLUMN creator VARCHAR(50) NULL,
+ADD COLUMN `ctime` int(10) COMMENT '创建时间',
+ADD COLUMN `utime` timestamp NOT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间' AFTER `ctime`;
+
+ALTER TABLE ykb_cp_ruku  
+CHANGE COLUMN `sid` `sid` int(11) DEFAULT 0 COMMENT '供应商Id';
+
+ALTER TABLE ykb_cpruku_product 
+ADD COLUMN user_id int(11) DEFAULT 0 COMMENT '操作员Id',
+ADD COLUMN creator VARCHAR(50) NULL,
+ADD COLUMN `ctime` int(10) COMMENT '创建时间',
+ADD COLUMN `utime` timestamp NOT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间' AFTER `ctime`;
+
+ALTER TABLE ykb_cp_chuku 
+ADD COLUMN user_id int(11) DEFAULT 0 COMMENT '操作员Id',
+ADD COLUMN creator VARCHAR(50) NULL,
+ADD COLUMN `ctime` int(10) COMMENT '创建时间',
+ADD COLUMN `utime` timestamp NOT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间' AFTER `ctime`;
+
+ALTER TABLE ykb_cp_chuku 
+CHANGE COLUMN `cid` `cid` int(11) DEFAULT 0 COMMENT '客户Id';
+
+ALTER TABLE ykb_cpchuku_product 
+ADD COLUMN user_id int(11) DEFAULT 0 COMMENT '操作员Id',
+ADD COLUMN creator VARCHAR(50) NULL,
+ADD COLUMN `ctime` int(10) COMMENT '创建时间',
+ADD COLUMN `utime` timestamp NOT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间' AFTER `ctime`;

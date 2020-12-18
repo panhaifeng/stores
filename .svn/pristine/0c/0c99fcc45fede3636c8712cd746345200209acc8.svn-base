@@ -1,0 +1,121 @@
+<div class="row">
+  <div class="col-lg-12"> 
+    <div class="widget-container fluid-height clearfix">
+      <div class="heading">
+         <i class="icon-table"></i>供应商查询
+         <a class="btn btn-sm btn-primary-outline pull-right" href="{:U('Supplier/Index/add')}"> 
+          <i class="icon-plus"></i>新增供应商 
+         </a> 
+         	<a class="btn btn-sm btn-primary-outline pull-right" data-toggle="modal" href="#import_client"><i class="icon-inbox"></i>导入</a>
+        	<a class="btn btn-sm btn-primary-outline pull-right" href="{:U('Supplier/Index/index',$arr+array('export'=>1))}"><i class="icon-download"> </i>导出</a>
+      </div> 
+      <div class="widget-content padded clearfix"> 
+      <form action="{:U('Supplier/Index/index')}" class="form-horizontal" method="post">
+	    <table class="tab search"> 
+	      <tbody> 
+	        <tr>
+	          <td><input class="form-control"  name="supplier" type="text" placeholder="供应商名称" value="{$supplier}"></td>
+	          <td><button type="submit"  class="btn btn-primary sousuo"><i class="icon-search"></i> 搜索</button></td> 
+	        </tr>
+	      </tbody>
+	    </table> 
+	  </form> 
+	  </div> 
+      <div class="widget-content padded clearfix"> 
+        <!-- <table class="table table-bordered table-striped" id="datatable-editable"> -->
+        <table class="table table-bordered table-striped">
+         <thead>
+            <th> 供应商名称  </th>
+            <th> 联系人         </th>
+            <th> 联系电话     </th>
+            <th> 操作          </th> 
+          </thead>
+          <tbody> 
+         	<foreach name="information" item="v"> 
+              <tr> 
+                <td>{$v['supplier_name']}</td>
+                <td>{$v['supplier_people']}</td> 
+                <td>{$v['supplier_tel']}</td> 
+                <td> 
+				  <div class="action-buttons">
+                    <a class="table-actions" href="{:U('Supplier/Index/edit',array('id'=>$v['id']))}"><i class="icon-pencil"></i></a>
+                    <a class="table-actions" data-toggle="modal" href="#myModal{$v['id']}"><i class="icon-trash"></i></a> 
+					  <!--删除模态框 --> 
+				      <div class="modal fade" id="myModal{$v['id']}"> 
+	                    <div class="modal-dialog">
+	                      <div class="modal-content">
+	                        <div class="modal-header">
+	                          <button aria-hidden="true" class="close" data-dismiss="modal" type="button">&times;</button>
+	                          <h4 class="modal-title">
+	                         	   注意！
+	                          </h4>
+	                        </div>
+	                        <div class="modal-body">
+	                          <p>
+	                        	  确认删除吗?删除后将不可恢复！！！ 
+	                          </p>
+	                        </div> 
+	                        <div class="modal-footer">
+	                          <a class="btn btn-primary" type="button" href="{:U('Supplier/Index/delect',array('id'=>$v['id']))}">删除</a>
+	                          <button class="btn btn-default-outline" data-dismiss="modal" type="button">取消</button>
+	                        </div>
+	                   	  </div>
+	                    </div>
+		              </div>
+		              <!-- 模态框结束 --> 
+                  </div>
+				</td>
+              </tr>
+            </foreach>
+          </tbody>
+        </table>
+        <span>
+			{$page} 
+		</span>
+      </div>
+    </div>
+  </div>
+</div> 
+
+<div class="modal fade" id="import_client">
+  	<div class="modal-dialog">
+  		<form id="form1" name="form1">  
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <button aria-hidden="true" class="close" data-dismiss="modal" type="button">&times;</button>
+	        <h4 class="modal-title">供应商导入</h4> 
+	      </div>
+	      <div class="modal-body">
+	     	  <div class="form-group">
+	            <div class="col-md-12">
+	              <div class="fileupload fileupload-new" data-provides="fileupload"><input type="hidden" value="" name="">
+	                <div class="input-group">
+	                  <div class="form-control">
+	                    <i class="icon-file fileupload-exists"></i><span class="fileupload-preview"></span>
+	                  </div>
+	                  <div class="input-group-btn">
+	                    <a class="btn btn-default fileupload-exists" data-dismiss="fileupload" href="#">移除</a><span class="btn btn-default btn-file"><span class="fileupload-new">选择文件</span><span class="fileupload-exists">更改</span><input type="file" name="fileToUpload" id="fileToUpload"  multiple="multiple"/></span>
+	                  </div>
+	                </div>
+	              </div>
+	            </div>
+	          </div>
+	          <div class="form-group hide" id="progress">
+	            <div class="col-md-12">
+	              <div class="progress progress-striped active" id="progress_line">
+		            <div class="progress-bar progress-bar-success" id="percent" style="width: 0%"><input id="judge" type="hidden" value="base"/></div>
+		          </div>
+		          <p id="msg"></p>
+	            </div>
+	          </div>
+	          
+	      </div>
+	      <div class="modal-footer">
+	          <a class="btn btn-info" id="download" href="__PUBLIC__/download/供应商导入模板.xls" target="_blank">下载模板</a>
+	          <button class="btn btn-primary" id="import" type="button" onclick="UpladFile()">上传</button>
+	          <button class="btn btn-success" data-dismiss="modal" type="button" >完成</button>
+	      </div>
+	  	</div>
+     </form> 
+    </div>
+</div>

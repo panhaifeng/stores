@@ -1,0 +1,80 @@
+<div class="row"> 
+  <div class="col-lg-12">
+    <div class="widget-container fluid-height clearfix">
+      <div class="heading">
+        <i class="icon-table"></i>银行账户
+        <a class="btn btn-sm btn-primary-outline pull-right" href="{:U('Finance/Base/addbank')}">
+          <i class="icon-plus"></i>新增账户
+        </a>
+      </div>
+      <div class="widget-content padded clearfix">
+      <form action="{:U('Finance/Base/bank')}" class="form-horizontal" method="post">
+	    <table class="tab search"> 
+	      <tbody>
+	        <tr>
+	          <td><input class="form-control"  name="bankname" type="text" placeholder="账户名称" value="{$bankname}"></td>
+	          <td><button type="submit"  class="btn btn-primary sousuo"><i class="icon-search"></i> 搜索</button></td>
+	        </tr>
+	      </tbody> 
+	    </table> 
+	  </form> 
+	  </div> 
+      <div class="widget-content padded clearfix"> 
+        <!-- <table class="table table-bordered table-striped" id="datatable-editable"> -->
+        <table class="table table-bordered table-striped"> 
+          <thead>
+           <tr>
+	            <th> 账户名称  </th>
+	            <th> 开户账号  </th>
+	            <th> 开户人      </th>
+	            <th> 备注          </th>
+	            <th> 操作          </th>
+            </tr> 
+          </thead>
+          <tbody> 
+         	<foreach name="bank" item="v"> 
+              <tr> 
+                <td>{$v['bankname']}</td>
+                <td>{$v['bankcode']}</td> 
+                <td>{$v['bankperson']}</td> 
+                <td>{$v['memo']}</td>
+                <td>
+				  <div class="action-buttons">
+                    <a class="table-actions" href="{:U('Finance/Base/editbank',array('id'=>$v['id']))}"><i class="icon-pencil"></i></a>
+                    <a class="table-actions" data-toggle="modal" href="#myModal{$v['id']}"><i class="icon-trash"></i></a>
+					  <!--删除模态框 --> 
+				      <div class="modal fade" id="myModal{$v['id']}"> 
+	                    <div class="modal-dialog">
+	                      <div class="modal-content">
+	                        <div class="modal-header">
+	                          <button aria-hidden="true" class="close" data-dismiss="modal" type="button">&times;</button>
+	                          <h4 class="modal-title">
+	                         	   注意！
+	                          </h4>
+	                        </div>
+	                        <div class="modal-body">
+	                          <p>
+	                        	  确认删除吗?删除后将不可恢复！！！
+	                          </p>
+	                        </div> 
+	                        <div class="modal-footer">
+	                          <a class="btn btn-primary" type="button" href="{:U('Finance/Base/delectbank',array('id'=>$v['id']))}">删除</a>
+	                          <button class="btn btn-default-outline" data-dismiss="modal" type="button">取消</button>
+	                        </div>
+	                   	  </div>
+	                    </div>
+		              </div>
+		              <!-- 模态框结束 --> 
+                  </div>
+				</td>
+              </tr>
+            </foreach>
+          </tbody>
+        </table>
+        <span>
+			{$page} 
+		</span>
+      </div>
+    </div>
+  </div>
+</div>

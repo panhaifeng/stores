@@ -1,0 +1,135 @@
+{__NOLAYOUT__} 
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>签到 </title>
+		<meta name="description" content="签到" />
+		<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0;" name="viewport" />
+		<link href="__PUBLIC__/assets/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    	<link href="__PUBLIC__/assets/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
+		<link rel="stylesheet" href="__PUBLIC__/weixin/showcase.css">
+ 		<link rel="stylesheet" href="__PUBLIC__/weixin/buttons.css">
+		<script type="text/javascript" src="__PUBLIC__/assets/js/jquery-2.0.3.min.js"></script>
+		<script type="text/javascript" src="http://api.map.baidu.com/api?v=1.5&ak=684ea2e34707dd5eff8c16b5926bf4ad"></script>
+		<script type="text/javascript" src="http://developer.baidu.com/map/jsdemo/demo/convertor.js"></script>
+		<style type="text/css">
+		body { font-family:'微软雅黑';}
+		</style>
+	</head>
+	
+	<body style="background:#ffffff;">
+		
+				<div class="navbar navbar-inverse navbar-fixed-top">
+					<div class="container">
+						<a class="button button-block button-primary" style="width:100%;" href="javascript:;">{:date('Y-m-d',time())} (星期{$w})</a>
+						<br/>
+					</div>
+				</div>
+				
+				<div class="container">
+					<div class="row">
+						<div class="span12">
+						<form>
+							<input type="hidden" id="type" name="type" value="{$type}"/>
+							<div>
+								<label for="form-field-8">定位</label>
+								<input id="txtPosition" name="label" class="span12 search-query" type="text" readonly  value="" placeholder="定位中">
+							</div>
+							<br/>
+							<div>
+								<label for="memo">内容</label>
+								<textarea name="memo" id="memo" class="span12" style="min-height:100px; box-shadow:none;" ></textarea>
+							</div>
+							<hr>
+							<a class="button button-primary button-pill button-block" id="signPost">保存</a>
+						</form>
+						</div>
+					</div>
+				</div>
+		<script type="text/javascript">
+			var x = "";
+	        var y = "";
+	      	//坐标转换完之后的回调函数
+	        translateCallback = function (point){
+	        	var url = "http://api.map.baidu.com/geocoder/v2/?ak=684ea2e34707dd5eff8c16b5926bf4ad" + 
+	            "&callback=renderReverse" + 
+	            "&location=" + point.lat + "," + point.lng + 
+	            "&output=json" + 
+	            "&pois=0";
+	            $.ajax({ 
+		            type: "GET", 
+		            dataType: "jsonp", 
+		            url: url, 
+		            success: function (json) { 
+		            	
+			            if (json == null || typeof (json) == "undefined") { 
+			            	return; 
+			            } 
+			            if (json.status != "0") { 
+			            	return; 
+			            } 
+			            setAddress(json.result.addressComponent); 
+		            }, 
+		            error: function (XMLHttpRequest, textStatus, errorThrown) { 
+		            alert("[x:" + x + ",y:" + y + "]地址位置获取失败,请手动选择地址"); 
+		            } 
+	            });
+	        }
+	      	
+	        if (navigator.geolocation) {
+	        	var options = {
+	                enableHighAccuracy: true,
+	            };
+	        	navigator.geolocation.getCurrentPosition(handleSuccess,getPositionError,options);
+	        } else {
+	        	alert("浏览器不支持html5来获取地理位置信息");
+	        }
+	        
+	        function handleSuccess(position){
+	        	// 获取到当前位置经纬度  本例中是chrome浏览器取到的是google地图中的经纬度
+	            x = position.coords.longitude;
+	            y = position.coords.latitude;
+	            var gpsPoint = new BMap.Point(x,y);
+		      	BMap.Convertor.translate(gpsPoint,0,translateCallback);
+		    }
+	        function getPositionError(){
+	        	alert("位置信息获取失败");
+	        }
+	        /** 
+	        * 设置地址 
+	        */ 
+	        function setAddress(json) { 
+		        var position = document.getElementById("txtPosition"); 
+		        var province = json.province; 
+		        var city = json.city; 
+		        var district = json.district;
+		        province = province.replace('市', ''); 
+		        position.value = province + city + district +json.street + json.street_number; 
+		        position.style.color = 'black'; 
+	        }
+	        document.addEventListener('WeixinJSBridgeReady', function onBridgeReady() {
+				WeixinJSBridge.call('hideOptionMenu');
+			});
+	        $(document).ready(function() { 
+	        	$('#signPost').click(function(){
+	        		var type=$('#type').val();
+	        		var label = $('#txtPosition').val();
+	        		var memo = $('#memo').val();
+	        		$.post("{:U('Weixin/Signin/insert')}",{'type':type,'label':label,'memo':memo},function(data){
+	        			if(data){
+	        				alert('签到成功！');
+	        				WeixinJSBridge.invoke('closeWindow',{},function(res){});
+	        			}else{
+	        				alert('签到失败，请联系管理员！');
+	        				WeixinJSBridge.invoke('closeWindow',{},function(res){});
+	        			}
+					});
+	        	});
+	        	
+	        })
+	    </script>
+	</body>
+</html>
+
+

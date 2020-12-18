@@ -1,0 +1,2 @@
+ALTER TABLE `ykb_aftersales`
+ADD COLUMN `clientName`  varchar(500) NOT NULL COMMENT '客户名' AFTER `cid`;

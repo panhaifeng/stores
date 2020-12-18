@@ -1,0 +1,190 @@
+<style type="text/css">
+  .showDetail{
+    background: linear-gradient(to bottom, white 0,#EEE 1%, #FFF 90%,white 100%);
+  }
+  .trRowDetail{
+    background: linear-gradient(to bottom, #FFF 117px, #EEE 100%);
+  }
+  .trRowDetail .detailTable{
+    width: 100%;
+  }
+  .trRowDetail .detailTable td{
+    border: 0;
+  }
+  .trRowDetail .detailTable th{
+    border: 0;
+    height: 28px;
+  }
+  .trRowDetail .detailTable i{
+    font-weight: 900;
+  }
+  .detailTable {
+  }
+  .detailTable tr td{
+    text-align: center;
+  }
+  .detailTable tr td textarea{
+    width: 100%;
+    border:1px solid #ddd;
+  }
+  table.table-content>tbody>.trRow:nth-child(2n+1)>td{
+    background-color: #F8F8F8;
+  }
+  table.table-content>tbody>.trRow:nth-child(2n+1).showDetail>td{
+    background: linear-gradient(to bottom, white 0,#EEE 1%, #FFF 90%,white 100%);
+  }
+  table.table-content>tbody>tr>th{
+    font-size: 16px;
+    border: 0;
+  }
+  table.table-content>tbody>tr>td{
+    font-size: 14px;
+    border: 0;
+  }
+  table.table-content>tbody>tr>td>span{
+    font-size:.8em;
+    color:black;
+  }
+  table.table-content>tbody>tr>th.careInfo{
+    width: 25%
+  }
+  table.table-content>tbody>tr>td.careInfo{
+    width: 25%
+  }
+  table.table-content>tbody>tr>td>textarea{
+    height: 100%;
+    width: 100%;.
+    border-color: #EEEEEE;
+    resize: none;
+  }
+</style>
+<div class="row">
+  <div class="col-lg-12"> 
+    <div class="widget-container fluid-height clearfix">
+      <div class="heading">
+          <i class="icon-table"></i>售后服务审核
+      </div>
+      <div class="widget-content padded clearfix">
+      <form action="{:U('index')}" class="form-horizontal" method="post">
+	    <table class="tab search"> 
+	      <tbody> 
+	        <tr>
+	           <td>
+		      	<select class="form-control" tabindex="1" name="reviewer" id="reviewer"> 
+	              <option value="0" <if condition="$map['reviewer']==0">selected="selected"</if>>未审核</option> 
+	              <option value="1" <if condition="$map['reviewer']!=0">selected="selected"</if>>已审核</option>
+	            </select> 
+		      </td> 
+		      <!-- 筛选条件：日期 
+	          <td>
+	          <input class="form-control" data-date-autoclose="true" data-date-format="yyyy-mm-dd" id="dpd1" name="start_time" placeholder="开始时间" type="text" value="{$map['start_time']}"> 
+	          </td> 
+	          <td>
+	          	  <input class="form-control" data-date-autoclose="true" data-date-format="yyyy-mm-dd" id="dpd2" name="end_time" placeholder="结束时间" type="text" value="{$map['end_time']}"> 
+	          </td>-->
+	          <td>
+	            <select class="form-control"  name="store"  name="store">
+	              <option value="">选择店铺</option>
+	              <foreach name="stores" item="v" key="key"> 
+                  <option value="{$key}" <if condition="$map['store'] == $key">selected="selected"</if> >{$v}</option>
+                </foreach> 
+	            </select>
+	          </td>
+            
+            <td>
+              <input class="form-control" id="orderId" name="orderId" placeholder="订单号" type="text" value="{$map['orderId']}"> 
+            </td> 
+            <td>
+              <input class="form-control" id="uid" name="uid" placeholder="客服姓名" type="text" value="{$map['uid']}"> 
+            </td> 
+            <!--
+            <td>
+              <input class="form-control" id="saleID" name="saleID" placeholder="ID" type="text" value="{$map['saleID']}"> 
+            </td> 
+            -->
+	          <td><button type="submit"  class="btn btn-primary sousuo"><i class="icon-search"></i> 搜索</button></td>
+	        </tr>
+	      </tbody>
+	    </table> 
+	  </form> 
+	  </div> 
+      <div class="widget-content padded clearfix"> 
+        <table class="table table-bordered table-content">
+         <thead>
+            <th>日期/客服</th>
+            <th>订单信息</th>
+            <th class="careInfo">售后问题/处理措施</th>
+            <th class="careInfo">后台处理跟进</th>
+            <th class="careInfo">客服反馈</th>
+            <th>操作</th>
+          </thead>
+          <tbody> 
+         	<foreach name="shouhou" item="v"> 
+              <tr class="trRow"> 
+                <td>{$v['date']}<br />{$v['uid']}</td>
+                <td><span>店铺: </span>{$v['store']}<br /><span>订单: </span>{$v['orderId']}<br /><span>ID: </span>{$v['saleID']}</td> 
+                <td class="careInfo"><span>问题: </span>{$v['saleProblem']}<br /><span>措施: </span>{$v['handleMessuares']}</td> 
+                <td class="careInfo"><textarea readonly="readonly">{$v['handleProcess']}</textarea></td>
+                <td class="careInfo"><textarea readonly="readonly">{$v['cserviceCallback']}</textarea></td>
+                <td>
+                  <if condition="$v['edit']!=1">   
+                  <div class="action-buttons">
+                      <if condition="$v['reviewer']=='0'">
+                      <!--
+                          <a class="table-actions" href="{:U('Profit/Aftersale/edit',array('id'=>$v['id'],'fromAction'=>'Review'))}"><i class="icon-pencil"></i></a>
+                          <a class="table-actions" data-toggle="modal" href="#" onclick = "deleteData({$v['id']},'{:U('Profit/Aftersale/delete')}')"><i class="icon-trash"></i></a>
+                      -->
+                          <a class="table-actions" href="{:U('review',array('id'=>$v['id'],'reviewer'=>$uid))}">审核</a> 
+                         <!-- <a id="showDialog" class="table-actions" data-toggle="modal" data-target="#{$v['var']}" href="#">详细</a> 
+                          <div class="modal fade" id="{$v['var']}" tabindex="-1" role="dialog" 
+                           aria-labelledby="myModalLabel" aria-hidden="true">
+                           <div class="modal-dialog" style="width:800px;">
+                              <div class="modal-content">
+                                 <div class="modal-header">
+                                    <button type="button" class="close" 
+                                       data-dismiss="modal" aria-hidden="true">
+                                          &times;
+                                    </button>
+                                    <h4 class="modal-title" id="myModalLabel">
+                                       详细列表
+                                    </h4>
+                                 </div>
+                                 <div id="divLogBody" class="modal-body">
+                                    <ul class="list-group" style="font-size: 16px; border: 1px">
+                                      <li class="list-group-item"><span>日期：{$v['date']}</span></li>
+                                      <li class="list-group-item">客服：{$v['uid']}</li>
+                                      <li class="list-group-item">店铺：{$v['store']}</li>
+                                      <li class="list-group-item">订单号：{$v['orderId']}</li>
+                                      <li class="list-group-item">ID：{$v['saleID']}</li>
+                                      <li class="list-group-item">售后问题：{$v['saleProblem']}</li>
+                                      <li class="list-group-item">处理措施：{$v['handleMessuares']}</li>
+                                      <li class="list-group-item">处理跟进：<textarea disabled>{$v['handleProcess']}</textarea></li>
+                                      <li class="list-group-item">客服反馈：<textarea disabled>{$v['cserviceCallback']}</textarea></li>
+                                    </ul>
+                                 </div>
+                                 <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" 
+                                       data-dismiss="modal">关闭
+                                    </button>
+                                 </div>
+                              </div>
+                          </div>
+                        </div>-->
+                      <else/>
+                        {$v['reviewer']}已审核
+                        <a class="table-actions" href="{:U('unreview',array('id'=>$v['id'],'reviewer'=>0))}">取消审核</a> 
+                      </if>
+                  </div>
+                   </if>
+                </td>
+              </tr>
+            </foreach>
+          </tbody>
+        </table>
+        <span>
+			{$page} 
+		</span>
+      </div>
+    </div>
+  </div>
+</div>

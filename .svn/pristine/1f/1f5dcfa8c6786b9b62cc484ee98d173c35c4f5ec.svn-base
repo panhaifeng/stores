@@ -1,0 +1,30 @@
+<script type="text/javascript"> 
+$(function(){
+	$('.newSon2').click(function(){
+		var id = $(this).find('.id').val();
+		var url = "{:U('Storehouse/Cpchuku/getProduct')}";
+		$.ajax({ 
+		     type:"POST", //请求方式
+		     url:url, //请求路径
+		     cache: false,   //(默认: true) 设置为 false 将不缓存此页面。
+		     data:"chukuId="+id,  //传参
+		     dataType: "json",   //返回值类型 
+		     success:function(res){
+		    	var id = ""; 
+				var code = "";
+				var name = "";
+				var cnt = "";
+				var html = "";
+				$.each(res,function(){
+					code = this['code']; 
+					name = this['name'];
+					norms = this['norms']; 
+					cnt = this['cnt'];
+					html += "<tr><td>"+code+"</td><td>"+name+"</td><td>"+norms+"</td><td>"+cnt+"</td></tr>"
+				})
+				$("#show").html(html);
+		     }
+		})
+	})
+}) 
+</script>
